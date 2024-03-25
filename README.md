@@ -12,7 +12,7 @@
 |------|---|
 |Tool|Visual Studio Code|
 |Library|React 18.2.0|
-|Language|JavaScript|
+|Language|JSX|
 |Flatform|Web|
 |Collaboration|Git, Github, Discord, Notion|
 
