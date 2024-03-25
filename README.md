@@ -1,5 +1,6 @@
 # CafeFlow
 
+<pre><code>	npm start   </code></pre>
 ### 📖 프로젝트 소개
 
 **CafeFlow - 실시간 카페 좌석 확인 서비스**
