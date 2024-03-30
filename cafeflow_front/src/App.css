@@ -2,31 +2,82 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.custom-card-body, .custom-card {
+  width: 95%; /* Card의 너비를 화면 너비에 맞춤 */
+  height: 500px;
+  margin: auto;
+  border: none !important;
+    display: flex; /* Flexbox를 활성화 */
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+  gap: 20px; /* 요소들 사이에 20px 간격 */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.custom-navbar-style {
+  background-color: white; /* 글자 색상 변경 */
+  padding: 10px 0; /* 상하 패딩 조정 */
+  /* 여기에 더 많은 스타일 규칙을 추가할 수 있습니다 */
+}
+
+.text-container{
+  flex: 0.85; /* 텍스트 컨테이너가 가능한 많은 공간을 차지하도록 설정 */
+  flex-direction: column; /* 텍스트 요소를 수직으로 정렬 */
+  margin-right: 20px; /* 이미지와의 간격 */
+}
+
+.custom-image {
+  width: auto; /* 이미지의 크기 설정, 필요에 따라 조절 */
+  height: 370px; /* 이미지의 비율을 유지 */
+}
+
+.card-button{
+  width: 200px;
+  height: 60px;
+}
+
+.card-title-custom {
+  font-family: 'Roboto', sans-serif;
+font-size: 60px;
+font-weight: 900;
+letter-spacing: 1px;
+}
+
+.card-text-custom {
+  font-family: "Nanum Gothic Coding", monospace;
+  font-weight: 400;
+  font-size: 23px;
+  font-style: normal;
+}
+
+@media (max-width: 1000px) {
+  .custom-card, .custom-card-body {
+    width: 100%; /* 화면이 작아졌을 때 카드의 너비를 100%로 조정 */
+    height: auto; /* 카드의 높이를 내용에 맞게 조정 */
+    flex-direction: column; /* 카드 내용을 수직으로 정렬 */
+  }
+
+  .text-container, .custom-image {
+    width: 100%; /* 화면이 작아졌을 때 텍스트 컨테이너와 이미지의 너비를 100%로 조정 */
+    margin: 0; /* 마진 조정 */
+  }
+
+  .custom-image {
+    height: auto; /* 이미지의 높이를 자동으로 조정 */
+  }
+
+  .card-button {
+    width: 100%; /* 버튼의 너비를 조정 */
+    margin-top: 20px; /* 버튼 상단의 간격 */
+  }
+
+  .card-title-custom {
+    font-size: 40px; /* 카드 제목의 폰트 크기 조정 */
+  }
+
+  .card-text-custom {
+    font-size: 18px; /* 카드 텍스트의 폰트 크기 조정 */
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
 
 @keyframes App-logo-spin {
   from {
