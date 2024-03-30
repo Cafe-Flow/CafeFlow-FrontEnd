@@ -29,7 +29,7 @@ function MainPage() {
               어디서나 편하게 비대면으로 주문해봐요
               </p>
               <Button className="card-button" style={{ fontFamily: "'Roboto', sans-serif", fontSize: '20px',
-              fontWeight: 400, backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 결제하기 👉</Button>
+              fontWeight: 400, backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 주문하기 👉</Button>
             </div>
             <img src="/슬라이드1.png" className="custom-image" alt="second pic" />
             </CardBody>

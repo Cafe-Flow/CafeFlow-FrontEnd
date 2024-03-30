@@ -4,7 +4,7 @@
 
 .custom-card-body, .custom-card {
   width: 95%; /* Card의 너비를 화면 너비에 맞춤 */
-  height: 500px;
+  height: 600px;
   margin: auto;
   border: none !important;
     display: flex; /* Flexbox를 활성화 */
@@ -41,6 +41,16 @@ font-weight: 900;
 letter-spacing: 1px;
 }
 
+.loading-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #007bff;
+  position: fixed;
+  top: 56px; /* Navbar의 높이에 맞춰 조정 */
+  left: 0;
+  animation: loading-animation 2s infinite;
+}
+
 .card-text-custom {
   font-family: "Nanum Gothic Coding", monospace;
   font-weight: 400;
@@ -48,42 +58,39 @@ letter-spacing: 1px;
   font-style: normal;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 992px) {
   .custom-card, .custom-card-body {
-    width: 100%; /* 화면이 작아졌을 때 카드의 너비를 100%로 조정 */
-    height: auto; /* 카드의 높이를 내용에 맞게 조정 */
-    flex-direction: column; /* 카드 내용을 수직으로 정렬 */
+    width: 100%;
+    height: auto; 
+    flex-direction: column; 
   }
 
   .text-container, .custom-image {
-    width: 100%; /* 화면이 작아졌을 때 텍스트 컨테이너와 이미지의 너비를 100%로 조정 */
-    margin: 0; /* 마진 조정 */
+    width: 80%;  
+    margin: 0;
   }
 
   .custom-image {
-    height: auto; /* 이미지의 높이를 자동으로 조정 */
+    height: auto; 
   }
 
   .card-button {
-    width: 100%; /* 버튼의 너비를 조정 */
-    margin-top: 20px; /* 버튼 상단의 간격 */
+    width: 100%; 
+    margin-top: 20px; 
   }
 
   .card-title-custom {
-    font-size: 40px; /* 카드 제목의 폰트 크기 조정 */
+    font-size: 40px;
   }
 
   .card-text-custom {
-    font-size: 18px; /* 카드 텍스트의 폰트 크기 조정 */
+    font-size: 18px; 
   }
 }
 
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes loading-animation {
+  0% { width: 0; }
+  50% { width: 50%; }
+  100% { width: 100%; }
 }
