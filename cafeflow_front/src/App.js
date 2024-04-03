@@ -3,6 +3,7 @@ import Header from './Header.js';
 import { Routes, Route } from 'react-router-dom'
 import MainPage from './MainPage.js';
 import LoginPage from './RegisterPage/Login.js';
+import UserSignupPage from './RegisterPage/UserSignup.js'
 
 function App() {
   return (
@@ -12,9 +13,13 @@ function App() {
         <Route path='/' element={<MainPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/adminsignup' element={<div>mypage</div>}/>
-        <Route path='/usersignup' element={<div>mypage</div>}/>
+        <Route path='/usersignup' element={<UserSignupPage/>}/>
       </Routes>
 
+    <footer className='ft'>
+         <p>&copy; 2024 Orange. All rights reserved.</p>
+         <a href="https://github.com/Cafe-Flow">Our Web Site</a>
+    </footer>
     </div>
   );
 }

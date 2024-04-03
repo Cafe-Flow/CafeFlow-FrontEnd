@@ -1,5 +1,14 @@
 .App {
   text-align: center;
+  width: 95%;
+  margin: 0 auto;
+}
+
+.Logo-font {
+  font-family: 'Times New Roman', Times, serif; 
+  font-weight: 900;
+  font-size: 40px;
+
 }
 
 .custom-card-body, .custom-card {
@@ -88,6 +97,18 @@ letter-spacing: 1px;
   }
 }
 
+.ft {
+    background-color: whitesmoke;
+    padding: 30px;
+    margin: auto;
+    font-weight: 900;
+    width: 95%;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: black;
+}
 
 @keyframes loading-animation {
   0% { width: 0; }

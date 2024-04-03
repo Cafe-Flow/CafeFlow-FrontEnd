@@ -15,12 +15,9 @@ function Header() {
 <Navbar expand="lg" className="custom-navbar-style" expanded={expanded}>
   <Container className="custom-navbar-container">
     <Navbar.Brand href="#" className="custom-navbar-brand">      
-      <img
-        src="/카페.png"
-        alt="Logo"
-        height="50"
-        onClick={() => navigate('/')}
-      />{' '}
+    <div className='Logo-font'>
+    <a onClick={() => navigate('/')}>Cafe Flow</a>
+    </div>
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
     <Navbar.Collapse id="basic-navbar-nav">
