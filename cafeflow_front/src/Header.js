@@ -22,10 +22,10 @@ function Header() {
     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
     <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="shop">Shop</Nav.Link>
-            <Nav.Link href="order">Order</Nav.Link>
-            <Nav.Link href="event">Event</Nav.Link>
-            <Nav.Link href="community">Community</Nav.Link>
+            <Nav.Link>Shop</Nav.Link>
+            <Nav.Link>Order</Nav.Link>
+            <Nav.Link>Event</Nav.Link>
+            <Nav.Link>Community</Nav.Link>
           </Nav>
           {isLoggedIn ? (
             <Nav>

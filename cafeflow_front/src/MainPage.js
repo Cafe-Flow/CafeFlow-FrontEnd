@@ -3,6 +3,7 @@ import { Card, CardBody, Carousel, Button } from 'react-bootstrap';
 
 function MainPage() {
   return (
+    <>
       <Carousel>
         <Carousel.Item>
         <Card className='custom-card' style={{ backgroundColor: '#43f770' }}>
@@ -50,6 +51,7 @@ function MainPage() {
           </Card>
         </Carousel.Item>
       </Carousel>
+      </>
   );
 }
 
