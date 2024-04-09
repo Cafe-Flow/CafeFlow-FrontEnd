@@ -3,6 +3,7 @@ import { Card, CardBody, Carousel, Button } from 'react-bootstrap';
 
 function MainPage() {
   return (
+    <>
       <Carousel>
         <Carousel.Item>
         <Card className='custom-card' style={{ backgroundColor: '#43f770' }}>
@@ -15,7 +16,7 @@ function MainPage() {
               <Button className="card-button" style={{ fontFamily: "'Roboto', sans-serif", fontSize: '20px',
               fontWeight: 400, backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 보러가기 👉</Button>
             </div>
-            <img src="/슬라이드2.png" className="custom-image" alt="first pic" />
+            <img src="/img/main_pic2.png" className="custom-image" alt="first pic" />
             </CardBody>
           </Card>
         </Carousel.Item>
@@ -30,7 +31,7 @@ function MainPage() {
               <Button className="card-button" style={{ fontFamily: "'Roboto', sans-serif", fontSize: '20px',
               fontWeight: 400, backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 주문하기 👉</Button>
             </div>
-            <img src="/슬라이드1.png" className="custom-image" alt="second pic" />
+            <img src="/img/main_pic1.png" className="custom-image" alt="second pic" />
             </CardBody>
           </Card>
         </Carousel.Item>
@@ -45,11 +46,12 @@ function MainPage() {
               <Button className="card-button" style={{ fontFamily: "'Roboto', sans-serif", fontSize: '20px',
               fontWeight: 400, backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 하러가기 👉</Button>
             </div>
-            <img src="/슬라이드3.png" className="custom-image" alt="설명" />
+            <img src="/img/pic3.png" className="custom-image" alt="third pic" />
             </CardBody>
           </Card>
         </Carousel.Item>
       </Carousel>
+      </>
   );
 }
 

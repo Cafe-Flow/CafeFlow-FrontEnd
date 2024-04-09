@@ -97,11 +97,11 @@ function LoginPage() {
         <Modal.Body className="custom-modal-body">
           <div className='signup-select'>
           <div className='admin-select' onClick={() => handleSignupTypeSelection('admin')}>
-          <img src="/관리자1.png" alt="카페 관리자" />
+          <img src="/img/admin.png" alt="카페 관리자" />
             카페 관리자
           </div>
           <div className='admin-select' onClick={() => handleSignupTypeSelection('user')}>
-          <img src="/손님1.png" alt="서비스 이용자" />
+          <img src="/img/customer.png" alt="서비스 이용자" />
             서비스 이용자
           </div>
           </div>

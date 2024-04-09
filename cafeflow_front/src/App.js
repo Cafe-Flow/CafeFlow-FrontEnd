@@ -4,6 +4,8 @@ import { Routes, Route } from 'react-router-dom'
 import MainPage from './MainPage.js';
 import LoginPage from './RegisterPage/Login.js';
 import UserSignupPage from './RegisterPage/UserSignup.js'
+import ShopInfo from './Shopinfo.js';
+import AdminSignupPage from './RegisterPage/AdminSignup.js';
 
 function App() {
   return (
@@ -12,8 +14,9 @@ function App() {
       <Routes>
         <Route path='/' element={<MainPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>
-        <Route path='/adminsignup' element={<div>mypage</div>}/>
+        <Route path='/adminsignup' element={<AdminSignupPage/>}/>
         <Route path='/usersignup' element={<UserSignupPage/>}/>
+        <Route path='/shop/info' element={<ShopInfo/>}/>
       </Routes>
 
     <footer className='ft'>

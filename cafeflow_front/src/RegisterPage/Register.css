@@ -18,6 +18,12 @@
     letter-spacing: 10px; 
 }
 
+.h2-font {
+  font-family: "Nanum Gothic Coding", monospace;
+  font-size: 40px;
+  letter-spacing: 5px;
+}
+
 .h6-font {
     font-family: "Nanum Gothic Coding", monospace;
     font-weight: 900;
@@ -38,6 +44,13 @@
     margin: 0 auto 10px; /* 이미지를 중앙 정렬하고, 아래쪽에 간격 추가 */
   }
   
+.signup-image {
+  width: 100px;
+  height: auto;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
 
 .admin-select {
     cursor: pointer;
@@ -60,6 +73,30 @@
   }
 
 
+
+  .gender-selection {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center; /* 세로 방향에서도 가운데 정렬 */
+  }
+
+
+.gender-image {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+    margin: 10px;
+    width: 100px; 
+    height: auto;
+  }
+
+.gender-image:hover {
+  transform: scale(1.05);
+}
+
+.gender-image.selected {
+  background-color: #e3e1e1; /* Bootstrap 기본 테마 색상의 연한 버전 */
+  border-radius: 20px;
+}
 span {
     cursor: pointer;    
 }
