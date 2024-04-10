@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import './Register.css'
 import { useNavigate } from 'react-router-dom';
-import { Modal, Button, Form, FloatingLabel, Container, Card} from 'react-bootstrap';
+import { Modal, Button, Form, FloatingLabel} from 'react-bootstrap';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
-  const [emailError, setEmailError] = useState('');
+  const [loginIdError, setLoginIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [showModal, setShowModal] = useState(false); // 모달 표시 상태
+  const [showModal, setShowModal] = useState(false); 
+  const [apiError, setApiError] = useState('');
 
   const validateForm = () => {
     let isValid = true;
-    if (!email) {
-      setEmailError('아이디를 입력해주세요.');
+    if (!loginId) {
+      setLoginIdError('아이디를 입력해주세요.');
       isValid = false;
     } else {
-      setEmailError('');
+      setLoginIdError('');
     }
     if (!password) {
       setPasswordError('비밀번호를 입력해주세요.');
@@ -38,11 +39,37 @@ function LoginPage() {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+  
     if (validateForm()) {
-      console.log(email, password);
-      navigate('/');
+      const loginUrl = 'http://localhost:8080/api/auth/login';
+  
+      try {
+        const response = await fetch(loginUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            loginId: loginId,
+            password: password,
+          }),
+        });
+  
+        const responseData = await response.json();
+  
+        if (response.ok) {
+          console.log('로그인 성공:', responseData);
+          navigate('/');
+        } else {
+          setApiError(responseData.message)
+          console.error('로그인 실패:', responseData);
+        }
+      } catch (error) {
+        setApiError('로그인 요청에 실패 했습니다')
+        console.error('로그인 요청 실패:', error);
+      }
     }
   };
 
@@ -55,10 +82,10 @@ function LoginPage() {
         <div className='h6-font'><p>카페 플로우와 함께 즐거운 시간 되세요</p>
         </div>
         <FloatingLabel controlId="floatingInput" label="아이디" className="mb-3">
-          <Form.Control type="text" placeholder="name@example.com" isInvalid={!!emailError}
-            onChange={(e) => setEmail(e.target.value)}/>
+          <Form.Control type="text" placeholder="name@example.com" isInvalid={!!loginIdError}
+            onChange={(e) => setLoginId(e.target.value)}/>
             <Form.Control.Feedback type="invalid">
-              {emailError}
+              {loginIdError}
             </Form.Control.Feedback>
           </FloatingLabel>
           <FloatingLabel controlId="floatingPassword" label="비밀번호">
@@ -82,9 +109,9 @@ function LoginPage() {
       <Button type="submit" style={{ border: "none", backgroundColor: "black", color: "white", height: "60px"}}>
         로그인
       </Button>
+      {apiError && <div style={{ color: 'red', marginTop: '10px' }}>{apiError}</div>}
       <div className='new-sign-box'>
-      <p><span onClick={() => {console.log(1)}}>아이디/비밀번호 찾기  </span>
-      <span onClick={() =>  setShowModal(true)}>|  회원가입</span>
+      <p>아직 아이디가 없으신가요?<span style = {{color : 'black'}} onClick={() =>  setShowModal(true)}> 회원가입</span>
       </p>
       </div>
       </Form> 

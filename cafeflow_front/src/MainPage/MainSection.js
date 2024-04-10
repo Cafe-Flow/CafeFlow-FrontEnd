@@ -1,7 +1,7 @@
-import './App.css';
+import '../App.css';
 import { Card, CardBody, Carousel, Button } from 'react-bootstrap';
 
-function MainPage() {
+function MainSection() {
   return (
     <>
       <Carousel>
@@ -46,7 +46,7 @@ function MainPage() {
               <Button className="card-button" style={{ fontFamily: "'Roboto', sans-serif", fontSize: '20px',
               fontWeight: 400, backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 하러가기 👉</Button>
             </div>
-            <img src="/img/pic3.png" className="custom-image" alt="third pic" />
+            <img src="/img/main_pic3.png" className="custom-image" alt="third pic" />
             </CardBody>
           </Card>
         </Carousel.Item>
@@ -56,4 +56,4 @@ function MainPage() {
 }
 
 
-export default MainPage;
+export default MainSection;

@@ -1,0 +1,38 @@
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .search-bar {
+    margin: 0 auto;
+    position: relative;
+    width: 80%;
+    max-width: 600px; /* 최대 너비 설정 */
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px 50px 10px 20px; /* 오른쪽 패딩을 넓게 설정하여 아이콘 공간 확보 */
+    border: 2px solid grey;
+    border-radius: 20px; /* 둥근 모서리 */
+    font-size: 16px;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: grey;
+}
+
+.search-icon:hover {
+    color: black;
+}
+.search-input:hover {
+    border: 2px solid black;
+}

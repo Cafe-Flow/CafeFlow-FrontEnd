@@ -19,6 +19,7 @@
     display: flex; /* Flexbox를 활성화 */
   align-items: center; /* 요소들을 수직 중앙 정렬 */
   gap: 20px; /* 요소들 사이에 20px 간격 */
+  margin-bottom: 50px;
 }
 
 .custom-navbar-style {
@@ -97,12 +98,20 @@ letter-spacing: 1px;
   }
 }
 
+.content {
+  padding-bottom: 100px; /* Footer의 높이에 따라 조정 */
+}
+
 .ft {
-    background-color: whitesmoke;
-    padding: 30px;
-    margin: auto;
+
+  left: 0;
+  bottom: 0;
+    background-color: #D5C4A1;
+    padding: 20px;
     font-weight: 900;
-    width: 95%;
+    color: black;
+    width: 100%;
+    text-align: center;
 }
 
 

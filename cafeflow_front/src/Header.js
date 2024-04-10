@@ -16,16 +16,17 @@ function Header() {
   <Container className="custom-navbar-container">
     <Navbar.Brand href="#" className="custom-navbar-brand">      
     <div className='Logo-font'>
-    <a onClick={() => navigate('/')}>Cafe Flow</a>
+    <a style = {{color:"#D5C4A1"}}onClick={() => navigate('/')}>Cafe Flow</a>
     </div>
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
     <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link>Shop</Nav.Link>
-            <Nav.Link>Order</Nav.Link>
-            <Nav.Link>Event</Nav.Link>
-            <Nav.Link>Community</Nav.Link>
+     
+            <Nav.Link  className='h6-font'>Shop</Nav.Link>
+            <Nav.Link  className='h6-font'>Order</Nav.Link>
+            <Nav.Link  className='h6-font'>Event</Nav.Link>
+            <Nav.Link  className='h6-font'>Community</Nav.Link>
           </Nav>
           {isLoggedIn ? (
             <Nav>
