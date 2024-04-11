@@ -22,7 +22,7 @@ function UserSignupPage() {
 
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   
   const [errors, setErrors] = useState({
     usernameError: '',
@@ -136,7 +136,7 @@ function UserSignupPage() {
   };
 
 
-  const handleUserInfoFetch = async (token) => {
+async function handleUserInfoFetch (token) {
     try {
       const response = await fetch('http://localhost:8080/api/auth/me', {
         method: 'GET',
@@ -152,8 +152,10 @@ function UserSignupPage() {
       }
     } catch (error) {
       console.error('에러', error);
+    } finally {
+      setIsLoading(false); 
     }
-  };
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -171,6 +173,7 @@ function UserSignupPage() {
     } else if (step === 3) {
       const isStep3Valid = validateStep3();
       if (isStep3Valid) {
+        setIsLoading(true);
         const userData = {
           username: formData.username,
           nickname: formData.nickname,
@@ -436,6 +439,7 @@ const FormStep3 = () => {
         <p className='h6-font'> {step} / 3 </p>
       <Form className='input-box' style={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit}>
       {step === 1 ? FormStep1() : step === 2 ? FormStep2() : FormStep3()}
+      {isLoading && <div className="loading-bar"></div>}
       </Form> 
       {apiError && <div style={{ color: 'red', marginTop: '10px' }}>{apiError}</div>}
       </div>

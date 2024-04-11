@@ -1,18 +1,18 @@
 import './App.css';
-import Header from './Header.js';
 import { Routes, Route } from 'react-router-dom'
 import MainPage from './MainPage/Main.js';
 import LoginPage from './RegisterPage/Login.js';
 import UserSignupPage from './RegisterPage/UserSignup.js'
 import ShopInfo from './Shopinfo.js';
 import AdminSignupPage from './RegisterPage/AdminSignup.js';
+import Header from './Header.js';
 
 function App() {
   return (
     <>
     <div className="App">
     <div className="content">
-            <Header/>
+    <Header/>
       <Routes>
         <Route path='/' element={<MainPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>

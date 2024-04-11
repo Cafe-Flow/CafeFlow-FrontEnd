@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Container, Navbar, Nav }from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [nickname, setNickname] = useState('');
@@ -14,6 +16,16 @@ function Header() {
       setNickname(userInfo.nickname); 
     }
   }, []);
+
+  const handleLogout = () => {
+    if (window.confirm("정말 로그아웃 하시겠습니까?")) {
+      localStorage.removeItem('userInfo');  
+      localStorage.removeItem('userToken');
+      setIsLoggedIn(false);              
+      navigate('/');                    
+    }
+  };
+
 
     return (
         <>
@@ -38,7 +50,7 @@ function Header() {
         {isLoggedIn ? (
           <>
               <a className='nav-side-element' href='/profile'> {nickname}님</a>
-              <a className='nav-side-element' href='/'> 로그아웃</a>
+              <a className='nav-side-element' onClick={handleLogout} href='/'> 로그아웃</a>
               </>
             ) : (
               <a href='/login'>로그인</a>

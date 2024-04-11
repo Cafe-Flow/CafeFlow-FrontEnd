@@ -12,6 +12,7 @@ function LoginPage() {
   const [passwordError, setPasswordError] = useState('');
   const [showModal, setShowModal] = useState(false); 
   const [apiError, setApiError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
 
   const validateForm = () => {
     let isValid = true;
@@ -31,7 +32,7 @@ function LoginPage() {
   };
 
   const handleSignupTypeSelection = (userType) => {
-    setShowModal(false); // 모달 닫기
+    setShowModal(false);
     if (userType === 'admin') {
       navigate('/adminSignup');
     } else {
@@ -39,7 +40,7 @@ function LoginPage() {
     }
   };
 
-  const handleUserInfoFetch = async (token) => {
+  async function handleUserInfoFetch(token) {
     try {
       const response = await fetch('http://localhost:8080/api/auth/me', {
         method: 'GET',
@@ -55,13 +56,16 @@ function LoginPage() {
       }
     } catch (error) {
       console.error('에러', error);
+    }  finally {
+      setIsLoading(false);
     }
-  };
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
   
     if (validateForm()) {
+      setIsLoading(true);
       const loginUrl = 'http://localhost:8080/api/auth/login';
   
       try {
@@ -135,6 +139,7 @@ function LoginPage() {
       <p>아직 아이디가 없으신가요?<span style = {{color : 'black'}} onClick={() =>  setShowModal(true)}> 회원가입</span>
       </p>
       </div>
+      {isLoading && <div className="loading-bar"></div>}
       </Form> 
       <Modal show={showModal} onHide={() => setShowModal(false)} size='lg'>
         <Modal.Header closeButton>

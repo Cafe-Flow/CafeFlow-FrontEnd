@@ -1,5 +1,4 @@
 import '../App.css';
-import { Card, CardBody, Carousel, Button } from 'react-bootstrap';
 import MainSection from './MainSection';
 import SearchSection from './SearchSection';
 
@@ -11,6 +10,5 @@ function Main() {
       </>
   );
 }
-
 
 export default Main;
