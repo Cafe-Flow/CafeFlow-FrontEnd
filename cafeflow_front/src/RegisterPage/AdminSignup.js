@@ -142,6 +142,26 @@ function AdminSignupPage() {
     return isValid;
   };
 
+  const handleUserInfoFetch = async (token) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem('userInfo', JSON.stringify(data));
+      } else {
+        throw new Error(data.message || '정보 불러오기 실패');
+      }
+    } catch (error) {
+      console.error('에러', error);
+    }
+  };
+
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
   
@@ -186,6 +206,8 @@ function AdminSignupPage() {
             setApiError(responseData.message);
           }
 
+          localStorage.setItem('userToken', responseData.token);
+          await handleUserInfoFetch(responseData.token);
           navigate('/');
         } catch (error) {
           console.error('Failed to send data:', error);

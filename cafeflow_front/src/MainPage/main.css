@@ -8,14 +8,14 @@
     margin: 0 auto;
     position: relative;
     width: 80%;
-    max-width: 600px; /* 최대 너비 설정 */
+    max-width: 600px;
   }
   
   .search-input {
     width: 100%;
-    padding: 10px 50px 10px 20px; /* 오른쪽 패딩을 넓게 설정하여 아이콘 공간 확보 */
+    padding: 10px 50px 10px 20px; 
     border: 2px solid grey;
-    border-radius: 20px; /* 둥근 모서리 */
+    border-radius: 20px;
     font-size: 16px;
   }
 

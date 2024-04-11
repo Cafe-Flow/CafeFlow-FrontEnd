@@ -4,39 +4,75 @@
   margin: 0 auto;
 }
 
+.hide-on-expanded {
+  font-size: large;
+}
+
 .Logo-font {
   font-family: 'Times New Roman', Times, serif; 
   font-weight: 900;
   font-size: 40px;
-
 }
 
-.custom-card-body, .custom-card {
-  width: 95%; /* Card의 너비를 화면 너비에 맞춤 */
-  height: 600px;
-  margin: auto;
-  border: none !important;
-    display: flex; /* Flexbox를 활성화 */
-  align-items: center; /* 요소들을 수직 중앙 정렬 */
-  gap: 20px; /* 요소들 사이에 20px 간격 */
-  margin-bottom: 50px;
+.nav-container {
+    margin: 30px 0px 0px 150px;
+    font-size: large;
+}
+
+.nav-element {
+    padding : 5px 30px 5px 30px;
+    font-weight: 900;
+}
+
+.nav-side-element {
+  position: relative;
+  top: -30px;
+  left: 0; 
+  font-size: 15px;
+  font-weight: 100;
+}
+
+.nav-side-element:hover {
+  text-decoration: underline;
 }
 
 .custom-navbar-style {
-  background-color: white; /* 글자 색상 변경 */
-  padding: 10px 0; /* 상하 패딩 조정 */
-  /* 여기에 더 많은 스타일 규칙을 추가할 수 있습니다 */
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+}
+
+.nav-element:hover {
+  background-color: #D5C4A1;
+  border-radius: 20px;
+  font-weight: 900;
+  color: white;
+}
+
+.custom-card-body, .custom-card {
+  width: 95%; 
+  height: 600px;
+  margin: auto;
+  border: none !important;
+    display: flex; 
+  align-items: center; 
+  gap: 20px;
+  padding-bottom: 50px;
 }
 
 .text-container{
-  flex: 0.85; /* 텍스트 컨테이너가 가능한 많은 공간을 차지하도록 설정 */
-  flex-direction: column; /* 텍스트 요소를 수직으로 정렬 */
-  margin-right: 20px; /* 이미지와의 간격 */
+  flex: 0.85; 
+  flex-direction: column; 
+  margin-right: 20px
 }
 
 .custom-image {
-  width: auto; /* 이미지의 크기 설정, 필요에 따라 조절 */
-  height: 370px; /* 이미지의 비율을 유지 */
+  width: auto; 
+  height: 370px;
 }
 
 .card-button{
@@ -45,10 +81,10 @@
 }
 
 .card-title-custom {
-  font-family: 'Roboto', sans-serif;
+font-family: 'Roboto', sans-serif;
 font-size: 60px;
 font-weight: 900;
-letter-spacing: 1px;
+letter-spacing: 5px;
 }
 
 .loading-bar {
@@ -56,7 +92,7 @@ letter-spacing: 1px;
   height: 4px;
   background-color: #007bff;
   position: fixed;
-  top: 56px; /* Navbar의 높이에 맞춰 조정 */
+  top: 56px;
   left: 0;
   animation: loading-animation 2s infinite;
 }
@@ -73,6 +109,10 @@ letter-spacing: 1px;
     width: 100%;
     height: auto; 
     flex-direction: column; 
+  }
+
+  .hide-on-expanded {
+    display: none;
   }
 
   .text-container, .custom-image {
@@ -99,11 +139,10 @@ letter-spacing: 1px;
 }
 
 .content {
-  padding-bottom: 100px; /* Footer의 높이에 따라 조정 */
+  padding-bottom: 100px;
 }
 
 .ft {
-
   left: 0;
   bottom: 0;
     background-color: #D5C4A1;

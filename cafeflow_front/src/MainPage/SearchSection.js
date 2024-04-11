@@ -11,7 +11,7 @@ function SearchSection() {
     };
   
     const handleSubmit = (e) => {
-        e.preventDefault(); // 폼 제출 시 페이지 재로드 방지
+        e.preventDefault(); 
     };
   
     return (
