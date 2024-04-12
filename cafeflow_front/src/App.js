@@ -12,6 +12,7 @@ function App() {
     <>
     <div className="App">
     <div className="content">
+      
     <Header/>
       <Routes>
         <Route path='/' element={<MainPage/>}/>

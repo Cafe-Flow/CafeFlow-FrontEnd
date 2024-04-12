@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import './Register.css'
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, FloatingLabel } from 'react-bootstrap';
+import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap';
 
 function AdminSignupPage() {
   const navigate = useNavigate();
@@ -22,7 +22,8 @@ function AdminSignupPage() {
 
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     usernameError: '',
@@ -142,7 +143,16 @@ function AdminSignupPage() {
     return isValid;
   };
 
-async function handleUserInfoFetch(token) {
+  const handleConfirmSuccess = () => {
+    navigate('/');
+    window.location.reload();
+  };
+
+  const handleConfirmFail = () => {
+    setShowFailModal(false);
+  };
+
+  async function handleUserInfoFetch(token) {
     try {
       const response = await fetch('http://localhost:8080/api/auth/me', {
         method: 'GET',
@@ -153,16 +163,17 @@ async function handleUserInfoFetch(token) {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('userInfo', JSON.stringify(data));
+        return data; 
       } else {
         throw new Error(data.message || '정보 불러오기 실패');
       }
     } catch (error) {
-      console.error('에러', error);
-    } finally {
-      setIsLoading(false); 
+      console.error('사용자 정보 불러오기 에러:', error);
+      throw error; 
     }
   }
 
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -205,15 +216,18 @@ async function handleUserInfoFetch(token) {
 
           const responseData = await response.json();
           if (!response.ok) {
-            console.log(responseData);
             setApiError(responseData.message);
+            setShowFailModal(true);
           }
 
           localStorage.setItem('userToken', responseData.token);
-          await handleUserInfoFetch(responseData.token);
-          navigate('/');
+          await handleUserInfoFetch(responseData.token); 
+          setShowSuccessModal(true);
         } catch (error) {
-          console.error('Failed to send data:', error);
+          setApiError('회원가입 요청에 실패 했습니다');
+          setShowFailModal(true);
+        } finally {
+          setIsLoading(false);
         }
       }
     }
@@ -245,6 +259,7 @@ async function handleUserInfoFetch(token) {
             setFormData({...formData, nickname: e.target.value});
             setErrors({...errors, nicknameError: ''});
           }}
+          maxLength={8}
         />
         <Form.Control.Feedback type="invalid">{errors.nicknameError}</Form.Control.Feedback>
       </FloatingLabel>
@@ -448,6 +463,24 @@ async function handleUserInfoFetch(token) {
       {isLoading && <div className="loading-bar"></div>}
       </Form> 
       {apiError && <div style={{ color: 'red', marginTop: '10px' }}>{apiError}</div>}
+      <Modal 
+      show={showSuccessModal} 
+      onHide={handleConfirmSuccess}
+      className='modal-position'>
+        <Modal.Header>
+          <Modal.Title className='Logo-font'>CafeFlow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='h6-font' style={{fontSize : "20px"}}>☕회원가입 되었습니다!☕</Modal.Body>
+      </Modal>
+      <Modal 
+      show={showFailModal} 
+      onHide={handleConfirmFail}
+      className='modal-position'>
+        <Modal.Header>
+          <Modal.Title className='Logo-font'>CafeFlow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='h6-font' style={{fontSize : "20px"}}>☕{apiError}☕</Modal.Body>
+      </Modal>
       </div>
   );
 

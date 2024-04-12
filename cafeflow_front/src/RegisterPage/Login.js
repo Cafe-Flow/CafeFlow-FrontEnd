@@ -13,6 +13,8 @@ function LoginPage() {
   const [showModal, setShowModal] = useState(false); 
   const [apiError, setApiError] = useState('');
   const [isLoading, setIsLoading] = useState(false); 
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
 
   const validateForm = () => {
     let isValid = true;
@@ -31,15 +33,6 @@ function LoginPage() {
     return isValid;
   };
 
-  const handleSignupTypeSelection = (userType) => {
-    setShowModal(false);
-    if (userType === 'admin') {
-      navigate('/adminSignup');
-    } else {
-      navigate('/userSignup');
-    }
-  };
-
   async function handleUserInfoFetch(token) {
     try {
       const response = await fetch('http://localhost:8080/api/auth/me', {
@@ -51,15 +44,34 @@ function LoginPage() {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('userInfo', JSON.stringify(data));
+        return data; 
       } else {
         throw new Error(data.message || '정보 불러오기 실패');
       }
     } catch (error) {
-      console.error('에러', error);
-    }  finally {
-      setIsLoading(false);
+      console.error('사용자 정보 불러오기 에러:', error);
+      throw error; 
     }
   }
+
+
+  const handleSignupTypeSelection = (userType) => {
+    setShowModal(false);
+    if (userType === 'admin') {
+      navigate('/adminSignup');
+    } else {
+      navigate('/userSignup');
+    }
+  };
+
+  const handleConfirmSuccess = () => {
+    navigate('/');
+    window.location.reload();
+  };
+
+  const handleConfirmFail = () => {
+    setShowFailModal(false);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -83,17 +95,18 @@ function LoginPage() {
         const responseData = await response.json();
   
         if (response.ok) {
-          console.log('로그인 성공:', responseData);
           localStorage.setItem('userToken', responseData.token);
-          await handleUserInfoFetch(responseData.token);
-          navigate('/');
+          await handleUserInfoFetch(responseData.token); 
+          setShowSuccessModal(true);
         } else {
-          setApiError(responseData.message)
-          console.error('로그인 실패:', responseData);
+          setApiError(responseData.message);
+          setShowFailModal(true);
         }
       } catch (error) {
-        setApiError('로그인 요청에 실패 했습니다')
-        console.error('로그인 요청 실패:', error);
+        setApiError('로그인 요청에 실패 했습니다');
+        setShowFailModal(true);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -140,9 +153,27 @@ function LoginPage() {
       </p>
       </div>
       {isLoading && <div className="loading-bar"></div>}
-      </Form> 
+      </Form>
+      <Modal 
+      show={showSuccessModal} 
+      onHide={handleConfirmSuccess}
+      className='modal-position'>
+        <Modal.Header>
+          <Modal.Title className='Logo-font'>CafeFlow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='h6-font' style={{fontSize : "20px"}}>☕로그인 되었습니다!☕</Modal.Body>
+      </Modal>
+      <Modal 
+      show={showFailModal} 
+      onHide={handleConfirmFail}
+      className='modal-position'>
+        <Modal.Header>
+          <Modal.Title className='Logo-font'>CafeFlow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='h6-font' style={{fontSize : "20px"}}>☕{apiError}☕</Modal.Body>
+      </Modal>
       <Modal show={showModal} onHide={() => setShowModal(false)} size='lg'>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <div className="h6-font"> 
           <Modal.Title>회원가입 유형 선택</Modal.Title>
           </div>
