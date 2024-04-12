@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import './Register.css'
 import { useNavigate } from 'react-router-dom';
-import { Modal, Button, Form, FloatingLabel, Container, Card} from 'react-bootstrap';
+import { Modal, Button, Form, FloatingLabel} from 'react-bootstrap';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
-  const [emailError, setEmailError] = useState('');
+  const [loginIdError, setLoginIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [showModal, setShowModal] = useState(false); // 모달 표시 상태
+  const [showModal, setShowModal] = useState(false); 
+  const [apiError, setApiError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
 
   const validateForm = () => {
     let isValid = true;
-    if (!email) {
-      setEmailError('아이디를 입력해주세요.');
+    if (!loginId) {
+      setLoginIdError('아이디를 입력해주세요.');
       isValid = false;
     } else {
-      setEmailError('');
+      setLoginIdError('');
     }
     if (!password) {
       setPasswordError('비밀번호를 입력해주세요.');
@@ -29,8 +33,30 @@ function LoginPage() {
     return isValid;
   };
 
+  async function handleUserInfoFetch(token) {
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        return data; 
+      } else {
+        throw new Error(data.message || '정보 불러오기 실패');
+      }
+    } catch (error) {
+      console.error('사용자 정보 불러오기 에러:', error);
+      throw error; 
+    }
+  }
+
+
   const handleSignupTypeSelection = (userType) => {
-    setShowModal(false); // 모달 닫기
+    setShowModal(false);
     if (userType === 'admin') {
       navigate('/adminSignup');
     } else {
@@ -38,11 +64,50 @@ function LoginPage() {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleConfirmSuccess = () => {
+    navigate('/');
+    window.location.reload();
+  };
+
+  const handleConfirmFail = () => {
+    setShowFailModal(false);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+  
     if (validateForm()) {
-      console.log(email, password);
-      navigate('/');
+      setIsLoading(true);
+      const loginUrl = 'http://localhost:8080/api/auth/login';
+  
+      try {
+        const response = await fetch(loginUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            loginId: loginId,
+            password: password,
+          }),
+        });
+  
+        const responseData = await response.json();
+  
+        if (response.ok) {
+          localStorage.setItem('userToken', responseData.token);
+          await handleUserInfoFetch(responseData.token); 
+          setShowSuccessModal(true);
+        } else {
+          setApiError(responseData.message);
+          setShowFailModal(true);
+        }
+      } catch (error) {
+        setApiError('로그인 요청에 실패 했습니다');
+        setShowFailModal(true);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -55,10 +120,10 @@ function LoginPage() {
         <div className='h6-font'><p>카페 플로우와 함께 즐거운 시간 되세요</p>
         </div>
         <FloatingLabel controlId="floatingInput" label="아이디" className="mb-3">
-          <Form.Control type="text" placeholder="name@example.com" isInvalid={!!emailError}
-            onChange={(e) => setEmail(e.target.value)}/>
+          <Form.Control type="text" placeholder="name@example.com" isInvalid={!!loginIdError}
+            onChange={(e) => setLoginId(e.target.value)}/>
             <Form.Control.Feedback type="invalid">
-              {emailError}
+              {loginIdError}
             </Form.Control.Feedback>
           </FloatingLabel>
           <FloatingLabel controlId="floatingPassword" label="비밀번호">
@@ -82,14 +147,33 @@ function LoginPage() {
       <Button type="submit" style={{ border: "none", backgroundColor: "black", color: "white", height: "60px"}}>
         로그인
       </Button>
+      {apiError && <div style={{ color: 'red', marginTop: '10px' }}>{apiError}</div>}
       <div className='new-sign-box'>
-      <p><span onClick={() => {console.log(1)}}>아이디/비밀번호 찾기  </span>
-      <span onClick={() =>  setShowModal(true)}>|  회원가입</span>
+      <p>아직 아이디가 없으신가요?<span style = {{color : 'black'}} onClick={() =>  setShowModal(true)}> 회원가입</span>
       </p>
       </div>
-      </Form> 
+      {isLoading && <div className="loading-bar"></div>}
+      </Form>
+      <Modal 
+      show={showSuccessModal} 
+      onHide={handleConfirmSuccess}
+      className='modal-position'>
+        <Modal.Header>
+          <Modal.Title className='Logo-font'>CafeFlow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='h6-font' style={{fontSize : "20px"}}>☕로그인 되었습니다!☕</Modal.Body>
+      </Modal>
+      <Modal 
+      show={showFailModal} 
+      onHide={handleConfirmFail}
+      className='modal-position'>
+        <Modal.Header>
+          <Modal.Title className='Logo-font'>CafeFlow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='h6-font' style={{fontSize : "20px"}}>☕{apiError}☕</Modal.Body>
+      </Modal>
       <Modal show={showModal} onHide={() => setShowModal(false)} size='lg'>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <div className="h6-font"> 
           <Modal.Title>회원가입 유형 선택</Modal.Title>
           </div>
