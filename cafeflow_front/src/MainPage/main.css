@@ -10,6 +10,11 @@
     width: 80%;
     max-width: 600px;
   }
+
+  .search-box {
+    margin-top: 30px;  
+    margin-bottom: 30px;
+  }
   
   .search-input {
     width: 100%;

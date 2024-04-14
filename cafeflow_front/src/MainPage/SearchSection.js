@@ -3,7 +3,7 @@ import '../App.css'
 import React, { useState } from 'react';
 import { BiSearch } from "react-icons/bi";
 
-function SearchSection() {
+function SearchSection({ placeholder, onSearch }) {
     const [searchTerm, setSearchTerm] = useState('');
   
     const handleChange = (e) => {
@@ -12,17 +12,19 @@ function SearchSection() {
   
     const handleSubmit = (e) => {
         e.preventDefault(); 
+        if (onSearch) {
+            onSearch(searchTerm);
+        }
     };
   
     return (
-        <>
-            <p className='Logo-font'>Shop Search</p>
+        <div className='search-box'>
             <div className="search-container">
                 <form className="search-bar" onSubmit={handleSubmit}>
                     <input
                         type="text"
                         className="search-input"
-                        placeholder="지역이나 카페 이름을 검색하세요"
+                        placeholder={placeholder}
                         value={searchTerm}
                         onChange={handleChange}
                     />
@@ -31,9 +33,13 @@ function SearchSection() {
                     </button>
                </form>
             </div>
-        </>
+        </div>
     );
 }
 
+SearchSection.defaultProps = {
+    placeholder: "키워드로 검색",
+    onSearch: () => {}
+};
 
 export default SearchSection;
