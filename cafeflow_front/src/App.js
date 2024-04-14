@@ -3,9 +3,10 @@ import { Routes, Route } from 'react-router-dom'
 import MainPage from './MainPage/Main.js';
 import LoginPage from './RegisterPage/Login.js';
 import UserSignupPage from './RegisterPage/UserSignup.js'
-import ShopInfo from './Shopinfo.js';
 import AdminSignupPage from './RegisterPage/AdminSignup.js';
 import Header from './Header.js';
+import MapPage from './map.js';
+import Boardlist from './CommunityPage/BoardList.js';
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/adminsignup' element={<AdminSignupPage/>}/>
         <Route path='/usersignup' element={<UserSignupPage/>}/>
-        <Route path='/shop/info' element={<ShopInfo/>}/>
+        <Route path='/location' element={<MapPage/>}/>
+        <Route path='/community' element={<Boardlist/>}/>
       </Routes>
       </div>
       </div>

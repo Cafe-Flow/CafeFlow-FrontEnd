@@ -1,0 +1,15 @@
+.map-container {
+    margin: 0 auto;
+    align-items: center; 
+    width: 70%; 
+    height: 60vh; 
+    position: relative; 
+    border: 10px solid #D5C4A1;
+    
+  }
+  
+  .map-content {
+    width: 100%; 
+    height: 100%; 
+  }
+  

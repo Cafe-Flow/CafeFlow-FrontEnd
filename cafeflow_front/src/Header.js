@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Container, Navbar, Nav }from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 function Header() {
@@ -9,6 +9,7 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [nickname, setNickname] = useState('');
+  const location = useLocation();
 
   useEffect(() => {
     console.log("start");
@@ -42,19 +43,19 @@ function Header() {
     <a className='Logo-font' href="/">Cafe Flow</a>
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
-
     <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="nav-container">
-            <p className='nav-element'>Shop</p>
-            <p className='nav-element'>Order</p>
-            <p className='nav-element'>Event</p>
-            <p className='nav-element'>Community</p>
+            <a className='nav-element' href='/'>Shop</a>
+            <a className={`nav-element ${location.pathname === '/location' ? 'active' : ''}`} href="/location">Location</a>
+            <a className='nav-element' href='/'>Order</a>
+            <a className='nav-element' href='/'>Event</a>
+            <a className={`nav-element ${location.pathname === '/community' ? 'active' : ''}`} href="/community">Community</a>
           </Nav>
         </Navbar.Collapse>
         <div className="hide-on-expanded">
         {isLoggedIn ? (
           <>
-              <a className='nav-side-element1' href='/profile'><span className='name-style'>가나다</span> 님</a>
+              <a className='nav-side-element1' href='/profile'><span className='name-style'>{nickname}</span> 님</a>
               <a className='nav-side-element2' onClick={handleLogout} href='/'>로그아웃</a>
               </> ) : (
               <a className='nav-side-element2' href='/login'>로그인</a>

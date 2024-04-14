@@ -6,6 +6,9 @@
 
 .hide-on-expanded {
   font-size: large;
+  display: flex;
+  justify-content: flex-end; 
+  flex-grow: 1;
 }
 
 .Logo-font {
@@ -16,8 +19,19 @@
 }
 
 .nav-container {
-    margin: 30px 0px 0px 100px;
     font-size: large;
+    display: flex;
+    justify-content: center; 
+    flex-grow: 1; 
+    padding: 0 5px;
+}
+
+
+.custom-navbar-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%; 
 }
 
 .nav-element {
@@ -27,7 +41,7 @@
 
 .nav-side-element1 {
   position: relative;
-  top: -30px;
+  top: -24px;
   left: 0; 
   font-size: 15px;
   font-weight: 100;
@@ -44,7 +58,7 @@
 .nav-side-element2 {
   padding-left: 15px;
   position: relative;
-  top: -30px;
+  top: -24px;
   left: 0; 
   font-size: 15px;
   font-weight: 900;
@@ -60,7 +74,7 @@
   backdrop-filter: blur(20px);
 }
 
-.nav-element:hover, .name-style:hover {
+.nav-element.active, .nav-element:hover, .name-style:hover {
   background-color: #D5C4A1;
   border-radius: 20px;
   font-weight: 900;
@@ -68,14 +82,15 @@
 }
 
 .custom-card-body, .custom-card {
-  width: 95%; 
+  width: 90%; 
   height: 600px;
   margin: auto;
   border: none !important;
-    display: flex; 
+  display: flex; 
   align-items: center; 
-  gap: 20px;
+  gap: 10px;
   padding-bottom: 50px;
+  border-radius: 100px !important;
 }
 
 .text-container{
@@ -169,7 +184,7 @@ letter-spacing: 5px;
 
 
 a:link, a:visited {
-  text-decoration: none;
+  text-decoration: none ;
   color: black;
 }
 
