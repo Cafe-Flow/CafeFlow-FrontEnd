@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import MainPage from './MainPage/Main.js';
 import LoginPage from './RegisterPage/Login.js';
 import UserSignupPage from './RegisterPage/UserSignup.js'
@@ -7,6 +7,7 @@ import AdminSignupPage from './RegisterPage/AdminSignup.js';
 import Header from './Header.js';
 import MapPage from './map.js';
 import Boardlist from './CommunityPage/BoardList.js';
+import DetailBoard from './CommunityPage/DetailBoard.js';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path='/usersignup' element={<UserSignupPage/>}/>
         <Route path='/location' element={<MapPage/>}/>
         <Route path='/community' element={<Boardlist/>}/>
+        <Route path='/community/:postId' element={<DetailBoard/>}/>
       </Routes>
       </div>
       </div>

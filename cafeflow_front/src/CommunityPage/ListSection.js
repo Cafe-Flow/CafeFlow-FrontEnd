@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './community.css';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useNavigate } from 'react-router-dom';
 
 function ListSection() {
     const [loading, setLoading] = useState(true);
@@ -13,10 +14,10 @@ function ListSection() {
     };
 
     useEffect(() => {
-        // API 호출 모방
+
         const fetchPosts = async () => {
             setLoading(true);
-            // 임시 데이터
+
             const fakeData = [
                 { id: 1, imageSrc: "/img/newjeans.png", title: "게시글 제목 1", content: "게시글 내용 1", author: "테스트", time: "10분전" },
                 { id: 2, imageSrc: "/img/newjeans.png", title: "게시글 제목 2", content: "게시글 내용 2", author: "테스트", time: "10분전" },
@@ -61,7 +62,7 @@ function ListSection() {
             ) : (
                 posts.map(post => (
                     <Card
-                        key={post.id}
+                        id={post.id}
                         imageSrc={post.imageSrc}
                         title={post.title}
                         content={post.content}
@@ -76,9 +77,15 @@ function ListSection() {
 }
 
 
-function Card({ imageSrc, title, content, author, time }) {
+function Card({ id, imageSrc, title, content, author, time}) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/community/${id}`);
+    };
+
     return (
-        <div className='custom-post-container'>
+        <div className='custom-post-container' onClick={handleClick}>
             <img src={imageSrc} alt="게시글 이미지" className="custom-post-img" />
             <div className="custom-post-body">
                 <h5 className="custom-post-title">{title}</h5>
