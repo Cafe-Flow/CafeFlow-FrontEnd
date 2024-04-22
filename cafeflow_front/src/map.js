@@ -37,48 +37,46 @@ function MapInfo() {
 
   useEffect(() => {
     const { naver } = window;
-
-    const getCurrentLocation = (options = {}) => {
-      return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, options);
-      });
-    };
-
-    const initMap = async () => {
-      if (mapRef.current && naver) {
-        try {
-          const position = await getCurrentLocation();
-          const { latitude, longitude } = position.coords;
-          
-          const location = new naver.maps.LatLng(latitude, longitude);
+  
+    const getCurrentLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
           const map = new naver.maps.Map(mapRef.current, {
-            center: location, 
-            zoom: 15, 
+            center: new naver.maps.LatLng(lat, lng),
+            zoom: 15
           });
-          
-          // 사용자의 현재 위치에 마커를 추가합니다.
-          new naver.maps.Marker({
-            position: location,
-            map,
-          });
-        } catch (error) {
-          const lat = 37.3595704;
-          const lng = 127.105399;
-          const location = new naver.maps.LatLng(lat, lng);
-          const map = new naver.maps.Map(mapRef.current, {
-            center: location,
-            zoom: 15,
-          });
-          new naver.maps.Marker({
-            position: location,
-            map,
-          });
-        }
+  
+          const latlng = new naver.maps.LatLng(lat, lng);
+          const contentString = [
+          '<div class="custom-window">',
+          '<p class="window-head">혼잡도</p>',
+          '<p class="window-cafe">카페명</p>',
+          '<p class="window-review">별점</p>',
+          '</div>',
+          ].join('');
+        
+          const infoWindow = new naver.maps.InfoWindow({
+            content: contentString,
+
+            maxWidth: 500,
+            backgroundColor: "#D5C4A1",
+            borderColor: "#D5C4A1",
+            borderWidth: 1,
+            anchorSize: new naver.maps.Size(10, 10),
+            anchorColor: "#D5C4A1",
+            pixelOffset: new naver.maps.Point(19, -20)
+
+        });
+  
+          infoWindow.open(map, latlng);
+        });
       }
     };
-
-    initMap();
-  }, []); // 의존성 배열을 비워서 컴포넌트가 마운트될 때 한 번만 실행되도록 합니다.
+  
+    getCurrentLocation();
+  }, []);
 
   return (
     <>

@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  width: 95%;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -24,24 +24,32 @@
     justify-content: center; 
     flex-grow: 1; 
     padding: 0 5px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
+.custom-navbar-brand {
+  width: 330px;
+}
 
 .custom-navbar-container {
-  display: flex;
-  justify-content: space-between; 
-  align-items: center;
-  width: 100%; 
+  width: 100%;
 }
 
 .nav-element {
     padding : 5px 30px 5px 30px;
-    font-weight: 900;
+    font-weight: 500;
+    position: relative;
+}
+
+.custom-navbar-container {
+  width: 100%;
+  display: flex;
 }
 
 .nav-side-element1 {
   position: relative;
-  top: -24px;
+  top: -20px;
   left: 0; 
   font-size: 15px;
   font-weight: 100;
@@ -58,7 +66,7 @@
 .nav-side-element2 {
   padding-left: 15px;
   position: relative;
-  top: -24px;
+  top: -20px;
   left: 0; 
   font-size: 15px;
   font-weight: 900;
@@ -67,22 +75,45 @@
 .custom-navbar-style {
   position: fixed !important;
   top: 0;
-  left: 0;
   width: 100%;
   z-index: 1000;
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
+  justify-content: space-between !important;
 }
 
-.nav-element.active, .nav-element:hover, .name-style:hover {
-  background-color: #D5C4A1;
-  border-radius: 20px;
+.nav-element.active, .name-style:hover {
   font-weight: 900;
-  color: white;
+  color: black;
 }
 
+.nav-element::after {
+  content: '';
+  position: absolute; 
+  bottom: -18px; 
+  left: 0; 
+  right: 0;
+  width: 0; 
+  margin: 0 auto;
+  height: 3px; 
+  background-color: black; 
+  transition: width 0.3s ease; 
+}
+
+.nav-element.active::after,
+.nav-element:hover::after {
+  width: 50%;
+  margin: 0 auto;
+  left: 0;
+  right: 0; 
+}
+
+
+.nav-element:hover{
+  font-weight: 900;
+}
 .custom-card-body, .custom-card {
-  width: 90%; 
+  width: 100%; 
   height: 600px;
   margin: auto;
   border: none !important;
@@ -90,7 +121,6 @@
   align-items: center; 
   gap: 10px;
   padding-bottom: 50px;
-  border-radius: 100px !important;
 }
 
 .text-container{

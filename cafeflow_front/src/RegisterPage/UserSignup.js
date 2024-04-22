@@ -206,14 +206,14 @@ function UserSignupPage() {
           });
 
           const responseData = await response.json();
-          if (!response.ok) {
+          if (response.ok) {
+            localStorage.setItem('userToken', responseData.token);
+            await handleUserInfoFetch(responseData.token); 
+            setShowSuccessModal(true);
+          } else {
             setApiError(responseData.message);
             setShowFailModal(true);
           }
-
-          localStorage.setItem('userToken', responseData.token);
-          await handleUserInfoFetch(responseData.token); 
-          setShowSuccessModal(true);
         } catch (error) {
           setApiError('회원가입 요청에 실패 했습니다');
           setShowFailModal(true);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import './Register.css'
 import { useNavigate } from 'react-router-dom';
-import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap';
+import { Modal, Button, Form, FloatingLabel, FormText } from 'react-bootstrap';
 
 function AdminSignupPage() {
   const navigate = useNavigate();
@@ -15,10 +15,13 @@ function AdminSignupPage() {
     password: '',
     confirmPassword: '',
     gender: '',
-    age: 0,
+    age: '',
     stateId: '',
     cityId: '',
   });
+  const [previewUrl, setPreviewUrl] = useState('/img/default.png');
+  const [showModal, setShowModal] = useState(false);
+  const [image, setImage] = useState(null);
 
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -192,37 +195,36 @@ function AdminSignupPage() {
       const isStep3Valid = validateStep3();
       if (isStep3Valid) {
         setIsLoading(true);
-        const userData = {
-          username: formData.username,
-          nickname: formData.nickname,
-          loginId: formData.loginId,
-          email: formData.email,
-          password: formData.password,
-          gender: formData.gender,
-          age: parseInt(formData.age, 10),
-          stateId: formData.stateId,
-          cityId: formData.cityId,
-          userType: "ADMIN",
-        };
+        const formdata = new FormData();
+        formdata.append('username', formData.username);
+        formdata.append('nickname', formData.nickname);
+        formdata.append('loginId', formData.loginId);
+        formdata.append('email', formData.email);
+        formdata.append('password', formData.password);
+        formdata.append('gender', formData.gender);
+        formdata.append('age', formData.age);
+        formdata.append('stateId', formData.stateId);
+        formdata.append('cityId', formData.cityId);
+        formdata.append('userType', 'ADMIN');
+        formdata.append('image', image);
   
         try {
           const response = await fetch('http://localhost:8080/api/auth/register', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
+            body: formdata,
           });
 
           const responseData = await response.json();
-          if (!response.ok) {
+          console.log([...formdata]);
+          if (response.ok) {
+            localStorage.setItem('userToken', responseData.token);
+            await handleUserInfoFetch(responseData.token); 
+            setShowSuccessModal(true);
+          } else {
+            
             setApiError(responseData.message);
             setShowFailModal(true);
           }
-
-          localStorage.setItem('userToken', responseData.token);
-          await handleUserInfoFetch(responseData.token); 
-          setShowSuccessModal(true);
         } catch (error) {
           setApiError('회원가입 요청에 실패 했습니다');
           setShowFailModal(true);
@@ -233,8 +235,36 @@ function AdminSignupPage() {
     }
   };
 
-  const FormStep1 = () => (
-    <>
+  const FormStep1 = () => {
+
+    const handleImageChange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewUrl(reader.result); 
+          setImage(file);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  
+    const toggleModal = () => setShowModal(!showModal);
+
+    return (
+    <>        
+          <FormText>프로필 설정 (선택)</FormText>
+      <Form.Group controlId="formFile" className="custom-file-input">
+        <div onClick={toggleModal}>
+          <img src={previewUrl} alt="Profile" className='profile-img' key={previewUrl} />
+        </div>
+        <Form.Control type="file" accept="image/*" onChange={handleImageChange} />
+      </Form.Group>
+      <Modal show={showModal} onHide={toggleModal} className='modal-position'>
+        <Modal.Body>
+          <img src={previewUrl} alt="Profile" className='profile-img-focus' />
+        </Modal.Body>
+      </Modal>
       <FloatingLabel controlId="floatingInput" label="사용자 이름" className="mb-3">
         <Form.Control
           type="text"
@@ -330,6 +360,7 @@ function AdminSignupPage() {
       </Button>
     </>
   );
+}
 
   const FormStep2 = () => (
     <>
@@ -483,8 +514,6 @@ function AdminSignupPage() {
       </Modal>
       </div>
   );
-
 }
-
 
 export default AdminSignupPage;

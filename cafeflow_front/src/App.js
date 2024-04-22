@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import MainPage from './MainPage/Main.js';
 import LoginPage from './RegisterPage/Login.js';
 import UserSignupPage from './RegisterPage/UserSignup.js'
@@ -8,6 +8,10 @@ import Header from './Header.js';
 import MapPage from './map.js';
 import Boardlist from './CommunityPage/BoardList.js';
 import DetailBoard from './CommunityPage/DetailBoard.js';
+import Modify from './MyPage/Modify.js';
+import Delete from './MyPage/Delete.js';
+import Password from './MyPage/Password.js';
+import Query from './MyPage/Query.js';
 
 function App() {
   return (
@@ -18,6 +22,10 @@ function App() {
     <Header/>
       <Routes>
         <Route path='/' element={<MainPage/>}/>
+        <Route path='/mypage/modify' element={<Modify/>}/>
+        <Route path='/mypage/delete' element= {<Delete/>}/>
+        <Route path='/mypage/password' element= {<Password/>}/>
+        <Route path='/mypage/query' element= {<Query/>}/>
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/adminsignup' element={<AdminSignupPage/>}/>
         <Route path='/usersignup' element={<UserSignupPage/>}/>
