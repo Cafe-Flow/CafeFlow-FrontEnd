@@ -10,10 +10,8 @@ function Boardlist() {
 
   return (
     <>
-
         <SearchSection onSearch={handleSearch}/>
         <ListSection/>
- 
       </>
   );
 }

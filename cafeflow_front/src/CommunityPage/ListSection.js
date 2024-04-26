@@ -88,7 +88,7 @@ function Card({ id, imageSrc, title, content, author, time}) {
         <div className='custom-post-container' onClick={handleClick}>
             <img src={imageSrc} alt="게시글 이미지" className="custom-post-img" />
             <div className="custom-post-body">
-                <h5 className="custom-post-title">{title}</h5>
+                <p className="custom-post-title">{title}</p>
                 <p className="custom-post-text">{content}</p>
                 <div className="custom-post-footer">
                     <span className="custom-post-author">{author}</span>

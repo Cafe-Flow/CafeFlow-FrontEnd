@@ -38,9 +38,11 @@
 }
 
 .custom-post-title {
+    font-family: "Nanum Gothic", sans-serif;
+    font-weight: 900;
     margin-bottom: 10px;
     font-size: 20px;
-    font-weight: bold;
+
 }
 
 .custom-post-text {

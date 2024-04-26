@@ -4,16 +4,22 @@ import React, { useState } from 'react';
 import { BiSearch } from "react-icons/bi";
 
 function SearchSection({ placeholder, onSearch }) {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [input, setInput] = useState('');
+
+    const handleInputChange = (e) => {
+      setInput(e.target.value);
+    };
   
-    const handleChange = (e) => {
-        setSearchTerm(e.target.value);
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        onSearch(input);  // Enter를 누르면 검색 실행
+      }
     };
   
     const handleSubmit = (e) => {
         e.preventDefault(); 
         if (onSearch) {
-            onSearch(searchTerm);
+            onSearch(input);
         }
     };
   
@@ -25,8 +31,9 @@ function SearchSection({ placeholder, onSearch }) {
                         type="text"
                         className="search-input"
                         placeholder={placeholder}
-                        value={searchTerm}
-                        onChange={handleChange}
+                        value={input}
+                        onChange={handleInputChange}
+                        onKeyPress={handleKeyPress}
                     />
                     <button type="submit" className="search-icon">
                     <BiSearch size={28}/>

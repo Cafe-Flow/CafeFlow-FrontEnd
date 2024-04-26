@@ -52,11 +52,11 @@ function Header() {
     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
     <Navbar.Collapse id="basic-navbar-nav">
           <div className="nav-container">
-            <a className='nav-element' href='/'>Shop</a>
-            <a className={`nav-element ${location.pathname === '/location' ? 'active' : ''}`} href="/location">Location</a>
-            <a className='nav-element' href='/'>Order</a>
-            <a className='nav-element' href='/'>Event</a>
-            <a className={`nav-element ${location.pathname === '/community' ? 'active' : ''}`} href="/community">Community</a>
+            <a className='nav-element' href='/'>매장</a>
+            <a className={`nav-element ${location.pathname === '/location' ? 'active' : ''}`} href="/location">위치 찾기</a>
+            <a className='nav-element' href='/'>메뉴 주문</a>
+            <a className='nav-element' href='/'>이벤트</a>
+            <a className={`nav-element ${location.pathname === '/community' ? 'active' : ''}`} href="/community">커뮤니티</a>
           </div>
         </Navbar.Collapse>
         <div className="hide-on-expanded">

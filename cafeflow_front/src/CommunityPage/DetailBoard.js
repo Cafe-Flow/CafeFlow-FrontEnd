@@ -11,7 +11,7 @@ function DetailBoard() {
         <>
         <div className='detail-post-container'>       
         <div className='detail-post-author'>       
-        <p className='name-style' style={{ width: authorWidth }}>{author}</p>
+        <p className='name-style'>{author}</p>
         </div>  
             <div  className='detail-post-top'>
             <p className='detail-post-title'> 게시물 {postId}번째</p> 
