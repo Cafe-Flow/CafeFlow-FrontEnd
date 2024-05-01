@@ -1,15 +1,145 @@
 .map-container {
-    margin: 0 auto;
-    align-items: center; 
-    width: 70%; 
-    height: 60vh; 
-    position: relative; 
-    border: 10px solid #D5C4A1;
-    
-  }
-  
-  .map-content {
-    width: 100%; 
-    height: 100%; 
-  }
-  
+  margin: 0 auto;
+  align-items: center;
+  width: 80%;
+  height: 70vh;
+  position: relative;
+  border: 10px solid #D5C4A1;
+}
+
+.map-content {
+  width: 100%;
+  height: 100%;
+}
+
+.info-window-content {
+  font-size: 14px;
+  color: #333;
+}
+
+.search-results {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto;
+  width: 80%;
+  background: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-results li {
+  font-family: "Nanum Gothic", sans-serif;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-results li:hover {
+  background-color: #e2e2e2;
+}
+
+.search-results li:last-child {
+  border-bottom: none;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  display: block;
+  padding: 5px 10px;
+  color: black;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.page-link:hover {
+  background-color: #f0f0f0;
+}
+
+.page-link:focus {
+  outline: none;
+}
+
+.custom-location-btn {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: black;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.custom-marker {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f1ec;
+  border: 1px solid #d3c1ae;
+  border-radius: 20px;
+  padding: 8px 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  color: #6d4c41;
+  position: relative;
+  text-align: center;
+}
+
+.custom-marker p {
+  margin: 0;
+  flex-grow: 1;
+}
+
+.custom-marker:before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-size: cover;
+  transform: translateX(-50%);
+}
+
+.custom-marker:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  border-width: 8px;
+  border-style: solid;
+  border-color: #f4f1ec transparent transparent transparent;
+  transform: translateX(-50%);
+}
+
+.congestion-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.custom-marker[data-congestion="high"] .congestion-indicator {
+  background-color: red;
+}
+
+.custom-marker[data-congestion="medium"] .congestion-indicator {
+  background-color: yellow;
+}
+
+.custom-marker[data-congestion="low"] .congestion-indicator {
+  background-color: blue;
+}

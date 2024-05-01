@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Container, Navbar, Nav }from 'react-bootstrap';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Button, Modal, Container, Navbar, Nav }from 'react-bootstrap';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 
 function Header() {
@@ -10,7 +10,8 @@ function Header() {
   const [expanded, setExpanded] = useState(false);
   const [nickname, setNickname] = useState('');
   const location = useLocation();
-
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  
   useEffect(() => {
     console.log("start");
     const updateUserInfo = () => {
@@ -25,45 +26,69 @@ function Header() {
     updateUserInfo(); 
   }, []);
 
+
   const handleLogout = () => {
-    if (window.confirm("정말 로그아웃 하시겠습니까?")) {
+
       localStorage.removeItem('userInfo');  
       localStorage.removeItem('userToken');
-      setIsLoggedIn(false);              
+      setIsLoggedIn(false);    
+     
       navigate('/');                    
-    }
+      setShowLogoutModal(false);     
   };
+
+
+  const handleShowLogoutModal = () => setShowLogoutModal(true);
+  const handleCloseLogoutModal = () => setShowLogoutModal(false);
 
 
     return (
         <>
 <Navbar expand="lg" className="custom-navbar-style" expanded={expanded}>
   <Container className="custom-navbar-container">
-    <Navbar.Brand href="#" className="custom-navbar-brand">      
-    <a className='Logo-font' href="/">Cafe Flow</a>
+    <Navbar.Brand href="/" className='custom-navbar-logo'>      
+    <img className="custom-navbar-brand" src="/img/MainLogo.png"/>
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
     <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="nav-container">
-            <a className='nav-element' href='/'>Shop</a>
-            <a className={`nav-element ${location.pathname === '/location' ? 'active' : ''}`} href="/location">Location</a>
-            <a className='nav-element' href='/'>Order</a>
-            <a className='nav-element' href='/'>Event</a>
-            <a className={`nav-element ${location.pathname === '/community' ? 'active' : ''}`} href="/community">Community</a>
-          </Nav>
+          <div className="nav-container">
+            <a className='nav-element' href='/'>매장</a>
+            <a className={`nav-element ${location.pathname === '/location' ? 'active' : ''}`} href="/location">위치 찾기</a>
+            <a className='nav-element' href='/'>메뉴 주문</a>
+            <a className='nav-element' href='/'>이벤트</a>
+            <a className={`nav-element ${location.pathname === '/community' ? 'active' : ''}`} href="/community">커뮤니티</a>
+          </div>
         </Navbar.Collapse>
         <div className="hide-on-expanded">
         {isLoggedIn ? (
           <>
-              <a className='nav-side-element1' href='/profile'><span className='name-style'>{nickname}</span> 님</a>
-              <a className='nav-side-element2' onClick={handleLogout} href='/'>로그아웃</a>
+                  <Link className='nav-side-element1' to={'/mypage/modify'}>
+      <span className='name-style'>{nickname}</span> 님
+    </Link>
+              <Link className='nav-side-element2' onClick={handleShowLogoutModal}>로그아웃</Link>
               </> ) : (
               <a className='nav-side-element2' href='/login'>로그인</a>
             )}
             </div>
-
   </Container>
   </Navbar>
+  <Modal 
+      show={showLogoutModal} 
+      onHide={handleCloseLogoutModal}
+      className='modal-position'>
+        <Modal.Header>
+          <Modal.Title className='Logo-font'>CafeFlow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='h6-font' style={{fontSize : "20px"}}>☕로그아웃 하시겠습니까?☕</Modal.Body>
+        <Modal.Footer>
+        <Button style={{backgroundColor:"white", color:"black", borderColor:"white"}} onClick={handleLogout}>
+            예
+          </Button>
+          <Button style={{backgroundColor:"white", color:"black", borderColor:"white"}}onClick={handleCloseLogoutModal}>
+            아니요
+          </Button>
+        </Modal.Footer>
+      </Modal>
 </>
 );
 }

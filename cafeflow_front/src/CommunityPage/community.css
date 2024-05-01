@@ -1,12 +1,12 @@
 .list-container {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;  
+    flex-wrap: wrap;
     gap: 20px;
-    justify-content: space-between; 
+    justify-content: space-between;
     margin: 0 auto;
-    max-width: 1280px; 
-    align-items: center; 
+    max-width: 1280px;
+    align-items: center;
 }
 
 .community-container {
@@ -14,10 +14,11 @@
 }
 
 .custom-post-container {
+    cursor: pointer;
     width: 20%;
     height: 400px;
     overflow: hidden;
-    box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
     flex-direction: column;
     border-radius: 30px;
     flex: 1 1 30%;
@@ -37,9 +38,11 @@
 }
 
 .custom-post-title {
+    font-family: "Nanum Gothic", sans-serif;
+    font-weight: 900;
     margin-bottom: 10px;
     font-size: 20px;
-    font-weight: bold;
+
 }
 
 .custom-post-text {
@@ -69,23 +72,22 @@
 }
 
 .post-sort p {
-    cursor: pointer; 
+    cursor: pointer;
     padding: 4px 16px;
-    background-color: #f0f0f0; 
-    border-radius: 8px; 
-    transition: background-color 0.3s; 
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    transition: background-color 0.3s;
 }
 
 .post-sort p:hover {
-    background-color: #d5c4a1;  
-    color: white; 
+    background-color: #d5c4a1;
+    color: white;
 }
 
-.post-sort p.active {
-    background-color: #d5c4a1; 
-    color: white; 
+.post-sort p:active {
+    background-color: #d5c4a1;
+    color: white;
 }
-
 
 @media (max-width: 1200px) {
     .custom-post-container {
@@ -95,12 +97,154 @@
 
 @media (max-width: 992px) {
     .custom-post-container {
-        flex: 45%; 
+        flex: 45%;
     }
 }
 
 @media (max-width: 768px) {
     .custom-post-container {
-        flex: 100%; 
+        flex: 100%;
     }
+}
+
+.detail-post-container {
+    justify-items: center;
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 70%;
+    min-height: 70vh;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    border-radius: 30px;
+    max-width: 1100px;
+    min-width: 700px;
+    padding-bottom: 50px;
+}
+
+.detail-post-author {
+    padding: 20px;
+    font-size: 17px;
+    text-align: left;
+    padding-bottom: 0px;
+}
+
+.detail-post-top {
+    display: flex;
+    width: 100%;
+    padding: 0px 10px 0px 30px;
+}
+
+.detail-post-title {
+    font-family: "Nanum Gothic", sans-serif;
+    font-weight: 400;
+    text-align: left;
+    font-size: 25px;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.detail-post-time {
+    color: #999;
+    font-size: 13px;
+    padding-top: 10px;
+}
+
+.detail-post-img {
+    width: 60%;
+    height: auto;
+}
+
+.detail-post-content {
+    font-family: "Nanum Gothic", sans-serif;
+    font-weight: 100;
+    font-size: 20px;
+}
+
+.comment-section {
+    justify-items: center;
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 70%;
+    min-height: 10vh;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    border-radius: 30px;
+    max-width: 1100px;
+    min-width: 700px;
+    padding: 0px 20px 20px 20px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.comment-list {
+    width: 100%;
+    /* max-height 제거 */
+    margin-bottom: 20px;
+}
+
+.comment-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.comment-input {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-input input {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+.comment-input button {
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #d5c4a1;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.comment-input button:hover {
+    color: black;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.profile-img1 {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 8px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
 }

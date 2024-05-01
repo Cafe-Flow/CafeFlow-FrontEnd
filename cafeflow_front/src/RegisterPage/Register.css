@@ -36,6 +36,28 @@
     color: grey;
 }
 
+.profile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    cursor: pointer;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.custom-file-input {
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 5px;
+}
+
+.profile-img-focus {
+  max-width: 100%;
+  max-height: 90vh;
+  height: auto;
+}
+
 .back-button {
   width: 100px;
   background-color: black !important;

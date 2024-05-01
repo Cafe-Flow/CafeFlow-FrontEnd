@@ -101,7 +101,7 @@ function LoginPage() {
         } else {
           setApiError(responseData.message);
           setShowFailModal(true);
-        }
+        } 
       } catch (error) {
         setApiError('로그인 요청에 실패 했습니다');
         setShowFailModal(true);
@@ -109,7 +109,7 @@ function LoginPage() {
         setIsLoading(false);
       }
     }
-  };
+};
 
   return (
     <div className='login-container'>

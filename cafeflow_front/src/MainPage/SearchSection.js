@@ -4,19 +4,25 @@ import React, { useState } from 'react';
 import { BiSearch } from "react-icons/bi";
 
 function SearchSection({ placeholder, onSearch }) {
-    const [searchTerm, setSearchTerm] = useState('');
-  
-    const handleChange = (e) => {
-        setSearchTerm(e.target.value);
+    const [input, setInput] = useState('');
+
+    const handleInputChange = (e) => {
+        setInput(e.target.value);
     };
-  
-    const handleSubmit = (e) => {
-        e.preventDefault(); 
-        if (onSearch) {
-            onSearch(searchTerm);
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            onSearch(input);  // Enter를 누르면 검색 실행
         }
     };
-  
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (onSearch) {
+            onSearch(input);
+        }
+    };
+
     return (
         <div className='search-box'>
             <div className="search-container">
@@ -25,13 +31,14 @@ function SearchSection({ placeholder, onSearch }) {
                         type="text"
                         className="search-input"
                         placeholder={placeholder}
-                        value={searchTerm}
-                        onChange={handleChange}
+                        value={input}
+                        onChange={handleInputChange}
+                        onKeyDown={handleKeyPress}
                     />
                     <button type="submit" className="search-icon">
-                    <BiSearch size={28}/>
+                        <BiSearch size={28} />
                     </button>
-               </form>
+                </form>
             </div>
         </div>
     );
@@ -39,7 +46,7 @@ function SearchSection({ placeholder, onSearch }) {
 
 SearchSection.defaultProps = {
     placeholder: "키워드로 검색",
-    onSearch: () => {}
+    onSearch: () => { }
 };
 
 export default SearchSection;
