@@ -1,45 +1,20 @@
 .map-container {
-    margin: 0 auto;
-    align-items: center; 
-    width: 80%; 
-    height: 70vh; 
-    position: relative; 
-    border: 10px solid #D5C4A1;
-  }
-  
-  .map-content {
-    width: 100%; 
-    height: 100%; 
-  }
-  
-
-.custom-window {
-    text-align: left;
-    padding: 0px;
-    margin: 0px;
-    color: black;
-  }
-
-.window-head {
-  font-size: 11px;
-  padding: 0px;
-  margin: 0px;
+  margin: 0 auto;
+  align-items: center;
+  width: 80%;
+  height: 70vh;
+  position: relative;
+  border: 10px solid #D5C4A1;
 }
 
-.window-cafe {
-  font-size: 15px;
-  font-weight: 900;
-  padding: 0px;
-  margin: 0px;
-  color: white;
+.map-content {
+  width: 100%;
+  height: 100%;
 }
 
-.window-review {
-  font-size: 13px;
-  font-weight: 100;
-  padding: 0px;
-  margin: 0px;
-  color: black;
+.info-window-content {
+  font-size: 14px;
+  color: #333;
 }
 
 .search-results {
@@ -49,7 +24,7 @@
   width: 80%;
   background: #f9f9f9;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .search-results li {
@@ -99,11 +74,72 @@
 }
 
 .custom-location-btn {
-  padding: 8px 16px;
   background-color: #fff;
   border: 1px solid #ccc;
+  color: black;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.custom-marker {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f1ec;
+  border: 1px solid #d3c1ae;
+  border-radius: 20px;
+  padding: 8px 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  color: #6d4c41;
+  position: relative;
+  text-align: center;
+}
+
+.custom-marker p {
+  margin: 0;
+  flex-grow: 1;
+}
+
+.custom-marker:before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-size: cover;
+  transform: translateX(-50%);
+}
+
+.custom-marker:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  border-width: 8px;
+  border-style: solid;
+  border-color: #f4f1ec transparent transparent transparent;
+  transform: translateX(-50%);
+}
+
+.congestion-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.custom-marker[data-congestion="high"] .congestion-indicator {
+  background-color: red;
+}
+
+.custom-marker[data-congestion="medium"] .congestion-indicator {
+  background-color: yellow;
+}
+
+.custom-marker[data-congestion="low"] .congestion-indicator {
+  background-color: blue;
 }

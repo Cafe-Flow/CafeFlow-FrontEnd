@@ -18,6 +18,14 @@ function CommentSection() {
         }
     };
 
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleAddComment();
+            event.preventDefault();  // 엔터키로 인한 form 제출을 방지
+        }
+    };
+
     return (
         <div className='comment-section'>
             <div className='comment-input'>
@@ -26,6 +34,7 @@ function CommentSection() {
                     type="text"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
+                    onKeyDown={handleKeyPress}
                     placeholder="댓글을 입력하세요"
                 />
                 <button onClick={handleAddComment}>댓글 추가</button>

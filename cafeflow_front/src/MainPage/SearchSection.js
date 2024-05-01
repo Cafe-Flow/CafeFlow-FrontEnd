@@ -7,22 +7,22 @@ function SearchSection({ placeholder, onSearch }) {
     const [input, setInput] = useState('');
 
     const handleInputChange = (e) => {
-      setInput(e.target.value);
+        setInput(e.target.value);
     };
-  
+
     const handleKeyPress = (e) => {
-      if (e.key === 'Enter') {
-        onSearch(input);  // Enter를 누르면 검색 실행
-      }
+        if (e.key === 'Enter') {
+            onSearch(input);  // Enter를 누르면 검색 실행
+        }
     };
-  
+
     const handleSubmit = (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         if (onSearch) {
             onSearch(input);
         }
     };
-  
+
     return (
         <div className='search-box'>
             <div className="search-container">
@@ -33,12 +33,12 @@ function SearchSection({ placeholder, onSearch }) {
                         placeholder={placeholder}
                         value={input}
                         onChange={handleInputChange}
-                        onKeyPress={handleKeyPress}
+                        onKeyDown={handleKeyPress}
                     />
                     <button type="submit" className="search-icon">
-                    <BiSearch size={28}/>
+                        <BiSearch size={28} />
                     </button>
-               </form>
+                </form>
             </div>
         </div>
     );
@@ -46,7 +46,7 @@ function SearchSection({ placeholder, onSearch }) {
 
 SearchSection.defaultProps = {
     placeholder: "키워드로 검색",
-    onSearch: () => {}
+    onSearch: () => { }
 };
 
 export default SearchSection;
