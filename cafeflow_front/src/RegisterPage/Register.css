@@ -1,21 +1,21 @@
 .login-container {
-    min-width: 450px; 
-    width: 95%;
-    margin: 0 auto;
+  min-width: 450px;
+  width: 95%;
+  margin: 0 auto;
 }
 
 .input-box {
-    padding: 30px;
-    width: 35%;
-    min-width: 450px;
-    margin: auto; 
+  padding: 30px;
+  width: 35%;
+  min-width: 450px;
+  margin: auto;
 }
 
 .h1-font {
-    font-family: 'Times New Roman', Times, serif; 
-    font-size: 35px;
-    font-weight: 900;
-    letter-spacing: 10px; 
+  font-family: "Times New Roman", Times, serif;
+  font-size: 35px;
+  font-weight: 900;
+  letter-spacing: 10px;
 }
 
 .h2-font {
@@ -30,19 +30,19 @@
 }
 
 .h6-font {
-    font-family: "Nanum Gothic Coding", monospace;
-    font-weight: 900;
-    font-size: 15px;
-    color: grey;
+  font-family: "Nanum Gothic Coding", monospace;
+  font-weight: 900;
+  font-size: 15px;
+  color: grey;
 }
 
-.profile-img {
-    width: 200px;
-    height: 200px;
-    border-radius: 100px;
-    cursor: pointer;
-    object-fit: cover;
-    margin-bottom: 20px;
+.profile-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  cursor: pointer;
+  object-fit: cover;
+  margin-bottom: 20px;
 }
 
 .custom-file-input {
@@ -52,7 +52,7 @@
   border-radius: 5px;
 }
 
-.profile-img-focus {
+.profile-image-focus {
   max-width: 100%;
   max-height: 90vh;
   height: auto;
@@ -64,19 +64,19 @@
   border: black !important;
 }
 .new-sign-box {
-    color: grey;
-    padding-top: 40px;
-    text-align: center;
-    font-size: 15px;
+  color: grey;
+  padding-top: 40px;
+  text-align: center;
+  font-size: 15px;
 }
 
 .signup-select div img {
-    width: 100px; 
-    height: auto;
-    display: block; 
-    margin: 0 auto 10px;
-  }
-  
+  width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
 .signup-image {
   width: 100px;
   height: auto;
@@ -86,50 +86,48 @@
 }
 
 .admin-select {
-    cursor: pointer;
-    padding: 10px;
-    flex: 1;
-    text-align: center;
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-  }
+  cursor: pointer;
+  padding: 10px;
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-.admin-select:hover, .user-select:hover {
-    background-color: #f2f2f2;
-  }
-  
+.admin-select:hover,
+.user-select:hover {
+  background-color: #f2f2f2;
+}
+
 .custom-modal-body {
-    height: 500px; 
-    overflow-y: auto; 
-  }
+  height: 500px;
+  overflow-y: auto;
+}
 
-
-
-  .gender-selection {
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-  }
-
+.gender-selection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .gender-image {
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    cursor: pointer;
-    margin: 10px;
-    width: 80px; 
-    height: auto;
-  }
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+  margin: 10px;
+  width: 80px;
+  height: auto;
+}
 
 .gender-image:hover {
   transform: scale(1.05);
 }
 
 .gender-image.selected {
-  background-color: #e3e1e1; 
+  background-color: #e3e1e1;
   border-radius: 20px;
 }
 span {
-    cursor: pointer;    
+  cursor: pointer;
 }
