@@ -55,7 +55,7 @@ function Header() {
               </a>
               <a
                 className={`nav-element ${
-                  location.pathname === "/location" ? "active" : ""
+                  location.pathname.startsWith("/location") ? "active" : ""
                 }`}
                 href="/location"
               >
@@ -69,7 +69,7 @@ function Header() {
               </a>
               <a
                 className={`nav-element ${
-                  location.pathname === "/community" ? "active" : ""
+                  location.pathname.startsWith("/community") ? "active" : ""
                 }`}
                 href="/community"
               >

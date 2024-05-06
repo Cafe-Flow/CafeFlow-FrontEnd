@@ -4,6 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useNavigate } from "react-router-dom";
 import { timeSince } from "./Time.js";
+import { FaRegHeart } from "react-icons/fa6";
 
 function ListSection({ posts }) {
   const [loading, setLoading] = useState(true);
@@ -80,7 +81,16 @@ function ListSection({ posts }) {
   );
 }
 
-function Card({ id, image, title, content, authorNickname, createdAt }) {
+function Card({
+  id,
+  image,
+  title,
+  content,
+  authorNickname,
+  createdAt,
+  likesCount,
+  views,
+}) {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -97,7 +107,7 @@ function Card({ id, image, title, content, authorNickname, createdAt }) {
         />
       ) : (
         <img
-          src="img/MainLogo.png"
+          src="img/admin.png"
           alt="게시글 이미지"
           className="custom-post-img"
         />
@@ -108,6 +118,13 @@ function Card({ id, image, title, content, authorNickname, createdAt }) {
         <div className="custom-post-footer">
           <span className="custom-post-author">{authorNickname}</span>
           <span className="custom-post-time">{timeSince(createdAt)}</span>
+        </div>
+        <div className="custom-post-bottom">
+          <span className="custom-post-likesCount">
+            <FaRegHeart />
+            {likesCount}
+          </span>
+          <span className="custom-post-view">조회 {views}</span>
         </div>
       </div>
     </div>

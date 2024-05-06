@@ -10,7 +10,7 @@ function Boardlist() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
   const resultsPerPage = 10; // 페이지 당 10개의 결과
-  const totalResults = 50;
+  const [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
     fetchPosts();
@@ -36,6 +36,7 @@ function Boardlist() {
       const data = await response.json();
       setSearchResults(data);
       console.log(data);
+      setTotalResults(data.length);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
