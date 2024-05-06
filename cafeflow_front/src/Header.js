@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { Button, Modal, Container, Navbar, Nav } from "react-bootstrap";
+import { Button, Modal, Container, Navbar } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function Header() {
@@ -23,7 +23,7 @@ function Header() {
     };
 
     updateUserInfo();
-  }, []);
+  }, [isLoggedIn]);
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
