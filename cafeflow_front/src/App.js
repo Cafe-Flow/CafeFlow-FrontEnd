@@ -1,17 +1,18 @@
 import "./App.css";
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import MainPage from "./MainPage/Main.js";
 import LoginPage from "./RegisterPage/Login.js";
 import UserSignupPage from "./RegisterPage/UserSignup.js";
 import AdminSignupPage from "./RegisterPage/AdminSignup.js";
 import Header from "./Header.js";
-import MapPage from "./map.js";
+import MapPage from "./Map/map.js";
 import Boardlist from "./CommunityPage/BoardList.js";
-import Shoplist from "./ShopPage/ShopList.js";
-import Shop from "./ShopPage/Shop.js";
-import ShopRegister from "./ShopPage/ShopRegister.js";
-import SeatRegister from "./SeatPage/SeatRegister.js";
-
+import DetailBoard from "./CommunityPage/DetailBoard.js";
+import Modify from "./MyPage/Modify.js";
+import Delete from "./MyPage/Delete.js";
+import Password from "./MyPage/Password.js";
+import Query from "./MyPage/Query.js";
+import NewBoard from "./CommunityPage/NewBoard.js";
 
 function App() {
   return (
@@ -21,15 +22,17 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<MainPage />} />
+            <Route path="/mypage/modify" element={<Modify />} />
+            <Route path="/mypage/delete" element={<Delete />} />
+            <Route path="/mypage/password" element={<Password />} />
+            <Route path="/mypage/query" element={<Query />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/adminsignup" element={<AdminSignupPage />} />
             <Route path="/usersignup" element={<UserSignupPage />} />
-            <Route path="/locations" element={<MapPage />} />
+            <Route path="/location" element={<MapPage />} />
             <Route path="/community" element={<Boardlist />} />
-            <Route path="/shop" element={<Shoplist />} />
-            <Route path="/shop/:idx" element={<Shop />} />
-            <Route path="/shopregister" element={<ShopRegister />} />
-            <Route path="/seat" element={<SeatRegister />} />
+            <Route path="/create-post" element={<NewBoard />} />
+            <Route path="/community/:postId" element={<DetailBoard />} />
           </Routes>
         </div>
       </div>

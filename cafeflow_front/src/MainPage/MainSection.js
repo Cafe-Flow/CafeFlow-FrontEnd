@@ -13,8 +13,8 @@ function MainSection() {
               <p className="card-text-custom">
               가고싶은 카페의 실시간 남은 자리를 확인
               </p>
-              <Button className="card-button" style={{ fontFamily: "'Roboto', sans-serif", fontSize: '20px',
-              fontWeight: 400, backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 보러가기 👉</Button>
+              <Button className="card-button" style={{ fontFamily: "'Nanum Gothic', 'sans-serif'", fontSize: '20px',
+               backgroundColor: 'white', color: 'black', borderColor: 'white' }}>지금 보러가기 👉</Button>
             </div>
             <img src="/img/main_pic2.png" className="custom-image" alt="first pic" />
             </CardBody>
