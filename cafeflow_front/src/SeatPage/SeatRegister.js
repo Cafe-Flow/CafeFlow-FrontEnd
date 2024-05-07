@@ -18,7 +18,7 @@ function SeatRegister({ existingSeats, onSeatData }) {
 
     const togglePlug = (id) => {
         setSeats(seats.map(seat => {
-            if (seat.id === id) {
+            if (seat.id === id) { 
                 return {
                     ...seat,
                     plug: !seat.plug

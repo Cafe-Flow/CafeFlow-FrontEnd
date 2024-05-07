@@ -17,7 +17,7 @@ function SeatView({ idx }) { // idx prop을 받아옴
         );
         setSeats(response.data);
       } catch (error) {
-        console.error("Error fetching seats:", error);
+        console.error("Error fetching seats:", error); 
       }
     };
 

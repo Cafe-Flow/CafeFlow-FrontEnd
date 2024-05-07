@@ -139,7 +139,7 @@ function ShopRegister() {
 
     const handleSeatData = (data) => {
         setSeats(data); // 기존의 좌석 데이터 대신 새로운 좌석 데이터로 업데이트
-    };
+    }; 
 
     return (
         <div className="register-cafe">

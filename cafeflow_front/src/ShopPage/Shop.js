@@ -182,7 +182,7 @@ function Shop() {
         </div>
         <br />
         <div class="cafe-reviews">
-          {reviews.map((_, index) => (
+          {reviews.map((_, index) => ( 
             <div key={index} className="review">
                   <Card id="reviews">
                     <Card.Header style={{textAlign: "start"}}>Unknown</Card.Header>

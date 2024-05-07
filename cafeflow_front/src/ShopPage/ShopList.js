@@ -19,7 +19,7 @@ function Shoplist() {
         if (sortBy === "1") {
           url += ""; // Append sort option to URL if sortBy is "1"
         }
-        else if (sortBy === "0") {
+        else if (sortBy === "0") { 
           url += "?sort-by=created-at";
         }
         const response = await axios.get(url);

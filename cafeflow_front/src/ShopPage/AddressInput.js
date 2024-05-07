@@ -19,7 +19,7 @@ function AddressInput() {
                 <label>주소</label>
                 <input type="text" value={address} readOnly />
             </div>
-            <div>
+            <div>  
                 <label>우편번호</label>
                 <input type="text" value={zipcode} readOnly />
             </div>
