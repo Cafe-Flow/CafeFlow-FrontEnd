@@ -4,7 +4,7 @@
   width: 80%;
   height: 70vh;
   position: relative;
-  border: 10px solid #D5C4A1;
+  border: 10px solid #d5c4a1;
 }
 
 .map-content {
@@ -104,7 +104,7 @@
 }
 
 .custom-marker:before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10px;
   left: 50%;
@@ -115,7 +115,7 @@
 }
 
 .custom-marker:after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./community.css";
-import CommentSection from "./CommentSection";
 import { timeSince } from "./Time";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
 
-function DetailBoard() {
+function NewBoard() {
   const { postId } = useParams();
   const [post, setPost] = useState({});
   const [liked, setLiked] = useState(false);
@@ -115,9 +114,7 @@ function DetailBoard() {
           </span>
         </div>
       </div>
-      <CommentSection comments={post.comments} postId={postId} />
     </>
   );
 }
-
-export default DetailBoard;
+export default NewBoard;

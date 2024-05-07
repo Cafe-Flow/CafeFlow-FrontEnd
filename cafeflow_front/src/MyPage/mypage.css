@@ -1,100 +1,155 @@
 .mypage {
-    display: flex;
-    height: 60vh;
-    max-width: 1280px;
-    margin: 0 auto;
+  display: flex;
+  height: 60vh;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .mypage-sidebar {
-    padding-right: 20px;
+  padding-right: 20px;
 }
 
 .mypage-sidebar ul {
-    list-style: none;
-    padding: 10px;
-
+  list-style: none;
+  padding: 10px;
 }
 
 .mypage-sidebar li {
-    padding: 15px;
-    cursor: pointer;
-    text-align: left;
+  padding: 15px;
+  cursor: pointer;
+  text-align: left;
 }
 
 .mypage-sidebar a {
-    font-size: 20px;
-    color: grey;
-    font-family: "Nanum Gothic Coding", monospace;
+  font-size: 20px;
+  color: grey;
+  font-family: "Nanum Gothic Coding", monospace;
 }
 
 .mypage-sidebar a:hover,
 .mypage-sidebar a.active {
-    color: #D5C4A1;
+  color: #d5c4a1;
 }
 
 .mypage-card {
-    flex: 1;
-    background-color: #fff;
-    overflow: auto;
+  flex: 1;
+  background-color: #fff;
+  height: 640px;
+  overflow: auto;
 }
 
 .mypage-header {
-    padding: 20px;
-    padding-left: 0px;
-    padding-bottom: 5px;
-    border-bottom: 3px solid #D5C4A1;
-    text-align: left;
-    margin-bottom: 100px;
+  padding: 20px;
+  padding-left: 0px;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #d5c4a1;
+  text-align: left;
+  margin-bottom: 30px;
 }
 
 .header-font {
-    font-size: 21px;
-    font-weight: 900;
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.mypage-modify-display p {
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.nickname-style:hover {
+  text-decoration: underline;
+}
+
+.custom-modify-button {
+  margin: 0 auto;
+  width: 60%;
+  background-color: black;
+  color: white;
+  padding: 15px;
+  font-size: 20px;
+  border-radius: 15px;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.custom-modify-button:hover {
+  background-color: #7bb5b1;
+}
+
+.admin-style {
+  color: #ccc;
+}
+
+.member-style {
+  color: #d5c4a1;
 }
 
 .custom-delete-button {
-    margin: 0 auto;
-    width: 60%;
-    background-color: black;
-    color: white;
-    padding: 15px;
-    font-size: 20px;
-    border-radius: 15px;
-    transition: background-color 0.3s, color 0.3s;
+  margin: 0 auto;
+  width: 60%;
+  background-color: black;
+  color: white;
+  padding: 15px;
+  font-size: 20px;
+  border-radius: 15px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .custom-delete-button:hover {
-    background-color: red;
-    cursor: pointer;
+  background-color: red;
+  cursor: pointer;
 }
 
 .password-change-form {
-    margin: 0 auto;
-    width: 60%;
+  margin: 0 auto;
+  width: 60%;
 }
 
 .custom-change-button {
-    margin: 30px auto;
-    width: 40%;
-    cursor: pointer;
-    color: white;
-    padding: 5px;
-    font-size: 20px;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+  margin: 30px auto;
+  width: 40%;
+  cursor: pointer;
+  color: white;
+  padding: 5px;
+  font-size: 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .button-active {
-    background-color: black;
+  background-color: black;
 }
 
 .button-inactive {
-    background-color: #ccc;
-    cursor: not-allowed;
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 @media (max-width: 992px) {
-    .mypage-sidebar {
-        display: none;
-    }
+  .mypage-sidebar {
+    display: none;
+  }
+}
+
+.form-label {
+  margin: 5px !important;
+}
+
+.form-modify-button {
+  margin: 30px auto;
+  text-align: center;
+  cursor: pointer;
+  width: 40%;
+  background-color: black;
+  color: white;
+  padding: 5px;
+  font-size: 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.form-modify-button:hover {
+  background-color: #7bb5b1;
 }
