@@ -50,7 +50,7 @@ function Header() {
           />
           <Navbar.Collapse id="basic-navbar-nav">
             <div className="nav-container">
-              <a className="nav-element" href="/">
+              <a className="nav-element" href="/shop">
                 매장
               </a>
               <a
