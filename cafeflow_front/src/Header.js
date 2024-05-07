@@ -45,7 +45,7 @@ function Header() {
     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
     <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="nav-container">
-            <a className='nav-element' href='/'>Shop</a>
+            <a className='nav-element' href='/shop'>Shop</a>
             <a className={`nav-element ${location.pathname === '/location' ? 'active' : ''}`} href="/location">Location</a>
             <a className='nav-element' href='/'>Order</a>
             <a className='nav-element' href='/'>Event</a>

@@ -1,0 +1,43 @@
+.register-cafe {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto; /* 중앙 정렬 및 상단 여백 추가 */
+    width: 80%; /* 너비 조정 */
+    max-width: 1300px; /* 최대 너비 설정 */
+  }
+  
+  .h2-font {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  #cafe-name,
+  #cafe-address,
+  #cafe-description,
+  #cafe-region,
+  #cafe-state,
+  #cafe-city {
+    width: 40%;
+    margin-bottom: 20px;
+  }
+  
+  .register-button {
+    margin-top: 20px;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 200px; /* 너비 조정 */
+    height: 50px; /* 높이 조정 */
+  }
+  
+  .register-button:hover {
+    background-color: #2980b9;
+  }
+  
+  
