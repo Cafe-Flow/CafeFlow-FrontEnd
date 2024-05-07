@@ -13,6 +13,11 @@ import Delete from "./MyPage/Delete.js";
 import Password from "./MyPage/Password.js";
 import Query from "./MyPage/Query.js";
 import NewBoard from "./CommunityPage/NewBoard.js";
+import Shoplist from "./ShopPage/ShopList.js";
+import Shop from "./ShopPage/Shop.js";
+import ShopRegister from "./ShopPage/ShopRegister.js";
+import SeatRegister from "./SeatPage/SeatRegister.js";
+
 
 function App() {
   return (
@@ -33,6 +38,11 @@ function App() {
             <Route path="/community" element={<Boardlist />} />
             <Route path="/create-post" element={<NewBoard />} />
             <Route path="/community/:postId" element={<DetailBoard />} />
+            <Route path="/shop" element={<Shoplist />} />
+            <Route path="/shop/:idx" element={<Shop />} />
+            <Route path="/shopregister" element={<ShopRegister />} />
+            <Route path="/seat" element={<SeatRegister />} />
+
           </Routes>
         </div>
       </div>

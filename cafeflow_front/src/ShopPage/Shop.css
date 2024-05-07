@@ -1,0 +1,77 @@
+.center-div {
+    width: 800px; /* div의 너비 */
+    margin: 0 auto; /* 좌우 여백을 자동으로 조정하여 가운데 정렬 */
+  }
+  .Shop{
+    margin: 0 auto;
+  }
+  .cafe-container {
+    display:flex;
+  }
+  
+  .cafe-img {
+    margin-bottom: 20px; /* Adjust spacing between image and content */
+    margin-right: 20px; /* Adjust spacing between image and content */
+  }
+  
+  .cafe-content {
+    margin: 0 auto;
+  }
+  .review-button{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .cafe-name-container{
+    display: flex;
+    align-items: center; /* Align items vertically */
+  }
+  .cafe-name-container h2{
+    margin-right: 10px; /* Adjust spacing between h2 and p */
+  }
+  .cafe-name-container p{
+    margin-bottom: 0px;
+  }
+  .review{
+    align-items: start; /* Align items vertically */
+  }
+  
+  #seatview {
+    transform: scale(0.2);
+  }
+  
+
+  .star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    font-size: 2.25rem; 
+    line-height: 2.5rem;
+    justify-content: space-around;
+    padding: 0 0.2em;
+    text-align: center;
+    width: 5em;
+  }
+   
+  .star-rating input {
+    display: none;
+  }
+   
+  .star-rating label {
+    -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 2.3px;
+    -webkit-text-stroke-color: #2b2a29;
+    cursor: pointer;
+  }
+   
+  .star-rating :checked ~ label {
+    -webkit-text-fill-color: gold;
+  }
+   
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+    -webkit-text-fill-color: #fff58c;
+  }
+  #reviews{
+    margin-top: 20px;
+    height: 200px; /* Set the height to a fixed value */
+  }
