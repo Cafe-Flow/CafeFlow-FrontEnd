@@ -12,6 +12,7 @@ import Modify from "./MyPage/Modify.js";
 import Delete from "./MyPage/Delete.js";
 import Password from "./MyPage/Password.js";
 import Query from "./MyPage/Query.js";
+import NewBoard from "./CommunityPage/NewBoard.js";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/usersignup" element={<UserSignupPage />} />
             <Route path="/location" element={<MapPage />} />
             <Route path="/community" element={<Boardlist />} />
+            <Route path="/create-post" element={<NewBoard />} />
             <Route path="/community/:postId" element={<DetailBoard />} />
           </Routes>
         </div>

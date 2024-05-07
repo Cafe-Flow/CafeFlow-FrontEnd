@@ -113,7 +113,7 @@ function AdminSignupPage() {
 
   const validateStep2 = () => {
     let isValid = true;
-    let newErrors = { ...errors, genderError: "", ageError: "" }; // Step 2 에러만 리셋
+    let newErrors = { ...errors, genderError: "", ageError: "" };
 
     if (!formData.gender) {
       newErrors.genderError = "성별을 선택해주세요.";

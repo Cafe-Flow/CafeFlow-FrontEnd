@@ -102,15 +102,17 @@ function CommentSection({ comments, postId }) {
         </div>
       )}
       <div className="comment-list">
-        {commentList.map((comment) => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            updateReplies={updateReplies}
-            onDeleteComment={onDeleteComment}
-            postId={postId}
-          ></CommentItem>
-        ))}
+        {commentList
+          .filter((comment) => !comment.parentCommentId)
+          .map((comment) => (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              updateReplies={updateReplies}
+              onDeleteComment={onDeleteComment}
+              postId={postId}
+            ></CommentItem>
+          ))}
       </div>
     </div>
   );

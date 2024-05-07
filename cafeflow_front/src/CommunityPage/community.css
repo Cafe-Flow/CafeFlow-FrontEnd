@@ -52,6 +52,9 @@
 .custom-post-text {
   font-size: 16px;
   color: #666;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .custom-post-footer {
@@ -118,7 +121,7 @@
   color: white;
 }
 
-.post-sort p:active {
+.post-sort p.active {
   background-color: #d5c4a1;
   color: white;
 }
@@ -401,21 +404,23 @@ input[type="text"] {
 
 .create-post-button {
   position: fixed;
-  bottom: 30px;
-  right: 300px;
-  z-index: 1000;
-  background-color: #4caf50;
+  right: 20px;
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  background-color: black;
   color: white;
-  border: none;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 36px;
-  line-height: 44px;
-  text-align: center;
+  display: flex;
+  font-weight: 900;
+  font-size: 40px;
+  padding-bottom: 10px;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.2s;
 }
 
 .create-post-button:hover {
+  background-color: #7bb5b1;
 }

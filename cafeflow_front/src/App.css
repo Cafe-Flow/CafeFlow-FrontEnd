@@ -12,10 +12,10 @@
 }
 
 .Logo-font {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   font-weight: 900;
   font-size: 40px;
-  color: #D5C4A1 !important;
+  color: #d5c4a1 !important;
 }
 
 .nav-container {
@@ -59,7 +59,7 @@
 }
 
 .name-style {
-  color: #D5C4A1;
+  color: #d5c4a1;
   font-weight: bold;
   padding: 5px;
   white-space: nowrap;
@@ -92,9 +92,8 @@
   color: black;
 }
 
-
 .nav-element::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 100%;
   right: 100%;
@@ -125,7 +124,7 @@
 .text-container {
   flex: 0.85;
   flex-direction: column;
-  margin-right: 20px
+  margin-right: 20px;
 }
 
 .custom-image {
@@ -155,7 +154,6 @@
 }
 
 @media (max-width: 992px) {
-
   .custom-card,
   .custom-card-body {
     width: 100%;
@@ -202,14 +200,13 @@
 .ft {
   left: 0;
   bottom: 0;
-  background-color: #D5C4A1;
+  background-color: #d5c4a1;
   padding: 20px;
   font-weight: 900;
   color: black;
   width: 100%;
   text-align: center;
 }
-
 
 a:link,
 a:visited {
@@ -220,6 +217,28 @@ a:visited {
 .modal-position {
   transform: translate(-0%, 30%);
   text-align: center;
+}
+
+.page-link {
+  cursor: pointer;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #d5c4a1 !important;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.page-link:hover,
+.page-link:focus {
+  background-color: #d5c4a1 !important;
+  color: white !important;
+}
+
+.page-item:active {
+  background-color: #d5c4a1 !important;
+  color: white !important;
 }
 
 @keyframes loading-animation {

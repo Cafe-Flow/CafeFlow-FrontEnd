@@ -9,7 +9,7 @@ function Boardlist() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
-  const resultsPerPage = 10; // 페이지 당 10개의 결과
+  const resultsPerPage = 8;
   const [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
@@ -34,12 +34,30 @@ function Boardlist() {
       }
 
       const data = await response.json();
-      setSearchResults(data);
-      console.log(data);
-      setTotalResults(data.length);
+      sortPosts("최신순", data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
+  };
+
+  const sortPosts = (sortType, posts) => {
+    let newSortedPosts = [...posts];
+    switch (sortType) {
+      case "최신순":
+        newSortedPosts.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        break;
+      case "조회수":
+        newSortedPosts.sort((a, b) => b.views - a.views);
+        break;
+      case "좋아요":
+        newSortedPosts.sort((a, b) => b.likesCount - a.likesCount);
+        break;
+    }
+    setSearchResults(newSortedPosts);
+    setTotalResults(newSortedPosts.length);
+    setCurrentPage(1); // 정렬 후 페이지를 1로 리셋
   };
 
   const handleSearch = (searchTerm) => {
@@ -54,15 +72,29 @@ function Boardlist() {
     setCurrentPage(pageNumber);
   };
 
+  const indexOfLastPost = currentPage * resultsPerPage;
+  const indexOfFirstPost = indexOfLastPost - resultsPerPage;
+  const currentPosts = searchResults.slice(
+    (currentPage - 1) * resultsPerPage,
+    currentPage * resultsPerPage
+  );
+
   return (
     <>
       <SearchSection onSearch={handleSearch} />
-      <ListSection posts={searchResults} />
+      <ListSection
+        posts={currentPosts}
+        sortPosts={(sortType) => sortPosts(sortType, searchResults)}
+      />
       <Pagination
+        currentPage={currentPage}
         resultsPerPage={resultsPerPage}
         totalResults={totalResults}
-        paginate={paginate}
+        paginate={setCurrentPage}
       />
+      <div className="create-post-button" onClick={handleCreatePost}>
+        +
+      </div>
     </>
   );
 }

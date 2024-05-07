@@ -5,20 +5,24 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useNavigate } from "react-router-dom";
 import { timeSince } from "./Time.js";
 import { FaRegHeart } from "react-icons/fa6";
+import Pagination from "../Pagination.js";
 
-function ListSection({ posts }) {
+function ListSection({ posts, sortPosts }) {
   const [loading, setLoading] = useState(true);
-  const [selectedSort, setSelectedSort] = useState("");
-
-  const handleSortClick = (sortType) => {
-    setSelectedSort(sortType);
-  };
+  const [selectedSort, setSelectedSort] = useState("최신순");
+  const [sortedPosts, setSortedPosts] = useState([]);
 
   useEffect(() => {
     if (posts.length > 0) {
       setLoading(false);
+      setSortedPosts(posts);
     }
   }, [posts]);
+
+  const handleSortClick = (sortType) => {
+    setSelectedSort(sortType);
+    sortPosts(sortType);
+  };
 
   return (
     <>
@@ -28,12 +32,6 @@ function ListSection({ posts }) {
           onClick={() => handleSortClick("최신순")}
         >
           최신순
-        </p>
-        <p
-          className={selectedSort === "댓글" ? "active" : ""}
-          onClick={() => handleSortClick("댓글")}
-        >
-          댓글
         </p>
         <p
           className={selectedSort === "조회수" ? "active" : ""}
@@ -72,10 +70,7 @@ function ListSection({ posts }) {
                   </div>
                 </div>
               ))
-          : posts
-              .slice()
-              .reverse()
-              .map((post) => <Card key={post.id} {...post} />)}
+          : sortedPosts.map((post) => <Card key={post.id} {...post} />)}
       </div>
     </>
   );

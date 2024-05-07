@@ -1,6 +1,6 @@
 import Sidebar from "./Sidebar";
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Button } from "react-bootstrap";
+import { Modal, Form } from "react-bootstrap";
 
 function Modify() {
   const [userInfo, setUserInfo] = useState({
@@ -113,7 +113,7 @@ function Modify() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/${userInfo.id}`,
+        `http://localhost:8080/api/auth/update-profile/${userInfo.id}`,
         {
           method: "PUT",
           headers: {
