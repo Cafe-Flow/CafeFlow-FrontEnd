@@ -1,0 +1,138 @@
+#background {
+    margin: 0 auto; /* 가운데 정렬 */
+    display: flex; /* 요소들을 가로로 배치 */
+    justify-content: center; /* 가로 정렬 */
+    align-items: center; /* 세로 정렬 */
+    flex-direction: column; /* 요소들을 세로로 쌓기 */
+}
+
+#outerContainer {
+    position: relative;
+    width: 1300px;
+    height: 700px;
+    /* border를 보이지 않게 */
+    border: 10px solid #d3c2a0;
+    overflow: hidden; /* Ensure that elements cannot be dragged outside the container */
+    margin: 20px 0; /* Add margin for spacing */
+    display: flex;
+    flex-direction: column; /* 버튼을 세로로 배치하기 위해 column으로 설정 */
+}
+
+#info {
+    display: flex; /* 요소들을 가로로 배치 */
+    justify-content: center; /* 가로 정렬 */
+    align-items: center; /* 세로 정렬 */
+    margin-top: 20px; /* 위쪽 여백 추가 */
+    overflow: hidden; /* 컨테이너를 벗어나는 요소들을 숨김 */
+    flex-direction: column; /* 요소들을 세로로 쌓기 */
+}
+
+#container {
+    width: 100%; /* 너비 지정 */
+    height: 100%; /* 높이 지정 */
+    position: relative; /* 상대 위치 지정 */
+}
+
+.draggable {
+    position: absolute; /* 상대 위치 지정 */
+    width: 50px; /* 너비 지정 */
+    height: 50px; /* 높이 지정 */
+    background-color: #d3c2a0; /* 배경색 지정 */
+    border: 10px solid rgba(136, 136, 136, .5); /* 테두리 지정 */
+    border-radius: 5%; /* 테두리를 둥글게 만듦 */ 
+    touch-action: none; /* 터치 동작 비활성화 */
+    user-select: none; /* 사용자 선택 비활성화 */
+    left: 0; /* 초기 left 값 */
+    top: 0;  /* 초기 top 값 */
+    transition: transform 0.2s ease; /* 변환 효과 지정 */
+    display: flex; /* 요소들을 가로로 배치 */
+    justify-content: center; /* 가로 정렬 */
+    align-items: center; /* 세로 정렬 */
+    color: white; /* 글자색 지정 */
+    font-weight: bold; /* 글자 굵기 지정 */
+    font-size: 18px; /* 글자 크기 지정 */
+    flex-direction: column; /* 요소들을 세로로 쌓기 */
+    overflow: visible; /* 요소들이 컨테이너를 벗어나도록 함 */
+}
+
+.draggable .plug-btn {
+    position: absolute; /* 절대 위치 지정 */
+    top: -15px; /* 상단 여백 조정 */
+    right: -15px; /* 우측 여백 조정 */
+    width: 30px; /* 너비 조정 */
+    height: 30px; /* 높이 조정 */
+    background-color: #3498db; /* 배경색 지정 */
+    border: none; /* 테두리 없음 */
+    border-radius: 50%; /* 원 모양으로 만들기 */
+    color: white; /* 글자색 지정 */
+    font-weight: bold; /* 글자 굵기 지정 */
+    font-size: 14px; /* 글자 크기 지정 */
+    cursor: pointer; /* 커서 모양 변경 */
+    transition: background-color 0.3s ease; /* 배경색 변화 효과 지정 */
+}
+
+.draggable:hover .plug-btn {
+    background-color: #2980b9; /* 배경색 변경 */
+}
+
+
+.draggable:hover {
+    cursor: pointer; /* 커서 모양 변경 */
+    /* border-width: 20px; 테두리 두께 변경 */
+}
+
+.rotate-btn {
+    position: absolute; /* 절대 위치 지정 */
+    top: 0; /* 상단 위치 지정 */
+    right: 0; /* 우측 위치 지정 */
+    margin: 5px; /* 여백 지정 */
+    padding: 5px; /* 여백 지정 */
+    background-color: rgba(255, 255, 255, 0.5); /* 배경색 지정 */
+    border: none; /* 테두리 없음 */
+    border-radius: 50%; /* 원 모양으로 만들기 */
+    cursor: pointer; /* 커서 모양 변경 */
+}
+
+.delete-btn {
+    position: absolute; /* 절대 위치 지정 */
+    top: 0; /* 상단 위치 지정 */
+    left: 0; /* 좌측 위치 지정 */
+    margin: 5px; /* 여백 지정 */
+    padding: 5px; /* 여백 지정 */
+    background-color: rgba(255, 0, 0, 0.5); /* 배경색 지정 */
+    border: none; /* 테두리 없음 */
+    border-radius: 50%; /* 원 모양으로 만들기 */
+    cursor: pointer; /* 커서 모양 변경 */
+}
+
+#outputBtn {
+    margin-top: 10px; /* 위쪽 여백 추가 */
+}
+
+
+#buttons {
+    display: flex;
+    justify-content:center; /* 버튼들을 오른쪽에 정렬 */
+    align-items: center; /* 버튼들을 수직으로 중앙 정렬 */
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#buttons button {
+    width: 200px; /* 너비 지정 */
+    height: 50px; /* 높이 지정 */
+    background-color: #3498db; /* 배경색 지정 */
+    border: none; /* 테두리 없음 */
+    border-radius: 5px; /* 테두리를 둥글게 만듦 */
+    color: white; /* 글자색 지정 */
+    font-weight: bold; /* 글자 굵기 지정 */
+    font-size: 18px; /* 글자 크기 지정 */
+    cursor: pointer; /* 커서 모양 변경 */
+    margin-top: 10px; /* 각 버튼 위에 마진 추가 */
+    margin-right: 10px; /* 각 버튼 오른쪽에 마진 추가 */
+    transition: background-color 0.3s ease; /* 배경색 변화 효과 지정 */
+}
+
+#buttons button:hover {
+    background-color: #2980b9; /* 배경색 변경 */
+}
