@@ -236,9 +236,10 @@ a:visited {
   color: white !important;
 }
 
-.page-item:active {
+.pagination .page-item.active .page-link {
   background-color: #d5c4a1 !important;
   color: white !important;
+  border-color: white !important;
 }
 
 @keyframes loading-animation {

@@ -24,15 +24,13 @@ function MapInfo() {
   const navermaps = useNavermaps();
 
   const htmlMarker1 = {
-    content:
-      '<div style="width: 30px; height: 30px; background-color: #f00; border-radius: 50%; text-align: center; line-height: 30px; color: white;">1</div>',
+    content: '<div class="custom-cluster1">1</div>',
     size: new navermaps.Size(30, 30),
     anchor: new navermaps.Point(15, 15),
   };
 
   const htmlMarker2 = {
-    content:
-      '<div style="width: 30px; height: 30px; background-color: #0f0; border-radius: 50%; text-align: center; line-height: 30px; color: white;">2</div>',
+    content: '<div class="custom-cluster2"> 2</div> ',
     size: new navermaps.Size(30, 30),
     anchor: new navermaps.Point(15, 15),
   };
@@ -159,14 +157,13 @@ function MapInfo() {
               htmlMarker4,
               htmlMarker5,
             ],
-            indexGenerator: [10, 100, 200, 500, 1000],
+            indexGenerator: [31, 40, 50, 60, 100],
             stylingFunction: (clusterMarker, count) => {
               clusterMarker
                 .getElement()
                 .querySelector("div:first-child").innerText = count;
             },
           };
-
           const newCluster = new MarkerClustering(clusterOptions);
           setCluster(newCluster);
         },

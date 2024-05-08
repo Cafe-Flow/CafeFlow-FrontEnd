@@ -424,3 +424,13 @@ input[type="text"] {
 .create-post-button:hover {
   background-color: #7bb5b1;
 }
+
+.sad-imoji {
+  font-size: 30px;
+  transition: 0.3s;
+}
+
+.sad-imoji:hover {
+  font-size: 50px;
+  font-family: "Nanum Gothic", sans-serif;
+}

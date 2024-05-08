@@ -143,3 +143,18 @@
 .custom-marker[data-congestion="low"] .congestion-indicator {
   background-color: blue;
 }
+
+.custom-cluster1 {
+  width: 30px;
+  height: 30px;
+  background-color: #d5c4a1;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+  transition: transform 0.3s ease-in-out;
+}
+
+.custom-cluster1:hover {
+  transform: scale(1.1);
+}

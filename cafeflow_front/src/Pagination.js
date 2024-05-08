@@ -1,5 +1,5 @@
 import "./App.css";
-function Pagination({ resultsPerPage, totalResults, paginate }) {
+function Pagination({ currentPage, resultsPerPage, totalResults, paginate }) {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalResults / resultsPerPage); i++) {
@@ -10,7 +10,10 @@ function Pagination({ resultsPerPage, totalResults, paginate }) {
     <nav>
       <ul className="pagination">
         {pageNumbers.map((number) => (
-          <li key={number} className="page-item">
+          <li
+            key={number}
+            className={`page-item ${number === currentPage ? "active" : ""}`}
+          >
             <a onClick={() => paginate(number)} className="page-link">
               {number}
             </a>
