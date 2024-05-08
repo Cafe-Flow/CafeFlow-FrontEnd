@@ -144,8 +144,16 @@ function ShopRegister() {
                     }
                 })));
     
-                // 좌석 정보를 서버에 저장
-                await axios.post(`http://localhost:8080/api/cafe/${shopid}/seat-register`, seatDataForPost, { headers });
+                await axios.post(
+                    `http://localhost:8080/api/cafe/${shopid}/seat-register`,
+                    seatDataForPost,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        }
+                    }
+                );
     
                 // Clear the seats data after successful registration
                 setSeats([]);
