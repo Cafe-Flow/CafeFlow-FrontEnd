@@ -1,3 +1,5 @@
+// Shop.js
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -16,6 +18,7 @@ function Shop() {
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0); // 리뷰 평점 state
   const [comment, setComment] = useState(""); // 리뷰 내용 state
+  const [seats, setSeats] = useState([]); // State to store seat data
   const Array = [0, 1, 2, 3, 4];
 
   useEffect(() => {
@@ -46,6 +49,25 @@ function Shop() {
     };
 
     fetchReviews();
+  }, [idx]);
+
+  useEffect(() => {
+    const fetchSeatInfo = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/cafe/${idx}/seat`
+        );
+        if (response.status === 200) {
+          setSeats(response.data); // Update seat data state
+        } else {
+          console.error("Failed to fetch seat information");
+        }
+      } catch (error) {
+        console.error("Error fetching seat information:", error);
+      }
+    };
+
+    fetchSeatInfo();
   }, [idx]);
 
   let cafeName = cafeData ? cafeData.name : "알 수 없음";
@@ -141,8 +163,8 @@ function Shop() {
         </div>
       </div>
       <br />
-      {/* SeatView 컴포넌트에 idx 전달 */}
-      <SeatView idx={idx} />
+      {/* Pass idx to the SeatView component */}
+      <SeatView seats={seats}  />
       <br />
       <div class="center-div">
         <FloatingLabel controlId="Textarea2" label="Reviews">

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './ShopRegister.css';
+import useSeatStore from '../SeatPage/SeatStore';
 import SeatRegister from '../SeatPage/SeatRegister';
 
 function ShopRegister() {
@@ -16,7 +17,8 @@ function ShopRegister() {
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [seats, setSeats] = useState([]);
+    const seats = useSeatStore((state) => state.seats); // Get seats from the store
+    const setSeats = useSeatStore((state) => state.setSeats); // Get function to update seats from the store
     const [errors, setErrors] = useState({
         nameError: '',
         addressError: '',
@@ -105,37 +107,61 @@ function ShopRegister() {
 
     const handleModalSubmit = async () => {
         try {
-            // 카페 등록 API 호출
-            const response = await axios.post('http://localhost:8080/api/register-cafe', {
-                name,
-                address,
-                description,
-                mapx: 123331,
-                mapy: 1111111
-            });
-            // const seatsData = seats.map(seat => ({
-            //     seatHasPlug: seat.hasPlug,
-            //     seatSize: seat.size,
-            //     seatNumber: seat.number,
-            //     seatAngle: seat.angle,
-            //     seatCoordinates: {
-            //         x: seat.position.x,
-            //         y: seat.position.y
-            //     }
-            // }));
-            console.log('Cafe registered successfully:', response.data);
-            const shopid = response.data;
-
-            // 좌석 정보를 서버에 저장
-            await axios.post(`http://localhost:8080/api/cafe/${shopid}/seat-register`, seats);
-
-            // 모달 닫기 및 페이지 이동
-            setShowModal(false);
-            navigate(`/shop/${shopid}`);
+            const isAdmin = localStorage.getItem("userInfo");
+            
+            // Parse the userInfo JSON string
+            const userInfo = JSON.parse(isAdmin);
+            
+            // Check if the userType is ADMIN
+            if (userInfo && userInfo.userType === "ADMIN") {
+                // Proceed with the POST request
+                const token = localStorage.getItem("userToken");
+                const headers = {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                };
+    
+                const response = await axios.post('http://localhost:8080/api/register-cafe', {
+                    name,
+                    address,
+                    description,
+                    mapx: 123331,
+                    mapy: 1111111
+                }, { headers });
+    
+                console.log('Cafe registered successfully:', response.data);
+                const shopid = response.data;
+                handleSeatData(seats);
+                
+                const seatDataForPost = JSON.stringify(seats.map(seat => ({
+                    seatHasPlug: seat.plug,
+                    seatSize: seat.size,
+                    seatNumber: seat.id,
+                    seatAngle: seat.orientation === "HORIZONTAL" ? "HORIZONTAL" : "VERTICAL",
+                    seatCoordinates: {
+                        x: seat.position.x,
+                        y: seat.position.y
+                    }
+                })));
+    
+                // 좌석 정보를 서버에 저장
+                await axios.post(`http://localhost:8080/api/cafe/${shopid}/seat-register`, seatDataForPost, { headers });
+    
+                // Clear the seats data after successful registration
+                setSeats([]);
+    
+                // 모달 닫기 및 페이지 이동
+                setShowModal(false);
+                navigate(`/shop/${shopid}`);
+            } else {
+                // Display an error message or handle the case where the user is not an ADMIN
+                console.error('User is not an ADMIN');
+            }
         } catch (error) {
             console.error('Error registering cafe:', error);
         }
     };
+    
 
     const handleSeatData = (data) => {
         setSeats(data); // 기존의 좌석 데이터 대신 새로운 좌석 데이터로 업데이트
@@ -219,7 +245,7 @@ function ShopRegister() {
                     <Modal.Title>좌석 등록</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <SeatRegister existingSeats={seats} onSeatData={handleSeatData} />
+                    <SeatRegister existingSeats={seats}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleModalClose}>닫기</Button>

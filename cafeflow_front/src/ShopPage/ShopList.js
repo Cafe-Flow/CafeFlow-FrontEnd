@@ -11,6 +11,7 @@ import axios from "axios";
 function Shoplist() {
   const [data, setData] = useState(null);
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
+  const [isAdmin, setIsAdmin] = useState(false); // State to hold whether user is admin
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +31,15 @@ function Shoplist() {
     };
 
     fetchData();
+
+    // Check if user is ADMIN
+    const userInfo = localStorage.getItem("userInfo");
+    if (userInfo) {
+      const { userType } = JSON.parse(userInfo);
+      if (userType === "ADMIN") {
+        setIsAdmin(true);
+      }
+    }
   }, [sortBy]); // Run effect whenever sortBy changes
 
   const handleSortChange = (e) => {
@@ -92,9 +102,12 @@ function Shoplist() {
         ))}
       </Row>
       <br />
-      <a class="cafe-register-button">
-        <Button href="/shopregister" style={{color:"white"}}>카페 등록</Button>
-      </a>
+      {/* Render the cafe register button only if user is ADMIN */}
+      {isAdmin && (
+        <a class="cafe-register-button">
+          <Button href="/shopregister" style={{color:"white"}}>카페 등록</Button>
+        </a>
+      )}
     </div>
   );
 }
