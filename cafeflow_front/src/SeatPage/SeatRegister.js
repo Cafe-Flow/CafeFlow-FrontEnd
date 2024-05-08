@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './SeatRegister.css';
+import useSeatStore from './SeatStore';
 
 function SeatRegister({ existingSeats, onSeatData }) {
-    const [seats, setSeats] = useState(existingSeats); // 기존의 좌석 데이터를 초기값으로 설정
+    const seats = useSeatStore((state) => state.seats); // Get seats from the store
+    const setSeats = useSeatStore((state) => state.setSeats); // Get function to update seats from the store
 
     const addSeat = (size) => {
         const newSeat = {
