@@ -104,13 +104,9 @@ function Shoplist() {
       {/* Render the cafe register button only if user is ADMIN */}
       {isAdmin && (
         <a class="cafe-register-button">
-<<<<<<< Updated upstream
-          <Button href="/shopregister" style={{color:"white"}}>카페 등록</Button>
-=======
           <Button href="/shopregister" style={{ color: "white" }}>
             카페 등록
           </Button>
->>>>>>> Stashed changes
         </a>
       )}
     </div>

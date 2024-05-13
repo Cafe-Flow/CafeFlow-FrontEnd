@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { Button, Modal, Container, Navbar } from "react-bootstrap";
+import CustomCheckModal from "./Component/CustomCheckModal";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Navbar, Container } from "react-bootstrap";
+import { useUser } from "./MainPage/UserContext";
 
 function Header() {
   const navigate = useNavigate();
+  const { userInfo, setUserInfo } = useUser();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [nickname, setNickname] = useState("");
@@ -17,19 +20,20 @@ function Header() {
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       if (userInfo) {
         setIsLoggedIn(true);
+        setUserInfo(userInfo);
         setNickname(userInfo.nickname);
         console.log("setting");
       }
     };
 
     updateUserInfo();
-  }, [isLoggedIn]);
+  }, [setUserInfo]);
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("userToken");
+    setUserInfo(null);
     setIsLoggedIn(false);
-
     navigate("/");
     setShowLogoutModal(false);
   };
@@ -98,40 +102,13 @@ function Header() {
           </div>
         </Container>
       </Navbar>
-      <Modal
+      <CustomCheckModal
         show={showLogoutModal}
-        onHide={handleCloseLogoutModal}
-        className="modal-position"
+        handleClose={handleCloseLogoutModal}
+        handleConfirm={handleLogout}
       >
-        <Modal.Header>
-          <Modal.Title className="Logo-font">CafeFlow</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="h6-font" style={{ fontSize: "20px" }}>
-          ☕로그아웃 하시겠습니까?☕
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            style={{
-              backgroundColor: "white",
-              color: "black",
-              borderColor: "white",
-            }}
-            onClick={handleLogout}
-          >
-            예
-          </Button>
-          <Button
-            style={{
-              backgroundColor: "white",
-              color: "black",
-              borderColor: "white",
-            }}
-            onClick={handleCloseLogoutModal}
-          >
-            아니요
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        ☕로그아웃 하시겠습니까?☕
+      </CustomCheckModal>
     </>
   );
 }
