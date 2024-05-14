@@ -34,8 +34,8 @@ function Header() {
     localStorage.removeItem("userToken");
     setUserInfo(null);
     setIsLoggedIn(false);
-    navigate("/");
     setShowLogoutModal(false);
+    navigate("/");
   };
 
   const handleShowLogoutModal = () => setShowLogoutModal(true);

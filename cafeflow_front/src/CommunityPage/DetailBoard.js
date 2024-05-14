@@ -99,12 +99,14 @@ function DetailBoard() {
           </p>
         </div>
         <div className="detail-post-content">
-          {post.image && (
+          {post.image ? (
             <img
               className="detail-post-img"
               src={`data:image/jpeg;base64,${post.image}`}
               alt="Post"
             />
+          ) : (
+            <></>
           )}
           <p className="detail-post-content">{post.content}</p>
         </div>
