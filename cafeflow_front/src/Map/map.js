@@ -35,27 +35,6 @@ function MapInfo() {
     anchor: new navermaps.Point(15, 15),
   };
 
-  const htmlMarker3 = {
-    content:
-      '<div style="width: 30px; height: 30px; background-color: #00f; border-radius: 50%; text-align: center; line-height: 30px; color: white;">3</div>',
-    size: new navermaps.Size(30, 30),
-    anchor: new navermaps.Point(15, 15),
-  };
-
-  const htmlMarker4 = {
-    content:
-      '<div style="width: 30px; height: 30px; background-color: #ff0; border-radius: 50%; text-align: center; line-height: 30px; color: white;">4</div>',
-    size: new navermaps.Size(30, 30),
-    anchor: new navermaps.Point(15, 15),
-  };
-
-  const htmlMarker5 = {
-    content:
-      '<div style="width: 30px; height: 30px; background-color: #0ff; border-radius: 50%; text-align: center; line-height: 30px; color: white;">5</div>',
-    size: new navermaps.Size(30, 30),
-    anchor: new navermaps.Point(15, 15),
-  };
-
   function getCongestionLevel(congestion) {
     return congestion > 80 ? "high" : congestion > 50 ? "medium" : "low";
   }
@@ -150,14 +129,8 @@ function MapInfo() {
             markers: markers,
             disableClickZoom: false,
             gridSize: 120,
-            icons: [
-              htmlMarker1,
-              htmlMarker2,
-              htmlMarker3,
-              htmlMarker4,
-              htmlMarker5,
-            ],
-            indexGenerator: [31, 40, 50, 60, 100],
+            icons: [htmlMarker1, htmlMarker2],
+            indexGenerator: [31, 40],
             stylingFunction: (clusterMarker, count) => {
               clusterMarker
                 .getElement()

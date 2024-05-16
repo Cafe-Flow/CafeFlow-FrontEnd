@@ -159,6 +159,12 @@
   padding-bottom: 50px;
 }
 
+.detail-post-container h1 {
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 400;
+  padding-bottom: 30px;
+}
+
 .detail-post-author {
   padding: 20px;
   font-size: 17px;
