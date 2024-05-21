@@ -27,21 +27,52 @@
 }
 
 .search-results li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-family: "Nanum Gothic", sans-serif;
   padding: 20px 0;
   border-bottom: 1px solid #ccc;
-  cursor: pointer;
   transition: background-color 0.3s;
-}
-
-.search-results li:hover {
-  background-color: #e2e2e2;
 }
 
 .search-results li:last-child {
   border-bottom: none;
-  margin-bottom: 0; /* 마지막 li 요소의 간격을 없앱니다. */
+  margin-bottom: 0;
 }
+
+.si-goo,
+.maejang-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.si-goo {
+  font-weight: 900;
+  margin-right: 10px;
+}
+
+.maejang-name {
+  display: flex;
+  align-items: center;
+}
+
+.search-results button {
+  flex-shrink: 0;
+  border: none;
+  background-color: #d5c4a1;
+  padding: 5px 15px;
+  margin-right: 70px;
+  color: white;
+  border-radius: 10px;
+}
+
+.search-results button:hover {
+  font-weight: 900;
+}
+
 .pagination {
   display: flex;
   list-style: none;
@@ -131,18 +162,6 @@
   margin-right: 5px;
 }
 
-.custom-marker[data-congestion="high"] .congestion-indicator {
-  background-color: red;
-}
-
-.custom-marker[data-congestion="medium"] .congestion-indicator {
-  background-color: yellow;
-}
-
-.custom-marker[data-congestion="low"] .congestion-indicator {
-  background-color: blue;
-}
-
 .custom-cluster1 {
   width: 30px;
   height: 30px;
@@ -178,11 +197,15 @@
 }
 
 .custom-control-button {
-  background-color: #64a8fa;
+  background-color: #d5c4a1;
   color: white;
-  border-radius: 10px;
-  padding: 7px;
+  border-radius: 20px;
+  padding: 10px;
   font-family: "Nanum Gothic", sans-serif;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
+}
+
+.custom-control-button:hover {
+  font-weight: 900;
 }

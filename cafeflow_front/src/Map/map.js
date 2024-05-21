@@ -1,6 +1,5 @@
 /* global naver */
 import React, { useState, useEffect, useRef } from "react";
-import { MdOutlineAutorenew } from "react-icons/md";
 import "./map.css";
 import SearchSection from "../MainPage/SearchSection";
 import ResultList from "./ResultList";
@@ -13,21 +12,17 @@ function MapInfo() {
   const mapInstanceRef = useRef(null);
   const markerRef = useRef(null);
   const dummyMarkersRef = useRef([]);
-  const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [resultsPerPage] = useState(8);
   const [markersData, setMarkersData] = useState([]);
+  const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [cluster, setCluster] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
   const navermaps = useNavermaps();
 
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
-  const currentResults = searchResults.slice(
-    indexOfFirstResult,
-    indexOfLastResult
-  );
-
-  const currentMarkers = markersData.slice(
+  const currentMarkers = visibleMarkers.slice(
     indexOfFirstResult,
     indexOfLastResult
   );
@@ -47,11 +42,11 @@ function MapInfo() {
   };
 
   function getCongestionLevel(congestion) {
-    return congestion > 80 ? "high" : congestion > 50 ? "medium" : "low";
+    return congestion > 80 ? "혼잡" : congestion > 50 ? "적정" : "원활";
   }
 
   function getCongestionColor(congestion) {
-    return congestion > 80 ? "red" : congestion > 50 ? "yellow" : "blue";
+    return congestion > 80 ? "red" : congestion > 50 ? "blue" : "green";
   }
 
   function createDummyData(center, count, distance) {
@@ -80,18 +75,28 @@ function MapInfo() {
 
   const updateMarkers = (map, markers) => {
     const mapBounds = map.getBounds();
+    const visibleMarkersData = [];
 
     markers.forEach((marker) => {
       const position = marker.getPosition();
 
       if (mapBounds.hasLatLng(position)) {
         showMarker(map, marker);
-        console.log("show");
+        visibleMarkersData.push({
+          id: marker.id,
+          lat: position.lat(),
+          lng: position.lng(),
+          title: marker.title,
+          description: marker.description,
+          congestion: marker.congestion,
+        });
       } else {
         hideMarker(marker);
-        console.log("hide");
       }
     });
+
+    setVisibleMarkers(visibleMarkersData);
+    setCurrentPage(1); // Reset to first page on each update
   };
 
   useEffect(() => {
@@ -110,7 +115,7 @@ function MapInfo() {
     mapInstanceRef.current = map;
 
     var locationBtnHtml =
-      '<div class="custom-control-button" id="current-location-btn"> 🔄 현재 위치에서 검색</div>';
+      '<div class="custom-control-button" id="current-location-btn"> ↻ 현위치에서 검색</div>';
 
     var customControl = new naver.maps.CustomControl(locationBtnHtml, {
       position: naver.maps.Position.BOTTOM_CENTER,
@@ -124,8 +129,13 @@ function MapInfo() {
 
       const locationButton = document.getElementById("current-location-btn");
       locationButton.addEventListener("click", () => {
+        // 기존 마커 데이터 초기화
+        setMarkersData([]);
+        setVisibleMarkers([]);
+        setSearchResults([]);
+
+        // 지도의 현재 보이는 구역에서 마커들을 검색
         updateMarkers(map, dummyMarkersRef.current);
-        console.log("실행");
       });
     });
 
@@ -157,7 +167,7 @@ function MapInfo() {
             },
           });
 
-          const dummyPositions = createDummyData(currentLocation, 15, 0.015);
+          const dummyPositions = createDummyData(currentLocation, 30, 0.025);
           const markers = dummyPositions.map((pos, index) => {
             const congestionColor = getCongestionColor(pos.congestion);
             const markerContent = `
@@ -167,7 +177,7 @@ function MapInfo() {
               <p>매장 ${index + 1}</p>
               <span class="congestion-indicator" style="background-color: ${congestionColor};"></span>
             </div>`;
-            return new naver.maps.Marker({
+            const marker = new naver.maps.Marker({
               position: new naver.maps.LatLng(pos.lat, pos.lng),
               map: map,
               icon: {
@@ -176,6 +186,11 @@ function MapInfo() {
                 anchor: new naver.maps.Point(58, 40),
               },
             });
+            marker.id = index + 1;
+            marker.title = `매장 ${index + 1}`;
+            marker.description = `Description for Marker ${index + 1}`;
+            marker.congestion = pos.congestion;
+            return marker;
           });
 
           const clusterOptions = {
@@ -207,6 +222,7 @@ function MapInfo() {
           setMarkersData(markerData);
 
           dummyMarkersRef.current = markers;
+          updateMarkers(map, markers);
         },
         (error) => {
           console.error("오류 : ", error);
@@ -310,14 +326,14 @@ function MapInfo() {
         </div>
       </div>
       <ResultList
-        results={currentResults}
+        results={searchResults}
         onSelect={handleSelect}
         markersData={currentMarkers}
         onMarkerClick={handleMarkerClick}
       />
       <Pagination
         resultsPerPage={resultsPerPage}
-        totalResults={searchResults.length + markersData.length}
+        totalResults={visibleMarkers.length}
         paginate={paginate}
       />
     </>
