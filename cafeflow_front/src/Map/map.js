@@ -1,9 +1,12 @@
 /* global naver */
 import React, { useState, useEffect, useRef } from "react";
+import { MdOutlineAutorenew } from "react-icons/md";
 import "./map.css";
 import SearchSection from "../MainPage/SearchSection";
+import ResultList from "./ResultList";
+import Pagination from "./Pagination";
 import { useNavermaps } from "react-naver-maps";
-import MarkerClustering from "./MarkerClustering.js";
+import MarkerClustering from "./MarkerClustering";
 
 function MapInfo() {
   const mapRef = useRef(null);
@@ -12,16 +15,24 @@ function MapInfo() {
   const dummyMarkersRef = useRef([]);
   const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [resultsPerPage, setResultsPerPage] = useState(10);
+  const [resultsPerPage] = useState(8);
+  const [markersData, setMarkersData] = useState([]);
+  const [cluster, setCluster] = useState(null);
+  const navermaps = useNavermaps();
+
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
   const currentResults = searchResults.slice(
-    currentPage * resultsPerPage - resultsPerPage,
-    currentPage * resultsPerPage
+    indexOfFirstResult,
+    indexOfLastResult
   );
+
+  const currentMarkers = markersData.slice(
+    indexOfFirstResult,
+    indexOfLastResult
+  );
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const [cluster, setCluster] = useState(null);
-  const navermaps = useNavermaps();
 
   const htmlMarker1 = {
     content: '<div class="custom-cluster1">1</div>',
@@ -46,7 +57,7 @@ function MapInfo() {
   function createDummyData(center, count, distance) {
     const positions = [];
     for (let i = 0; i < count; i++) {
-      const angle = Math.random() * 360; // 랜덤 각도
+      const angle = Math.random() * 360;
       const latChange = distance * Math.sin((angle * Math.PI) / 180);
       const lngChange = distance * Math.cos((angle * Math.PI) / 180);
       const congestion = Math.floor(Math.random() * 101);
@@ -58,6 +69,30 @@ function MapInfo() {
     }
     return positions;
   }
+
+  const showMarker = (map, marker) => {
+    marker.setMap(map);
+  };
+
+  const hideMarker = (marker) => {
+    marker.setMap(null);
+  };
+
+  const updateMarkers = (map, markers) => {
+    const mapBounds = map.getBounds();
+
+    markers.forEach((marker) => {
+      const position = marker.getPosition();
+
+      if (mapBounds.hasLatLng(position)) {
+        showMarker(map, marker);
+        console.log("show");
+      } else {
+        hideMarker(marker);
+        console.log("hide");
+      }
+    });
+  };
 
   useEffect(() => {
     const mapOptions = {
@@ -72,6 +107,27 @@ function MapInfo() {
     };
 
     const map = new naver.maps.Map(mapRef.current, mapOptions);
+    mapInstanceRef.current = map;
+
+    var locationBtnHtml =
+      '<div class="custom-control-button" id="current-location-btn"> 🔄 현재 위치에서 검색</div>';
+
+    var customControl = new naver.maps.CustomControl(locationBtnHtml, {
+      position: naver.maps.Position.BOTTOM_CENTER,
+    });
+
+    naver.maps.Event.once(map, "init", function () {
+      customControl.setMap(map);
+
+      const controlWrapper = customControl.getElement().parentNode;
+      controlWrapper.style.marginBottom = "40px";
+
+      const locationButton = document.getElementById("current-location-btn");
+      locationButton.addEventListener("click", () => {
+        updateMarkers(map, dummyMarkersRef.current);
+        console.log("실행");
+      });
+    });
 
     dummyMarkersRef.current.forEach((marker) => {
       marker.setMap(null);
@@ -101,7 +157,7 @@ function MapInfo() {
             },
           });
 
-          const dummyPositions = createDummyData(currentLocation, 30, 0.033);
+          const dummyPositions = createDummyData(currentLocation, 15, 0.015);
           const markers = dummyPositions.map((pos, index) => {
             const congestionColor = getCongestionColor(pos.congestion);
             const markerContent = `
@@ -117,7 +173,7 @@ function MapInfo() {
               icon: {
                 content: markerContent,
                 size: new naver.maps.Size(38, 58),
-                anchor: new naver.maps.Point(19, 58),
+                anchor: new naver.maps.Point(58, 40),
               },
             });
           });
@@ -139,6 +195,18 @@ function MapInfo() {
           };
           const newCluster = new MarkerClustering(clusterOptions);
           setCluster(newCluster);
+
+          const markerData = markers.map((marker, index) => ({
+            id: index + 1,
+            lat: marker.getPosition().lat(),
+            lng: marker.getPosition().lng(),
+            title: `${index + 1}`,
+            description: `Description for Marker ${index + 1}`,
+            congestion: dummyPositions[index].congestion,
+          }));
+          setMarkersData(markerData);
+
+          dummyMarkersRef.current = markers;
         },
         (error) => {
           console.error("오류 : ", error);
@@ -148,29 +216,6 @@ function MapInfo() {
       console.log("Geolocation is not supported by this browser.");
     }
   }, [navermaps]);
-
-  function createDummyMarkers(map, count) {
-    const markers = [];
-    for (let i = 0; i < count; i++) {
-      const position = new navermaps.LatLng(
-        37.5666103 + Math.random() * 0.1 - 0.05, // Random latitude within a range
-        126.9783882 + Math.random() * 0.1 - 0.05 // Random longitude within a range
-      );
-
-      const marker = new navermaps.Marker({
-        position,
-        map: map,
-        title: `Marker ${i + 1}`,
-        icon: {
-          content: '<div class="custom-marker">매장 ' + (i + 1) + "</div>",
-          size: new navermaps.Size(38, 58),
-          anchor: new navermaps.Point(19, 58),
-        },
-      });
-      markers.push(marker);
-    }
-    return markers;
-  }
 
   const searchLocation = (searchInput) => {
     naver.maps.Service.geocode(
@@ -227,72 +272,31 @@ function MapInfo() {
     }
   };
 
-  function SearchResultList({ results, onSelect }) {
-    if (!results.length) {
-      return <div>검색 결과가 없습니다</div>;
+  const handleMarkerClick = (marker) => {
+    const newLocation = new navermaps.LatLng(marker.lat, marker.lng);
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.setCenter(newLocation);
     }
+  };
 
-    return (
-      <ul className="search-results">
-        {results.map((result, index) => (
-          <li key={index} onClick={() => onSelect(result)}>
-            {result.roadAddress} - {result.jibunAddress}
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  const searchNearby = () => {
+  const moveToCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const currentLocation = new naver.maps.LatLng(
+          const currentLocation = new navermaps.LatLng(
             position.coords.latitude,
             position.coords.longitude
           );
           if (mapInstanceRef.current) {
             mapInstanceRef.current.setCenter(currentLocation);
-            if (!markerRef.current) {
-              markerRef.current = new naver.maps.Marker({
-                position: currentLocation,
-                map: mapInstanceRef.current,
-              });
-            } else {
-              markerRef.current.setPosition(currentLocation);
-            }
           }
         },
         (error) => {
-          console.error("Geolocation error: ", error);
+          console.error("Error getting current position: ", error);
         }
       );
-    } else {
-      console.log("Geolocation is not supported by this browser.");
     }
   };
-
-  function Pagination({ resultsPerPage, totalResults, paginate }) {
-    const pageNumbers = [];
-
-    for (let i = 1; i <= Math.ceil(totalResults / resultsPerPage); i++) {
-      pageNumbers.push(i);
-    }
-
-    return (
-      <nav>
-        <ul className="pagination">
-          {pageNumbers.map((number) => (
-            <li key={number} className="page-item">
-              <a onClick={() => paginate(number)} className="page-link">
-                {number}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    );
-  }
 
   return (
     <>
@@ -305,10 +309,15 @@ function MapInfo() {
           <div ref={mapRef} style={{ width: "100%", height: "100%" }}></div>
         </div>
       </div>
-      <SearchResultList results={currentResults} onSelect={handleSelect} />
+      <ResultList
+        results={currentResults}
+        onSelect={handleSelect}
+        markersData={currentMarkers}
+        onMarkerClick={handleMarkerClick}
+      />
       <Pagination
         resultsPerPage={resultsPerPage}
-        totalResults={searchResults.length}
+        totalResults={searchResults.length + markersData.length}
         paginate={paginate}
       />
     </>

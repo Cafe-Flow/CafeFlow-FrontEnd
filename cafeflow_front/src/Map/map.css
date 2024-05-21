@@ -22,14 +22,13 @@
   padding: 0;
   margin: 20px auto;
   width: 80%;
-  background: #f9f9f9;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .search-results li {
   font-family: "Nanum Gothic", sans-serif;
-  padding: 10px 20px;
+  padding: 20px 0;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -41,8 +40,8 @@
 
 .search-results li:last-child {
   border-bottom: none;
+  margin-bottom: 0; /* 마지막 li 요소의 간격을 없앱니다. */
 }
-
 .pagination {
   display: flex;
   list-style: none;
@@ -157,4 +156,33 @@
 
 .custom-cluster1:hover {
   transform: scale(1.1);
+}
+
+.marker-info-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.marker-info {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.marker-info:hover {
+  background-color: #f1f1f1;
+}
+
+.custom-control-button {
+  background-color: #64a8fa;
+  color: white;
+  border-radius: 10px;
+  padding: 7px;
+  font-family: "Nanum Gothic", sans-serif;
+  cursor: pointer;
+  font-size: 18px;
 }
