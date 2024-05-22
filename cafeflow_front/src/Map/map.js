@@ -37,8 +37,20 @@ function MapInfo() {
   };
 
   const htmlMarker2 = {
-    content: '<div class="custom-cluster2"> 2</div> ',
-    size: new navermaps.Size(30, 30),
+    content: '<div class="custom-cluster2">2</div>',
+    size: new navermaps.Size(40, 40),
+    anchor: new navermaps.Point(15, 15),
+  };
+
+  const htmlMarker3 = {
+    content: '<div class="custom-cluster3">4</div>',
+    size: new navermaps.Size(50, 50),
+    anchor: new navermaps.Point(15, 15),
+  };
+
+  const htmlMarker4 = {
+    content: '<div class="custom-cluster4">4</div>',
+    size: new navermaps.Size(60, 60),
     anchor: new navermaps.Point(15, 15),
   };
 
@@ -97,7 +109,7 @@ function MapInfo() {
     });
 
     setVisibleMarkers(visibleMarkersData);
-    setCurrentPage(1); // Reset to first page on each update
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -209,9 +221,9 @@ function MapInfo() {
             map: map,
             markers: markers,
             disableClickZoom: false,
-            gridSize: 120,
-            icons: [htmlMarker1, htmlMarker2],
-            indexGenerator: [31, 40],
+            gridSize: 100,
+            icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4],
+            indexGenerator: [26, 51, 76, 101],
             stylingFunction: (clusterMarker, count) => {
               clusterMarker
                 .getElement()
@@ -316,6 +328,7 @@ function MapInfo() {
           );
           if (mapInstanceRef.current) {
             mapInstanceRef.current.setCenter(currentLocation);
+            mapInstanceRef.current.setZoom(14);
           }
         },
         (error) => {
@@ -334,6 +347,26 @@ function MapInfo() {
       <div className="map-container">
         <div className="map-content">
           <div ref={mapRef} style={{ width: "100%", height: "100%" }}></div>
+        </div>
+        <div className="congestion-sentence">
+          <button onClick={moveToCurrentLocation}>↻ 내 위치</button>
+          <h6>
+            원활
+            <span
+              className="congestion-indicator1"
+              style={{ backgroundColor: "green" }}
+            ></span>{" "}
+            적정
+            <span
+              className="congestion-indicator1"
+              style={{ backgroundColor: "blue" }}
+            ></span>{" "}
+            혼잡
+            <span
+              className="congestion-indicator1"
+              style={{ backgroundColor: "red" }}
+            ></span>{" "}
+          </h6>
         </div>
       </div>
       <ResultList
