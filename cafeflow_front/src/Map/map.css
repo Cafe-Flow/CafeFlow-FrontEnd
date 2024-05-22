@@ -26,6 +26,11 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.search-results h5 {
+  font-size: 16px;
+  margin: 0 auto;
+}
+
 .search-results li {
   display: flex;
   align-items: center;

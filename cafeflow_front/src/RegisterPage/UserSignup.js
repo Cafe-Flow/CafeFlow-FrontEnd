@@ -188,11 +188,11 @@ function UserSignupPage() {
         .then((blob) => {
           const file = new File([blob], "default.png", { type: "image/png" });
           setImage(file);
-          resolve(file); // 파일 설정 후 Promise를 resolve 함
+          resolve(file);
         })
         .catch((error) => {
           console.error("Default image loading failed:", error);
-          reject(error); // 오류 발생 시 Promise를 reject 함
+          reject(error);
         });
     });
   };

@@ -18,6 +18,7 @@ function MapInfo() {
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [cluster, setCluster] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
+  const customControlRef = useRef(null);
   const navermaps = useNavermaps();
 
   const indexOfLastResult = currentPage * resultsPerPage;
@@ -115,11 +116,13 @@ function MapInfo() {
     mapInstanceRef.current = map;
 
     var locationBtnHtml =
-      '<div class="custom-control-button" id="current-location-btn"> ↻ 현위치에서 검색</div>';
+      '<div class="custom-control-button" id="current-location-btn"> ↻ 현재 화면에서 검색</div>';
 
     var customControl = new naver.maps.CustomControl(locationBtnHtml, {
       position: naver.maps.Position.BOTTOM_CENTER,
     });
+
+    customControlRef.current = customControl;
 
     naver.maps.Event.once(map, "init", function () {
       customControl.setMap(map);
@@ -129,13 +132,20 @@ function MapInfo() {
 
       const locationButton = document.getElementById("current-location-btn");
       locationButton.addEventListener("click", () => {
-        // 기존 마커 데이터 초기화
         setMarkersData([]);
         setVisibleMarkers([]);
         setSearchResults([]);
 
-        // 지도의 현재 보이는 구역에서 마커들을 검색
         updateMarkers(map, dummyMarkersRef.current);
+      });
+
+      naver.maps.Event.addListener(map, "zoom_changed", () => {
+        const zoomLevel = map.getZoom();
+        if (zoomLevel <= 12) {
+          customControlRef.current.getElement().style.display = "none";
+        } else {
+          customControlRef.current.getElement().style.display = "block";
+        }
       });
     });
 
@@ -195,7 +205,7 @@ function MapInfo() {
 
           const clusterOptions = {
             minClusterSize: 2,
-            maxZoom: 13,
+            maxZoom: 15,
             map: map,
             markers: markers,
             disableClickZoom: false,
@@ -208,6 +218,7 @@ function MapInfo() {
                 .querySelector("div:first-child").innerText = count;
             },
           };
+
           const newCluster = new MarkerClustering(clusterOptions);
           setCluster(newCluster);
 
@@ -335,6 +346,7 @@ function MapInfo() {
         resultsPerPage={resultsPerPage}
         totalResults={visibleMarkers.length}
         paginate={paginate}
+        currentPage={currentPage}
       />
     </>
   );

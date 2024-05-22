@@ -11,30 +11,31 @@ function getCongestionColor(congestion) {
 function ResultList({ results, onSelect, markersData, onMarkerClick }) {
   const allResults = markersData;
 
-  if (allResults.length === 0) {
-    return <div>결과가 없습니다.</div>;
-  }
-
   return (
     <ul className="search-results">
-      {allResults.map((item, index) => (
-        <li key={index} onClick={() => onMarkerClick(item)}>
-          <span className="si-goo">ㅇㅇ시 / ㅁㅁ구</span>
-          <span className="maejang-name">
-            {item.title} - {getCongestionLevel(item.congestion)}{" "}
-            <span
-              className="congestion-indicator"
-              style={{
-                backgroundColor: getCongestionColor(item.congestion),
-                marginLeft: "10px",
-              }}
-            ></span>
-          </span>
-          <button>조회</button>
+      {allResults.length === 0 ? (
+        <li>
+          <h5>결과가 없습니다.</h5>
         </li>
-      ))}
+      ) : (
+        allResults.map((item, index) => (
+          <li key={index} onClick={() => onMarkerClick(item)}>
+            <span className="si-goo">ㅇㅇ시 / ㅁㅁ구</span>
+            <span className="maejang-name">
+              {item.title} - {getCongestionLevel(item.congestion)}{" "}
+              <span
+                className="congestion-indicator"
+                style={{
+                  backgroundColor: getCongestionColor(item.congestion),
+                  marginLeft: "10px",
+                }}
+              ></span>
+            </span>
+            <button>조회</button>
+          </li>
+        ))
+      )}
     </ul>
   );
 }
-
 export default ResultList;
