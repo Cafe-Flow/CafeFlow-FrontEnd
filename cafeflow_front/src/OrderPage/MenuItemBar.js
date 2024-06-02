@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CiShoppingBasket } from "react-icons/ci";
+import { FaBasketShopping } from "react-icons/fa6";
 import "./OrderList.css";
 
 function MenuItemBar({ items, onAddToCart }) {
@@ -50,8 +50,8 @@ function MenuItemBar({ items, onAddToCart }) {
           <img src={item.image} alt={item.name} />
           <div className="menu-item-bar">
             <p>{item.name}</p>
-            <CiShoppingBasket
-              onClick={(e) => handleBasketClick(item.name, e)} // name 인자를 전달
+            <FaBasketShopping
+              onClick={(e) => handleBasketClick(item.name, e)}
               style={{ cursor: "pointer" }}
             />
             {showQuantity[item.name] && (

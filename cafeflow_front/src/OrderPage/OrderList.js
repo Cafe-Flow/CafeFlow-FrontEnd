@@ -3,9 +3,10 @@ import "./OrderList.css";
 import menuData from "./MenuItem.js";
 import MenuItemBar from "./MenuItemBar.js";
 import { CiShoppingBasket } from "react-icons/ci";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 function OrderList() {
-  const [selectedItem, setSelectedItem] = useState("🍹음료");
+  const [selectedItem, setSelectedItem] = useState("음료");
   const [selectedDetails, setSelectedDetails] = useState({
     전체상품: true,
     카페인: false,
@@ -79,12 +80,38 @@ function OrderList() {
     return selectedMenuItems;
   };
 
+  const increaseQuantity = (itemName) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.name === itemName ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  const decreaseQuantity = (itemName) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.name === itemName
+          ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+          : item
+      )
+    );
+  };
+
+  const getTotalQuantity = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  const handleRemoveFromCart = (itemName) => {
+    setCart((prevCart) => prevCart.filter((item) => item.name !== itemName));
+  };
+
   return (
     <div className="orderlist-page">
       <div className="orderlist-top">
         <h3>{selectedItem}</h3>
         <ul className="orderlist-list">
-          {["🍹음료", "🥪푸드", "💬기타"].map((item) => (
+          {["음료", "푸드", "기타"].map((item) => (
             <li
               key={item}
               className={selectedItem === item ? "active" : ""}
@@ -94,25 +121,38 @@ function OrderList() {
             </li>
           ))}
         </ul>
-        <div className="orderlist-bucket">
+        <div onClick={handleCartClick} className="orderlist-bucket">
           <CiShoppingBasket />
           장바구니
-          {cart.length > 0 && <span>{cart.length}</span>}
+          {getTotalQuantity() > 0 && (
+            <span className="cart-count">{getTotalQuantity()}</span>
+          )}
+          {showCart && (
+            <div className="cart-modal" onClick={(e) => e.stopPropagation()}>
+              <span className="close-modal" onClick={handleCartClick}>
+                &times;
+              </span>
+              <h5>장바구니</h5>
+              <ul>
+                {cart.map((item) => (
+                  <li key={item.name}>
+                    {item.name} {item.quantity}잔
+                    <button onClick={() => decreaseQuantity(item.name)}>
+                      -
+                    </button>
+                    <button onClick={() => increaseQuantity(item.name)}>
+                      +
+                    </button>
+                    <FaRegTrashAlt
+                      onClick={() => handleRemoveFromCart(item.name)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-        {showCart && (
-          <div className="cart-modal">
-            <h2>장바구니</h2>
-            <ul>
-              {cart.map((item) => (
-                <li key={item.name}>
-                  {item.name} - {item.quantity}개
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleCartClick}>닫기</button>
-          </div>
-        )}
-        {selectedItem === "🍹음료" && (
+        {selectedItem === "음료" && (
           <>
             <ul className="orderlist-list-detail">
               {["전체상품", "커피", "라떼", "티", "스무디", "주스"].map(
