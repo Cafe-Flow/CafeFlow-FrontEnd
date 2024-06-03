@@ -39,7 +39,7 @@ function Modify() {
   }, []);
 
   const fetchStates = async (initialStateId) => {
-    const response = await fetch("http://localhost:8080/api/locations/states");
+    const response = await fetch("/api/locations/states");
     const data = await response.json();
     setStates(data);
     if (initialStateId) {
@@ -48,9 +48,7 @@ function Modify() {
   };
 
   const fetchCities = async (stateId) => {
-    const response = await fetch(
-      `http://localhost:8080/api/locations/states/${stateId}/cities`
-    );
+    const response = await fetch(`/api/locations/states/${stateId}/cities`);
     const data = await response.json();
     setCities(data);
     console.log(data);
@@ -116,16 +114,13 @@ function Modify() {
     formData.append("image", image);
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/auth/update-profile/${userInfo.id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`/api/auth/update-profile/${userInfo.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -145,9 +140,7 @@ function Modify() {
   const fetchStateName = async (stateId) => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `http://localhost:8080/api/locations/states`
-      );
+      const response = await fetch(`/api/locations/states`);
       const data = await response.json();
       const state = data.find((state) => state.id === stateId);
       setUserInfo((prev) => ({
@@ -161,9 +154,7 @@ function Modify() {
 
   const fetchCityName = async (stateId, cityId) => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/locations/states/${stateId}/cities`
-      );
+      const response = await fetch(`/api/locations/states/${stateId}/cities`);
       const cities = await response.json();
       const city = cities.find((city) => city.id === cityId);
       setUserInfo((prev) => ({ ...prev, cityName: city.name }));
