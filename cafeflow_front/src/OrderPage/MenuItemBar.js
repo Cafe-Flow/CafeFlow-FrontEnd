@@ -27,13 +27,6 @@ function MenuItemBar({ items, onAddToCart }) {
     }));
   };
 
-  const handleQuantityChange = (name, value) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [name]: value,
-    }));
-  };
-
   const handleAddToCart = (item, e) => {
     const quantity = quantities[item.name] || 1;
     onAddToCart({ ...item, quantity });
@@ -49,7 +42,9 @@ function MenuItemBar({ items, onAddToCart }) {
         <div key={item.name} className="menu-item">
           <img src={item.image} alt={item.name} />
           <div className="menu-item-bar">
-            <p>{item.name}</p>
+            <p>
+              {item.name} {item.price}원
+            </p>
             <FaBasketShopping
               onClick={(e) => handleBasketClick(item.name, e)}
               style={{ cursor: "pointer" }}
@@ -77,6 +72,7 @@ function MenuItemBar({ items, onAddToCart }) {
                 >
                   +
                 </button>
+                <p>{item.price * (quantities[item.name] || 1)}원</p>
                 <button onClick={(e) => handleAddToCart(item, e)}>추가</button>
               </div>
             )}

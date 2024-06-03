@@ -106,6 +106,23 @@ function OrderList() {
     setCart((prevCart) => prevCart.filter((item) => item.name !== itemName));
   };
 
+  const getItemPrice = (itemName) => {
+    for (const category in menuData) {
+      const item = menuData[category].find((i) => i.name === itemName);
+      if (item) {
+        return item.price;
+      }
+    }
+    return 0;
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce(
+      (total, item) => total + item.quantity * getItemPrice(item.name),
+      0
+    );
+  };
+
   return (
     <div className="orderlist-page">
       <div className="orderlist-top">
@@ -129,9 +146,7 @@ function OrderList() {
           )}
           {showCart && (
             <div className="cart-modal" onClick={(e) => e.stopPropagation()}>
-              <span className="close-modal" onClick={handleCartClick}>
-                &times;
-              </span>
+              <span onClick={handleCartClick}>&times;</span>
               <h5>장바구니</h5>
               <ul>
                 {cart.map((item) => (
@@ -143,12 +158,19 @@ function OrderList() {
                     <button onClick={() => increaseQuantity(item.name)}>
                       +
                     </button>
+                    <p>{item.quantity * getItemPrice(item.name)}원</p>
                     <FaRegTrashAlt
                       onClick={() => handleRemoveFromCart(item.name)}
                     />
                   </li>
                 ))}
               </ul>
+              {getTotalQuantity() > 0 && (
+                <div className="cart-modal-bottom">
+                  <p>총 금액 : {getTotalPrice()}원</p>
+                  <button>주문하기</button>
+                </div>
+              )}
             </div>
           )}
         </div>

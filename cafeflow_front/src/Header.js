@@ -65,7 +65,12 @@ function Header() {
               >
                 위치 찾기
               </a>
-              <a className="nav-element" href="/">
+              <a
+                className={`nav-element ${
+                  location.pathname.startsWith("/order") ? "active" : ""
+                }`}
+                href="/"
+              >
                 메뉴 주문
               </a>
               <a className="nav-element" href="/">
