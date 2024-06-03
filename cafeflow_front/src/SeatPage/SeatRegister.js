@@ -101,7 +101,7 @@ function SeatRegister({ existingSeats, onSeatData }) {
                                 <button className="rotate-btn" onClick={() => rotateSeat(seat.id)}>↻</button>
                                 <button className="delete-btn" onClick={() => deleteSeat(seat.id)}>X</button>
                                 <button className="plug-btn" onClick={() => togglePlug(seat.id)}>
-                                    {seat.plug ? "🔌" : "Off"}
+                                    {seat.seatHasPlug ? "🔌" : "Off"}
                                 </button>
                                 <div>
                                     Position: {seat.position.x}, {seat.position.y}

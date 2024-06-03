@@ -16,8 +16,8 @@ import NewBoard from "./CommunityPage/NewBoard.js";
 import Shoplist from "./ShopPage/ShopList.js";
 import Shop from "./ShopPage/Shop.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
-import SeatRegister from "./SeatPage/SeatRegister.js";
-
+import SeatRegister from "./SeatPage/SeatRegister.js"; 
+import SeatView from "./SeatPage/SeatView.js";
 
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
             <Route path="/shop/:idx" element={<Shop />} />
             <Route path="/shopregister" element={<ShopRegister />} />
             <Route path="/seat" element={<SeatRegister />} />
-
+            <Route path="/seat/:cafeId" element={<SeatView />} />
           </Routes>
         </div>
       </div>
