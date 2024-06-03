@@ -28,6 +28,7 @@ function Modify() {
     const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
     if (storedUserInfo) {
       setUserInfo(storedUserInfo);
+      console.log(`${localStorage.getItem("userToken")}`);
       setTempUserInfo(storedUserInfo);
       setPreviewUrl(`data:image/jpeg;base64,${tempUserInfo.image}`);
       fetchStates(storedUserInfo.stateId);
@@ -74,6 +75,9 @@ function Modify() {
   };
 
   const handleModify = () => {
+    const previousImageUrl = `data:image/jpeg;base64,${userInfo.image}`;
+    setPreviewUrl(previousImageUrl);
+
     setTempUserInfo({ ...userInfo });
     setIsModalOpen(true);
   };
@@ -321,7 +325,7 @@ function Modify() {
             <Form.Group controlId="formState">
               <Form.Label className="form-label">지역 (주/도)</Form.Label>
               <Form.Select
-                value={tempUserInfo.stateId}
+                value={tempUserInfo.stateId || ""}
                 onChange={handleStateChange}
               >
                 {states.map((state) => (

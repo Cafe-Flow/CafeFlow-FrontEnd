@@ -107,7 +107,9 @@ function UserSignupPage() {
       newErrors.passwordError = "비밀번호는 8자 이상이어야 합니다.";
       isValid = false;
     }
-
+    if (!image) {
+      loadDefaultImageAsFile();
+    }
     setErrors(newErrors);
     return isValid;
   };
@@ -179,6 +181,22 @@ function UserSignupPage() {
     }
   }
 
+  const loadDefaultImageAsFile = () => {
+    return new Promise((resolve, reject) => {
+      fetch("/img/default.png")
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "default.png", { type: "image/png" });
+          setImage(file);
+          resolve(file);
+        })
+        .catch((error) => {
+          console.error("Default image loading failed:", error);
+          reject(error);
+        });
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -246,6 +264,7 @@ function UserSignupPage() {
         reader.onloadend = () => {
           setPreviewUrl(reader.result);
           setImage(file);
+          console.log(file);
         };
         reader.readAsDataURL(file);
       }
@@ -293,6 +312,7 @@ function UserSignupPage() {
               setFormData({ ...formData, username: e.target.value });
               setErrors({ ...errors, usernameError: "" });
             }}
+            maxLength={4}
           />
           <Form.Control.Feedback type="invalid">
             {errors.usernameError}
@@ -410,7 +430,7 @@ function UserSignupPage() {
             height: "60px",
           }}
         >
-          다음
+          다음 ({step}/3)
         </Button>
       </>
     );
@@ -481,7 +501,7 @@ function UserSignupPage() {
           height: "60px",
         }}
       >
-        다음
+        다음 ({step}/3)
       </Button>
     </>
   );
@@ -567,7 +587,7 @@ function UserSignupPage() {
             height: "60px",
           }}
         >
-          회원가입
+          회원가입 ({step}/3)
         </Button>
       </>
     );
@@ -586,7 +606,6 @@ function UserSignupPage() {
       <div className="h6-font">
         <p>서비스 이용자</p>
       </div>
-      <p className="h6-font"> {step} / 3 </p>
       <Form
         className="input-box"
         style={{ display: "flex", flexDirection: "column" }}

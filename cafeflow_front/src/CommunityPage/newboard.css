@@ -1,0 +1,38 @@
+.newboard-icon {
+  font-size: 45px;
+}
+
+.newboard-icon:hover {
+  color: #999;
+}
+
+.newboard-title {
+  width: 50%;
+  min-width: 340px;
+  padding-bottom: 40px;
+}
+
+.newboard-content-control {
+  height: 20vh;
+}
+
+.newboard-img-control {
+  width: 50%;
+  min-width: 340px;
+  margin-bottom: 100px;
+}
+
+.newboard-submit-button {
+  font-size: 20px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.newboard-submit-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}

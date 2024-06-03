@@ -2,6 +2,7 @@
   text-align: center;
   width: 100%;
   margin: 0 auto;
+  font-family: "Nanum Gothic", sans-serif;
 }
 
 .hide-on-expanded {
@@ -97,7 +98,7 @@
   position: absolute;
   left: 100%;
   right: 100%;
-  bottom: -20px;
+  bottom: -15px;
   height: 3px;
   background-color: black;
   transition: left 0.3s ease, right 0.3s ease;
@@ -236,9 +237,10 @@ a:visited {
   color: white !important;
 }
 
-.page-item:active {
+.pagination .page-item.active .page-link {
   background-color: #d5c4a1 !important;
   color: white !important;
+  border-color: white !important;
 }
 
 @keyframes loading-animation {

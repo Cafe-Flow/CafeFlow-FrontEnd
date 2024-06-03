@@ -77,7 +77,7 @@ function LoginPage() {
 
     if (validateForm()) {
       setIsLoading(true);
-      const loginUrl = "http://localhost:8080/api/auth/login";
+      const loginUrl = "/api/auth/login";
 
       try {
         const response = await fetch(loginUrl, {

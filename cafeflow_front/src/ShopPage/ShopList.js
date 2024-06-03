@@ -19,8 +19,7 @@ function Shoplist() {
         let url = "http://localhost:8080/api/cafe";
         if (sortBy === "1") {
           url += ""; // Append sort option to URL if sortBy is "1"
-        }
-        else if (sortBy === "0") { 
+        } else if (sortBy === "0") {
           url += "?sort-by=created-at";
         }
         const response = await axios.get(url);
@@ -50,11 +49,11 @@ function Shoplist() {
   let listLength = data ? parseInt(data.length) : 0;
 
   const radios = [
-    { name: '기본 순', value: '0' },
-    { name: '최신 순', value: '1' }
+    { name: "기본 순", value: "0" },
+    { name: "최신 순", value: "1" },
   ];
 
-  const [radioValue, setRadioValue] = useState('0');
+  const [radioValue, setRadioValue] = useState("0");
 
   return (
     <div className="Shop">
@@ -67,7 +66,7 @@ function Shoplist() {
                 key={idx}
                 id={`radio-${idx}`}
                 type="radio"
-                variant={idx % 2 ? 'outline-success' : 'outline-danger'}
+                variant={idx % 2 ? "outline-success" : "outline-danger"}
                 name="radio"
                 value={radio.value}
                 checked={radioValue === radio.value}
@@ -105,7 +104,9 @@ function Shoplist() {
       {/* Render the cafe register button only if user is ADMIN */}
       {isAdmin && (
         <a class="cafe-register-button">
-          <Button href="/shopregister" style={{color:"white"}}>카페 등록</Button>
+          <Button href="/shopregister" style={{ color: "white" }}>
+            카페 등록
+          </Button>
         </a>
       )}
     </div>

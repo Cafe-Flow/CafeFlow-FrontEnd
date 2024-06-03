@@ -15,7 +15,7 @@ function AdminSignupPage() {
     password: "",
     confirmPassword: "",
     gender: "",
-    age: "",
+    age: 0,
     stateId: "",
     cityId: "",
   });
@@ -107,6 +107,9 @@ function AdminSignupPage() {
       newErrors.passwordError = "비밀번호는 8자 이상이어야 합니다.";
       isValid = false;
     }
+    if (!image) {
+      loadDefaultImageAsFile();
+    }
     setErrors(newErrors);
     return isValid;
   };
@@ -177,6 +180,22 @@ function AdminSignupPage() {
       throw error;
     }
   }
+
+  const loadDefaultImageAsFile = () => {
+    return new Promise((resolve, reject) => {
+      fetch("/img/default.png")
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "default.png", { type: "image/png" });
+          setImage(file);
+          resolve(file); // 파일 설정 후 Promise를 resolve 함
+        })
+        .catch((error) => {
+          console.error("Default image loading failed:", error);
+          reject(error); // 오류 발생 시 Promise를 reject 함
+        });
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -293,6 +312,7 @@ function AdminSignupPage() {
               setFormData({ ...formData, username: e.target.value });
               setErrors({ ...errors, usernameError: "" });
             }}
+            maxLength={4}
           />
           <Form.Control.Feedback type="invalid">
             {errors.usernameError}
@@ -410,7 +430,7 @@ function AdminSignupPage() {
             height: "60px",
           }}
         >
-          다음
+          다음 ({step}/3)
         </Button>
       </>
     );
@@ -481,7 +501,7 @@ function AdminSignupPage() {
           height: "60px",
         }}
       >
-        다음
+        다음 ({step}/3)
       </Button>
     </>
   );
@@ -567,7 +587,7 @@ function AdminSignupPage() {
             height: "60px",
           }}
         >
-          회원가입
+          회원가입 ({step}/3)
         </Button>
       </>
     );
@@ -582,7 +602,6 @@ function AdminSignupPage() {
       <div className="h6-font">
         <p>카페 관리자</p>
       </div>
-      <p className="h6-font"> {step} / 3 </p>
       <Form
         className="input-box"
         style={{ display: "flex", flexDirection: "column" }}
