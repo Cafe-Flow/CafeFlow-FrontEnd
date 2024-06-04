@@ -18,6 +18,7 @@ import Shop from "./ShopPage/Shop.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatRegister from "./SeatPage/SeatRegister.js";
 import OrderList from "./OrderPage/OrderList.js";
+import MainChat from "./Chat/MainChat.js";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/shop/:idx" element={<Shop />} />
             <Route path="/shopregister" element={<ShopRegister />} />
             <Route path="/seat" element={<SeatRegister />} />
+            <Route path="/chat" element={<MainChat />} />
           </Routes>
         </div>
       </div>

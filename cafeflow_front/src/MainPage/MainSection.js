@@ -7,7 +7,7 @@ function MainSection() {
 
   return (
     <>
-      <Carousel>
+      <Carousel interval={3000}>
         <Carousel.Item>
           <Card className="custom-card" style={{ backgroundColor: "#43f770" }}>
             <CardBody className="custom-card-body">

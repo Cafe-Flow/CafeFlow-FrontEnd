@@ -5,6 +5,10 @@
   font-family: "Nanum Gothic", sans-serif;
 }
 
+img {
+  user-select: none;
+}
+
 .hide-on-expanded {
   font-size: large;
   display: flex;

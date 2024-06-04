@@ -8,7 +8,7 @@ function getCongestionColor(congestion) {
   return congestion > 80 ? "red" : congestion > 50 ? "blue" : "green";
 }
 
-function ResultList({ results, onSelect, markersData, onMarkerClick }) {
+function ResultList({ markersData, onMarkerClick }) {
   const allResults = markersData;
 
   return (

@@ -1,7 +1,7 @@
 /* global naver */
 import React, { useState, useEffect, useRef } from "react";
 import "./map.css";
-import SearchSection from "../MainPage/SearchSection";
+import SearchSection from "./SearchSection";
 import ResultList from "./ResultList";
 import Pagination from "./Pagination";
 import { useNavermaps } from "react-naver-maps";
@@ -10,7 +10,8 @@ import MarkerClustering from "./MarkerClustering";
 function MapInfo() {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
-  const markerRef = useRef(null);
+  const userLocationMarkerRef = useRef(null);
+  const searchMarkerRef = useRef(null);
   const dummyMarkersRef = useRef([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [resultsPerPage] = useState(8);
@@ -86,6 +87,14 @@ function MapInfo() {
     marker.setMap(null);
   };
 
+  const handleLocationButtonClick = (map, dummyMarkersRef) => {
+    setMarkersData([]);
+    setVisibleMarkers([]);
+    setSearchResults([]);
+
+    updateMarkers(map, dummyMarkersRef.current);
+  };
+
   const updateMarkers = (map, markers) => {
     const mapBounds = map.getBounds();
     const visibleMarkersData = [];
@@ -143,13 +152,9 @@ function MapInfo() {
       controlWrapper.style.marginBottom = "40px";
 
       const locationButton = document.getElementById("current-location-btn");
-      locationButton.addEventListener("click", () => {
-        setMarkersData([]);
-        setVisibleMarkers([]);
-        setSearchResults([]);
-
-        updateMarkers(map, dummyMarkersRef.current);
-      });
+      locationButton.addEventListener("click", () =>
+        handleLocationButtonClick(map, dummyMarkersRef)
+      );
 
       naver.maps.Event.addListener(map, "zoom_changed", () => {
         const zoomLevel = map.getZoom();
@@ -174,7 +179,7 @@ function MapInfo() {
             position.coords.longitude
           );
           map.setCenter(currentLocation);
-          markerRef.current = new naver.maps.Marker({
+          userLocationMarkerRef.current = new naver.maps.Marker({
             position: currentLocation,
             map: map,
             title: "Your Location",
@@ -185,7 +190,7 @@ function MapInfo() {
                 'style="width: 32px; height: 32px;">',
               size: new naver.maps.Size(50, 52),
               origin: new naver.maps.Point(0, 0),
-              anchor: new naver.maps.Point(25, 26),
+              anchor: new naver.maps.Point(17, 26),
             },
           });
 
@@ -283,32 +288,29 @@ function MapInfo() {
         if (mapInstanceRef.current) {
           mapInstanceRef.current.setCenter(newLocation);
 
-          if (markerRef.current) {
-            markerRef.current.setPosition(newLocation);
-          } else {
-            markerRef.current = new naver.maps.Marker({
-              position: newLocation,
-              map: mapInstanceRef.current,
-            });
+          // searchMarkerRef를 사용하여 검색 결과 마커를 관리
+          if (searchMarkerRef.current) {
+            searchMarkerRef.current.setMap(null);
           }
+
+          // 새로운 검색 결과 마커 생성
+          searchMarkerRef.current = new naver.maps.Marker({
+            position: newLocation,
+            map: mapInstanceRef.current,
+            title: "Search Result",
+            zIndex: 1000,
+            icon: {
+              content:
+                '<img src="/img/search-marker.png" alt="검색 결과" ' +
+                'style="width: 32px; height: 32px;">',
+              size: new naver.maps.Size(25, 26),
+              origin: new naver.maps.Point(0, 0),
+              anchor: new naver.maps.Point(15, 26),
+            },
+          });
         }
       }
     );
-  };
-
-  const handleSelect = (item) => {
-    const newLocation = new naver.maps.LatLng(item.y, item.x);
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.setCenter(newLocation);
-      if (markerRef.current) {
-        markerRef.current.setPosition(newLocation);
-      } else {
-        markerRef.current = new naver.maps.Marker({
-          position: newLocation,
-          map: mapInstanceRef.current,
-        });
-      }
-    }
   };
 
   const handleMarkerClick = (marker) => {
@@ -338,15 +340,45 @@ function MapInfo() {
     }
   };
 
+  const handleResultClick = (result) => {
+    const newLocation = new naver.maps.LatLng(result.y, result.x);
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.setCenter(newLocation);
+      mapInstanceRef.current.setZoom(14);
+      if (searchMarkerRef.current) {
+        searchMarkerRef.current.setMap(null);
+      }
+      searchMarkerRef.current = new naver.maps.Marker({
+        position: newLocation,
+        map: mapInstanceRef.current,
+        title: "Search Result",
+        zIndex: 1000,
+        icon: {
+          content:
+            '<img src="/img/search-marker.png" alt="검색 결과" ' +
+            'style="width: 32px; height: 32px;">',
+          size: new naver.maps.Size(25, 26),
+          origin: new naver.maps.Point(0, 0),
+          anchor: new naver.maps.Point(15, 26),
+        },
+      });
+    }
+  };
+
   return (
     <>
       <SearchSection
         placeholder="지역을 검색하여 카페를 찾으세요 예시.(경북 구미시)"
         onSearch={searchLocation}
+        searchResults={searchResults}
+        onResultClick={handleResultClick}
       />
       <div className="map-container">
         <div className="map-content">
-          <div ref={mapRef} style={{ width: "100%", height: "100%" }}></div>
+          <div
+            ref={mapRef}
+            style={{ width: "100%", height: "100%", userSelect: "none" }}
+          ></div>
         </div>
         <div className="congestion-sentence">
           <button onClick={moveToCurrentLocation}>↻ 내 위치</button>
@@ -370,8 +402,6 @@ function MapInfo() {
         </div>
       </div>
       <ResultList
-        results={searchResults}
-        onSelect={handleSelect}
         markersData={currentMarkers}
         onMarkerClick={handleMarkerClick}
       />
