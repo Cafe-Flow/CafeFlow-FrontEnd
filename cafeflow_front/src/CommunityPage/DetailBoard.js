@@ -18,15 +18,12 @@ function DetailBoard() {
     const fetchPost = async () => {
       const userToken = localStorage.getItem("userToken");
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/community/posts/${postId}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-            },
-          }
-        );
+        const response = await fetch(`/api/community/posts/${postId}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -49,15 +46,12 @@ function DetailBoard() {
     setLikesCount(newLikedState ? likesCount + 1 : likesCount - 1);
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/community/posts/${postId}/like`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-          },
-        }
-      );
+      const response = await fetch(`/api/community/posts/${postId}/like`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

@@ -17,6 +17,48 @@
   color: #333;
 }
 
+.search-results-list {
+  list-style: none;
+  border: 1px solid #ccc;
+  margin: 15px auto;
+  max-width: 600px;
+  padding: 0;
+  text-align: left;
+  border-radius: 4px;
+}
+
+.search-results-list.overflow {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+/* 스크롤바 스타일 */
+.search-results-list.overflow::-webkit-scrollbar {
+  width: 8px; /* 스크롤바의 너비 */
+}
+
+.search-results-list.overflow::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙 배경색 */
+}
+
+.search-results-list.overflow::-webkit-scrollbar-thumb {
+  background: #888; /* 스크롤바 색상 */
+  border-radius: 4px; /* 스크롤바 모서리 둥글게 */
+}
+
+.search-results-list.overflow::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 스크롤바에 마우스 오버 시 색상 */
+}
+
+.search-results-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.search-results-list li:hover {
+  background-color: #f1f1f1;
+}
+
 .search-results {
   list-style: none;
   padding: 0;

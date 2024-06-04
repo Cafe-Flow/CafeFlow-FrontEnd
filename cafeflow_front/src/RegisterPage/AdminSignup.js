@@ -44,9 +44,7 @@ function AdminSignupPage() {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/locations/states"
-        );
+        const response = await fetch("/api/locations/states");
         if (response.ok) {
           const data = await response.json();
           setStates(data);
@@ -162,7 +160,7 @@ function AdminSignupPage() {
 
   async function handleUserInfoFetch(token) {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/me", {
+      const response = await fetch("/api/auth/me", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -228,13 +226,10 @@ function AdminSignupPage() {
         formdata.append("image", image);
 
         try {
-          const response = await fetch(
-            "http://localhost:8080/api/auth/register",
-            {
-              method: "POST",
-              body: formdata,
-            }
-          );
+          const response = await fetch("/api/auth/register", {
+            method: "POST",
+            body: formdata,
+          });
 
           const responseData = await response.json();
           console.log([...formdata]);
@@ -511,9 +506,7 @@ function AdminSignupPage() {
       const stateId = e.target.value;
       setFormData({ ...formData, stateId });
 
-      const response = await fetch(
-        `http://localhost:8080/api/locations/states/${stateId}/cities`
-      );
+      const response = await fetch(`/api/locations/states/${stateId}/cities`);
       const citiesData = await response.json();
       setCities(citiesData);
     };

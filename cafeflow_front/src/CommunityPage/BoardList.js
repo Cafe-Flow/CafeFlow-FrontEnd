@@ -26,15 +26,12 @@ function Boardlist() {
   const fetchPosts = async () => {
     try {
       const userToken = localStorage.getItem("userToken");
-      const response = await fetch(
-        "http://localhost:8080/api/community/posts",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      const response = await fetch("/api/community/posts", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
