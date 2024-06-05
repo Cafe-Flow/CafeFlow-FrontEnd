@@ -43,9 +43,13 @@ function ResultList({ markersData, onMarkerClick }) {
                   marginLeft: "10px",
                 }}
               ></span>
-              {hoveredItem === index && (
-                <div className="description-box">{item.description}</div>
-              )}
+              <div
+                className={`description-box ${
+                  hoveredItem === index ? "visible" : ""
+                }`}
+              >
+                {item.description}
+              </div>
             </span>
             <button>조회</button>
           </li>

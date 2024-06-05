@@ -110,20 +110,32 @@
 .description-box {
   opacity: 0;
   position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: #1e90ff;
+  color: white;
+  border-radius: 10px;
   padding: 10px;
   max-width: 200px;
   z-index: 10;
   top: -20px;
-  transform: translateX(-30%);
-  transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-  visibility: hidden; /* 요소가 보이지 않도록 설정 */
+  transform: translateX(-10%) scale(0);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  font-weight: 900;
 }
 
-.maejang-name:hover .description-box {
+.description-box::after {
+  content: "";
+  position: absolute;
+  bottom: -17px;
+  left: 30%;
+  transform: translateX(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: #1e90ff transparent transparent transparent;
+}
+
+.description-box.visible {
   opacity: 1;
-  visibility: visible; /* 요소가 보이도록 설정 */
+  transform: translatey(-10%) scale(1);
 }
 
 .search-results button {

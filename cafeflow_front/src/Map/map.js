@@ -230,7 +230,7 @@ function MapInfo() {
         icon: {
           content: markerContent,
           size: new naver.maps.Size(38, 58),
-          anchor: new navermaps.Point(19, 29),
+          anchor: new navermaps.Point(58, 40),
         },
       });
       marker.id = item.id;
