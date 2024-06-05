@@ -15,7 +15,7 @@ function AdminSignupPage() {
     password: "",
     confirmPassword: "",
     gender: "",
-    age: "",
+    age: 0,
     stateId: "",
     cityId: "",
   });
@@ -44,9 +44,7 @@ function AdminSignupPage() {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/locations/states"
-        );
+        const response = await fetch("/api/locations/states");
         if (response.ok) {
           const data = await response.json();
           setStates(data);
@@ -107,6 +105,9 @@ function AdminSignupPage() {
       newErrors.passwordError = "비밀번호는 8자 이상이어야 합니다.";
       isValid = false;
     }
+    if (!image) {
+      loadDefaultImageAsFile();
+    }
     setErrors(newErrors);
     return isValid;
   };
@@ -159,7 +160,7 @@ function AdminSignupPage() {
 
   async function handleUserInfoFetch(token) {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/me", {
+      const response = await fetch("/api/auth/me", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -177,6 +178,22 @@ function AdminSignupPage() {
       throw error;
     }
   }
+
+  const loadDefaultImageAsFile = () => {
+    return new Promise((resolve, reject) => {
+      fetch("/img/default.png")
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "default.png", { type: "image/png" });
+          setImage(file);
+          resolve(file); // 파일 설정 후 Promise를 resolve 함
+        })
+        .catch((error) => {
+          console.error("Default image loading failed:", error);
+          reject(error); // 오류 발생 시 Promise를 reject 함
+        });
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -209,13 +226,10 @@ function AdminSignupPage() {
         formdata.append("image", image);
 
         try {
-          const response = await fetch(
-            "http://localhost:8080/api/auth/register",
-            {
-              method: "POST",
-              body: formdata,
-            }
-          );
+          const response = await fetch("/api/auth/register", {
+            method: "POST",
+            body: formdata,
+          });
 
           const responseData = await response.json();
           console.log([...formdata]);
@@ -293,6 +307,7 @@ function AdminSignupPage() {
               setFormData({ ...formData, username: e.target.value });
               setErrors({ ...errors, usernameError: "" });
             }}
+            maxLength={4}
           />
           <Form.Control.Feedback type="invalid">
             {errors.usernameError}
@@ -410,7 +425,7 @@ function AdminSignupPage() {
             height: "60px",
           }}
         >
-          다음
+          다음 ({step}/3)
         </Button>
       </>
     );
@@ -481,7 +496,7 @@ function AdminSignupPage() {
           height: "60px",
         }}
       >
-        다음
+        다음 ({step}/3)
       </Button>
     </>
   );
@@ -491,9 +506,7 @@ function AdminSignupPage() {
       const stateId = e.target.value;
       setFormData({ ...formData, stateId });
 
-      const response = await fetch(
-        `http://localhost:8080/api/locations/states/${stateId}/cities`
-      );
+      const response = await fetch(`/api/locations/states/${stateId}/cities`);
       const citiesData = await response.json();
       setCities(citiesData);
     };
@@ -567,7 +580,7 @@ function AdminSignupPage() {
             height: "60px",
           }}
         >
-          회원가입
+          회원가입 ({step}/3)
         </Button>
       </>
     );
@@ -582,7 +595,6 @@ function AdminSignupPage() {
       <div className="h6-font">
         <p>카페 관리자</p>
       </div>
-      <p className="h6-font"> {step} / 3 </p>
       <Form
         className="input-box"
         style={{ display: "flex", flexDirection: "column" }}

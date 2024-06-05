@@ -1,5 +1,6 @@
-import "./App.css";
-function Pagination({ currentPage, resultsPerPage, totalResults, paginate }) {
+import React from "react";
+
+function Pagination({ resultsPerPage, totalResults, paginate, currentPage }) {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalResults / resultsPerPage); i++) {

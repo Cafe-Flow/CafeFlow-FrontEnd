@@ -150,13 +150,19 @@
   margin: 0 auto;
   margin-top: 20px;
   width: 70%;
-  min-height: 70vh;
+  min-height: 50vh;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   border-radius: 30px;
   max-width: 1100px;
   min-width: 700px;
   padding-bottom: 50px;
+}
+
+.detail-post-container h1 {
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 400;
+  padding-bottom: 30px;
 }
 
 .detail-post-author {
@@ -423,4 +429,14 @@ input[type="text"] {
 
 .create-post-button:hover {
   background-color: #7bb5b1;
+}
+
+.sad-imoji {
+  font-size: 30px;
+  transition: 0.3s;
+}
+
+.sad-imoji:hover {
+  font-size: 50px;
+  font-family: "Nanum Gothic", sans-serif;
 }

@@ -44,9 +44,7 @@ function UserSignupPage() {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/locations/states"
-        );
+        const response = await fetch("/api/locations/states");
         if (response.ok) {
           const data = await response.json();
           setStates(data);
@@ -107,7 +105,9 @@ function UserSignupPage() {
       newErrors.passwordError = "비밀번호는 8자 이상이어야 합니다.";
       isValid = false;
     }
-
+    if (!image) {
+      loadDefaultImageAsFile();
+    }
     setErrors(newErrors);
     return isValid;
   };
@@ -160,7 +160,7 @@ function UserSignupPage() {
 
   async function handleUserInfoFetch(token) {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/me", {
+      const response = await fetch("/api/auth/me", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -178,6 +178,22 @@ function UserSignupPage() {
       throw error;
     }
   }
+
+  const loadDefaultImageAsFile = () => {
+    return new Promise((resolve, reject) => {
+      fetch("/img/default.png")
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "default.png", { type: "image/png" });
+          setImage(file);
+          resolve(file);
+        })
+        .catch((error) => {
+          console.error("Default image loading failed:", error);
+          reject(error);
+        });
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -210,13 +226,10 @@ function UserSignupPage() {
         formdata.append("image", image);
 
         try {
-          const response = await fetch(
-            "http://localhost:8080/api/auth/register",
-            {
-              method: "POST",
-              body: formdata,
-            }
-          );
+          const response = await fetch("/api/auth/register", {
+            method: "POST",
+            body: formdata,
+          });
 
           const responseData = await response.json();
           console.log([...formdata]);
@@ -246,6 +259,7 @@ function UserSignupPage() {
         reader.onloadend = () => {
           setPreviewUrl(reader.result);
           setImage(file);
+          console.log(file);
         };
         reader.readAsDataURL(file);
       }
@@ -293,6 +307,7 @@ function UserSignupPage() {
               setFormData({ ...formData, username: e.target.value });
               setErrors({ ...errors, usernameError: "" });
             }}
+            maxLength={4}
           />
           <Form.Control.Feedback type="invalid">
             {errors.usernameError}
@@ -410,7 +425,7 @@ function UserSignupPage() {
             height: "60px",
           }}
         >
-          다음
+          다음 ({step}/3)
         </Button>
       </>
     );
@@ -481,7 +496,7 @@ function UserSignupPage() {
           height: "60px",
         }}
       >
-        다음
+        다음 ({step}/3)
       </Button>
     </>
   );
@@ -491,9 +506,7 @@ function UserSignupPage() {
       const stateId = e.target.value;
       setFormData({ ...formData, stateId });
 
-      const response = await fetch(
-        `http://localhost:8080/api/locations/states/${stateId}/cities`
-      );
+      const response = await fetch(`/api/locations/states/${stateId}/cities`);
       const citiesData = await response.json();
       setCities(citiesData);
     };
@@ -567,7 +580,7 @@ function UserSignupPage() {
             height: "60px",
           }}
         >
-          회원가입
+          회원가입 ({step}/3)
         </Button>
       </>
     );
@@ -586,7 +599,6 @@ function UserSignupPage() {
       <div className="h6-font">
         <p>서비스 이용자</p>
       </div>
-      <p className="h6-font"> {step} / 3 </p>
       <Form
         className="input-box"
         style={{ display: "flex", flexDirection: "column" }}

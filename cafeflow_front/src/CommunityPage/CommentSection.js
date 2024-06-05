@@ -38,7 +38,7 @@ function CommentSection({ comments, postId }) {
       };
       try {
         const response = await fetch(
-          `http://localhost:8080/api/community/posts/${postId}/comments`,
+          `/api/community/posts/${postId}/comments`,
           {
             method: "POST",
             headers: {
@@ -142,15 +142,12 @@ function CommentItem({
 
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `http://localhost:8080/api/community/comments/${comment.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      const response = await fetch(`/api/community/comments/${comment.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -175,7 +172,7 @@ function CommentItem({
       };
       try {
         const response = await fetch(
-          `http://localhost:8080/api/community/posts/${postId}/comments/${comment.id}/replies`,
+          `/api/community/posts/${postId}/comments/${comment.id}/replies`,
           {
             method: "POST",
             headers: {
