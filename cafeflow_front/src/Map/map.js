@@ -1,5 +1,6 @@
 /* global naver */
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import "./map.css";
 import SearchSection from "./SearchSection";
 import ResultList from "./ResultList";
@@ -63,20 +64,12 @@ function MapInfo() {
     return congestion > 80 ? "red" : congestion > 50 ? "blue" : "green";
   }
 
-  function createDummyData(center, count, distance) {
-    const positions = [];
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * 360;
-      const latChange = distance * Math.sin((angle * Math.PI) / 180);
-      const lngChange = distance * Math.cos((angle * Math.PI) / 180);
-      const congestion = Math.floor(Math.random() * 101);
-      positions.push({
-        lat: center.lat() + latChange,
-        lng: center.lng() + lngChange,
-        congestion,
-      });
-    }
-    return positions;
+  function convertCoords(x, y) {
+    const xString = x.toString();
+    const yString = y.toString();
+    const mapx = parseFloat(xString.slice(0, 3) + "." + xString.slice(3));
+    const mapy = parseFloat(yString.slice(0, 2) + "." + yString.slice(2));
+    return { mapx, mapy };
   }
 
   const showMarker = (map, marker) => {
@@ -108,7 +101,8 @@ function MapInfo() {
           id: marker.id,
           lat: position.lat(),
           lng: position.lng(),
-          title: marker.title,
+          name: marker.name,
+          address: marker.address,
           description: marker.description,
           congestion: marker.congestion,
         });
@@ -158,7 +152,7 @@ function MapInfo() {
 
       naver.maps.Event.addListener(map, "zoom_changed", () => {
         const zoomLevel = map.getZoom();
-        if (zoomLevel <= 12) {
+        if (zoomLevel <= 11) {
           customControlRef.current.getElement().style.display = "none";
         } else {
           customControlRef.current.getElement().style.display = "block";
@@ -170,6 +164,21 @@ function MapInfo() {
       marker.setMap(null);
     });
     dummyMarkersRef.current = [];
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/cafe?sort-by=created-at"
+        );
+        const data = response.data;
+        setMarkersData(data);
+        createMarkers(data);
+      } catch (error) {
+        console.error("API로부터 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchData();
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -193,64 +202,6 @@ function MapInfo() {
               anchor: new naver.maps.Point(17, 26),
             },
           });
-
-          const dummyPositions = createDummyData(currentLocation, 30, 0.025);
-          const markers = dummyPositions.map((pos, index) => {
-            const congestionColor = getCongestionColor(pos.congestion);
-            const markerContent = `
-            <div class="custom-marker" data-congestion="${getCongestionLevel(
-              pos.congestion
-            )}">
-              <p>매장 ${index + 1}</p>
-              <span class="congestion-indicator" style="background-color: ${congestionColor};"></span>
-            </div>`;
-            const marker = new naver.maps.Marker({
-              position: new naver.maps.LatLng(pos.lat, pos.lng),
-              map: map,
-              icon: {
-                content: markerContent,
-                size: new naver.maps.Size(38, 58),
-                anchor: new naver.maps.Point(58, 40),
-              },
-            });
-            marker.id = index + 1;
-            marker.title = `매장 ${index + 1}`;
-            marker.description = `Description for Marker ${index + 1}`;
-            marker.congestion = pos.congestion;
-            return marker;
-          });
-
-          const clusterOptions = {
-            minClusterSize: 2,
-            maxZoom: 15,
-            map: map,
-            markers: markers,
-            disableClickZoom: false,
-            gridSize: 100,
-            icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4],
-            indexGenerator: [26, 51, 76, 101],
-            stylingFunction: (clusterMarker, count) => {
-              clusterMarker
-                .getElement()
-                .querySelector("div:first-child").innerText = count;
-            },
-          };
-
-          const newCluster = new MarkerClustering(clusterOptions);
-          setCluster(newCluster);
-
-          const markerData = markers.map((marker, index) => ({
-            id: index + 1,
-            lat: marker.getPosition().lat(),
-            lng: marker.getPosition().lng(),
-            title: `${index + 1}`,
-            description: `Description for Marker ${index + 1}`,
-            congestion: dummyPositions[index].congestion,
-          }));
-          setMarkersData(markerData);
-
-          dummyMarkersRef.current = markers;
-          updateMarkers(map, markers);
         },
         (error) => {
           console.error("오류 : ", error);
@@ -260,6 +211,57 @@ function MapInfo() {
       console.log("Geolocation is not supported by this browser.");
     }
   }, [navermaps]);
+
+  const createMarkers = (data) => {
+    const markers = data.map((item) => {
+      const { mapx, mapy } = convertCoords(item.mapx, item.mapy);
+      const congestionColor = getCongestionColor(item.traffic);
+      const markerContent = `
+        <div class="custom-marker" data-congestion="${getCongestionLevel(
+          item.congestion
+        )}">
+          <p>${item.name}</p>
+          <span class="congestion-indicator" style="background-color: ${congestionColor};"></span>
+        </div>`;
+
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(mapy, mapx),
+        map: mapInstanceRef.current,
+        icon: {
+          content: markerContent,
+          size: new naver.maps.Size(38, 58),
+          anchor: new navermaps.Point(19, 29),
+        },
+      });
+      marker.id = item.id;
+      marker.name = item.name;
+      marker.description = item.description;
+      marker.address = item.address;
+      marker.congestion = item.traffic;
+      return marker;
+    });
+
+    const clusterOptions = {
+      minClusterSize: 2,
+      maxZoom: 15,
+      map: mapInstanceRef.current,
+      markers: markers,
+      disableClickZoom: false,
+      gridSize: 100,
+      icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4],
+      indexGenerator: [26, 51, 76, 101],
+      stylingFunction: (clusterMarker, count) => {
+        clusterMarker.getElement().querySelector("div:first-child").innerText =
+          count;
+      },
+    };
+
+    const newCluster = new MarkerClustering(clusterOptions);
+    setCluster(newCluster);
+
+    dummyMarkersRef.current = markers;
+    updateMarkers(mapInstanceRef.current, markers);
+  };
 
   const searchLocation = (searchInput) => {
     naver.maps.Service.geocode(
