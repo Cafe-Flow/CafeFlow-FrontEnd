@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 function getCongestionLevel(congestion) {
   return congestion > 80 ? "혼잡" : congestion > 50 ? "적정" : "원활";
@@ -10,6 +10,15 @@ function getCongestionColor(congestion) {
 
 function ResultList({ markersData, onMarkerClick }) {
   const allResults = markersData;
+  const [hoveredItem, setHoveredItem] = useState(null);
+
+  const handleMouseEnter = (index) => {
+    setHoveredItem(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredItem(null);
+  };
 
   return (
     <ul className="search-results">
@@ -20,9 +29,13 @@ function ResultList({ markersData, onMarkerClick }) {
       ) : (
         allResults.map((item, index) => (
           <li key={index} onClick={() => onMarkerClick(item)}>
-            <span className="si-goo">ㅇㅇ시 / ㅁㅁ구</span>
-            <span className="maejang-name">
-              {item.title} - {getCongestionLevel(item.congestion)}{" "}
+            <span className="si-goo">{item.address}</span>
+            <span
+              className="maejang-name"
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={handleMouseLeave}
+            >
+              {item.name} - {getCongestionLevel(item.congestion)}{" "}
               <span
                 className="congestion-indicator"
                 style={{
@@ -30,6 +43,9 @@ function ResultList({ markersData, onMarkerClick }) {
                   marginLeft: "10px",
                 }}
               ></span>
+              {hoveredItem === index && (
+                <div className="description-box">{item.description}</div>
+              )}
             </span>
             <button>조회</button>
           </li>
