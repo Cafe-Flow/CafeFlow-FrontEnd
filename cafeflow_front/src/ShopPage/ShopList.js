@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
+import "./ShopList.css";
 import axios from "axios";
 
 function Shoplist() {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
   const [isAdmin, setIsAdmin] = useState(false); // State to hold whether user is admin
@@ -17,10 +16,14 @@ function Shoplist() {
     const fetchData = async () => {
       try {
         let url = "http://localhost:8080/api/cafe";
-        if (sortBy === "1") {
-          url += ""; // Append sort option to URL if sortBy is "1"
-        } else if (sortBy === "0") {
+        if (sortBy === "0") {
           url += "?sort-by=created-at";
+        }
+        else if (sortBy === "1") { 
+          url += "?sort-by=reviews-count";
+        }
+        else if (sortBy === "2") {
+          url += "?sort-by=reviews-rating";
         }
         const response = await axios.get(url);
         setData(response.data);
@@ -41,45 +44,31 @@ function Shoplist() {
     }
   }, [sortBy]); // Run effect whenever sortBy changes
 
-  const handleSortChange = (e) => {
-    const selectedValue = e.target.value;
-    setSortBy(selectedValue); // Update sortBy state with the selected option value
-  };
 
   let listLength = data ? parseInt(data.length) : 0;
 
-  const radios = [
-    { name: "기본 순", value: "0" },
-    { name: "최신 순", value: "1" },
-  ];
+  const handleRegisterCafe = () => {
+    navigate("/shopregister");
+  };
 
-  const [radioValue, setRadioValue] = useState("0");
 
   return (
     <div className="Shop">
       <div>
         <h3>카페 목록</h3>
         <div class="buttons-group">
-          <ButtonGroup style={{}}>
-            {radios.map((radio, idx) => (
-              <ToggleButton
-                key={idx}
-                id={`radio-${idx}`}
-                type="radio"
-                variant={idx % 2 ? "outline-success" : "outline-danger"}
-                name="radio"
-                value={radio.value}
-                checked={radioValue === radio.value}
-                onChange={(e) => {
-                  setRadioValue(e.currentTarget.value);
-                  setSortBy(e.currentTarget.value);
-                }}
-              >
-                {radio.name}
-              </ToggleButton>
-            ))}
-          </ButtonGroup>
+            <div className="post-sort list-container">
+            <p
+              className={sortBy === "0" ? "active" : ""} 
+              onClick={() => setSortBy("0")}>최신순</p>
+            <p
+              className={sortBy === "1" ? "active" : ""}  
+              onClick={() => setSortBy("1")}>리뷰순</p>
+            <p
+              className={sortBy === "2" ? "active" : ""}  
+              onClick={() => setSortBy("2")}>평점순</p>
         </div>
+      </div>
       </div>
       <br />
       <Row xs={1} md={3} className="g-4">
@@ -90,7 +79,6 @@ function Shoplist() {
               <a href={`/shop/${data[idx].id}`}>
                 <Card.Body>
                   <Card.Title>{data[idx].name}</Card.Title>
-
                   <Card.Text>
                     ⭐️{data[idx].reviewsRating} ({data[idx].reviewCount})
                   </Card.Text>
@@ -103,11 +91,9 @@ function Shoplist() {
       <br />
       {/* Render the cafe register button only if user is ADMIN */}
       {isAdmin && (
-        <a class="cafe-register-button">
-          <Button href="/shopregister" style={{ color: "white" }}>
-            카페 등록
-          </Button>
-        </a>
+        <div class="cafe-register-button" onClick={handleRegisterCafe}>
+          +
+        </div>
       )}
     </div>
   );

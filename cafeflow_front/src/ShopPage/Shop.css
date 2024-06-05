@@ -8,14 +8,21 @@
   .cafe-container {
     display:flex;
   }
+  .cafe-container .cafe-content{
+    float: left;
+    width: 30%;
+    height: 50%;
+  }
+  .cafe-container .seat-content{ 
+    display: flex;
+    float: right;
+    width: 500px;
+    height: 500px;
+    transform: scale(0.7);
+  }
   
   .cafe-img {
     margin-bottom: 20px; /* Adjust spacing between image and content */
-    margin-right: 20px; /* Adjust spacing between image and content */
-  }
-  
-  .cafe-content {
-    margin: 0 auto;
   }
   .review-button{
     margin-top: 20px;
@@ -38,6 +45,12 @@
   
   #seatview {
     transform: scale(0.2);
+  }
+  
+  .cafe-img img{
+    width: 800px;
+    height: 500px;
+    object-fit: object-fit;
   }
   
 
