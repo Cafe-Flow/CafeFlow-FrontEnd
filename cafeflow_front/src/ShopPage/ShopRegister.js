@@ -17,6 +17,7 @@ function ShopRegister() {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [imageFile, setImageFile] = useState(null); // 추가
     const seats = useSeatStore((state) => state.seats); // Get seats from the store
     const setSeats = useSeatStore((state) => state.setSeats); // Get function to update seats from the store
     const [errors, setErrors] = useState({
@@ -46,31 +47,35 @@ function ShopRegister() {
     const handleModalSubmit = async () => {
         try {
             const isAdmin = localStorage.getItem("userInfo");
-
+    
             // Parse the userInfo JSON string
             const userInfo = JSON.parse(isAdmin);
-
+    
             // Check if the userType is ADMIN
             if (userInfo && userInfo.userType === "ADMIN") {
                 // Proceed with the POST request
                 const token = localStorage.getItem("userToken");
+    
+                // Create a FormData object
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('address', address);
+                formData.append('description', description);
+                formData.append('mapx', selectedCafe.mapx);
+                formData.append('mapy', selectedCafe.mapy);
+                formData.append('image', imageFile); // Assuming `imageFile` is the file object for the image
+    
                 const headers = {
-                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data", // Important for form-data
                 };
-
-                const response = await axios.post('http://localhost:8080/api/register-cafe', {
-                    name,
-                    address,
-                    description,
-                    mapx: selectedCafe.mapx, // Include mapx from selectedCafe
-                    mapy: selectedCafe.mapy // Include mapy from selectedCafe
-                }, { headers });
-
+    
+                const response = await axios.post('http://localhost:8080/api/register-cafe', formData, { headers });
+    
                 console.log('Cafe registered successfully:', response.data);
                 const shopid = response.data;
                 handleSeatData(seats);
-
+    
                 const seatDataForPost = JSON.stringify(seats.map(seat => ({
                     seatHasPlug: seat.plug,
                     seatSize: seat.size,
@@ -81,7 +86,7 @@ function ShopRegister() {
                         y: seat.position.y
                     }
                 })));
-
+    
                 await axios.post(
                     `http://localhost:8080/api/cafe/${shopid}/seat-register`,
                     seatDataForPost,
@@ -92,10 +97,10 @@ function ShopRegister() {
                         }
                     }
                 );
-
+    
                 // Clear the seats data after successful registration
                 setSeats([]);
-
+    
                 // 모달 닫기 및 페이지 이동
                 setShowModal(false);
                 navigate(`/shop/${shopid}`);
@@ -107,6 +112,7 @@ function ShopRegister() {
             console.error('Error registering cafe:', error);
         }
     };
+    
 
     const validateForm = () => {
         let isValid = true;
@@ -205,6 +211,13 @@ function ShopRegister() {
                     />
                     <Form.Control.Feedback type="invalid">{errors.descriptionError}</Form.Control.Feedback>
                 </FloatingLabel>
+            </div>
+            <div id="cafe-image">
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files[0])}
+                />
             </div>
             <Button onClick={handleNextButtonClick} className="register-button" style={{ background: "black" }}>다음</Button>
 

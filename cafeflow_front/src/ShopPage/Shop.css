@@ -23,7 +23,6 @@
   
   .cafe-img {
     margin-bottom: 20px; /* Adjust spacing between image and content */
-    margin-right: 20px; /* Adjust spacing between image and content */
   }
   .review-button{
     margin-top: 20px;
@@ -46,6 +45,12 @@
   
   #seatview {
     transform: scale(0.2);
+  }
+  
+  .cafe-img img{
+    width: 800px;
+    height: 500px;
+    object-fit: object-fit;
   }
   
 

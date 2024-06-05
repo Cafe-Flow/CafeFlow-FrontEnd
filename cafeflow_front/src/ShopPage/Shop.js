@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
@@ -13,6 +13,7 @@ function Shop() {
   let { idx } = useParams();
   const [cafeData, setCafeData] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [reviewImg, setReviewImg] = useState(null);
   const [rating, setRating] = useState(0); // 리뷰 평점 state
   const [comment, setComment] = useState(""); // 리뷰 내용 state
   const [seats, setSeats] = useState([]); // State to store seat data
@@ -79,7 +80,8 @@ function Shop() {
       // 리뷰 작성을 위한 데이터 객체 생성
       const reviewData = {
         rating: rating,
-        comment: comment
+        comment: comment,
+        image: reviewImg // 이미지 데이터 추가
       };
       // 서버에 리뷰 작성 요청
       await axios.post(
@@ -102,12 +104,37 @@ function Shop() {
       console.error("리뷰 작성 중 오류 발생:", error);
     }
   };
+  
+
+  
 
   let cafeName = cafeData ? cafeData.name : "알 수 없음";
   let address = cafeData ? cafeData.address : "알 수 없음";
   let reviewCount = cafeData ? cafeData.reviewCount : 0;
   let reviewsRating = cafeData ? cafeData.reviewsRating : 0;
   let description = cafeData ? cafeData.description : "알 수 없음";
+  let cafeImage =  cafeData ? `data:image/png;base64,${cafeData.image}` : "";
+  let mapx = cafeData ? cafeData.mapx : 0;
+  let mapy = cafeData ? cafeData.mapy : 0;
+
+  const mapRef = useRef(null);
+  
+  useEffect(() => {
+    const { naver } = window;
+    if (mapRef.current && naver) {
+      const location = new naver.maps.LatLng(mapx, mapy);
+      const map = new naver.maps.Map(mapRef.current, {
+        center: location,
+        zoom: 17, // 지도 확대 정도
+      });
+      new naver.maps.Marker({
+        position: location,
+        map,
+      });
+    }
+  }, []);
+
+  console.log("image", cafeImage)
 
   return (
     <div className="Shop">
@@ -115,7 +142,7 @@ function Shop() {
         <div className="cafe-img">
           <Carousel>
             <Carousel.Item>
-              <img src="/img/cafelistimg.jpg" alt="Your Image" />
+              <img  src={cafeImage} alt="Cafe Image" />
               <Carousel.Caption>
                 <h3>First slide label</h3>
                 <p>
@@ -155,6 +182,9 @@ function Shop() {
             <div className="cafe-content2">
               <Card>
                 <Card.Img variant="top" src="/img/map_dummy.png" />
+                <div id="map">
+
+                </div>
                 <Card.Body>
                   <Card.Text>{address}</Card.Text>
                 </Card.Body>
@@ -212,6 +242,10 @@ function Shop() {
               리뷰 작성
             </Button>{" "}
           </div>
+          <input
+            type="file"
+            onChange={(e) => setReviewImg(e.target.files[0])}
+          />
           <div className="post-sort list-container">
             <p
               className={sortBy === "0" ? "active" : ""}
@@ -238,11 +272,12 @@ function Shop() {
           {reviews.map((review, index) => (
             <div key={index} className="review">
               <Card id="reviews">
-                <Card.Header style={{ textAlign: "start" }}>Unknown</Card.Header>
+                <Card.Header style={{ textAlign: "start" }}>{reviews.id}</Card.Header>
                 <Card.Body style={{ textAlign: "start" }}>{review.comment}</Card.Body>
                 <Card.Body style={{ textAlign: "end" }}>
                   {"⭐️".repeat(review.rating)}
                 </Card.Body>
+                <Card.Img variant="top" src={reviews ? `data:image/png;base64,${reviews.image}` : ""} />
               </Card>
             </div>
           ))}
