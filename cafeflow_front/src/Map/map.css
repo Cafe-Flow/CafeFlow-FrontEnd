@@ -77,16 +77,9 @@
   display: flex;
   position: relative;
   align-items: center;
-  justify-content: space-between;
-  font-family: "Nanum Gothic", sans-serif;
   padding: 20px 0;
   border-bottom: 1px solid #ccc;
   transition: background-color 0.3s;
-}
-
-.search-results li:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
 }
 
 .si-goo,
@@ -97,6 +90,11 @@
   text-overflow: ellipsis;
 }
 
+.search-results li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
 .si-goo {
   font-weight: 900;
   margin-right: 10px;
@@ -105,6 +103,15 @@
 .maejang-name {
   display: flex;
   align-items: center;
+}
+
+.maejang-name:hover {
+  font-weight: 900;
+}
+
+.maejang-name:hover .description-box {
+  opacity: 1;
+  transform: translatey(-10%) scale(1);
 }
 
 .description-box {
@@ -122,18 +129,39 @@
   font-weight: 900;
 }
 
-.description-box::after {
-  content: "";
-  position: absolute;
-  bottom: -17px;
-  left: 30%;
-  transform: translateX(-50%);
-  border-width: 10px;
-  border-style: solid;
-  border-color: #1e90ff transparent transparent transparent;
+.description-box.visible {
+  opacity: 1;
+  transform: translatey(-10%) scale(1);
 }
 
-.description-box.visible {
+.chat-icon {
+  position: relative;
+  display: inline-block;
+}
+
+.chat-tooltip {
+  opacity: 0;
+  position: absolute;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 12px;
+  z-index: 1000;
+  top: -35px;
+  left: 0;
+  white-space: nowrap;
+  transform: translateX(-10%) scale(0);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.chat-icon:hover,
+.search-results button:hover {
+  color: black;
+}
+
+.chat-icon:hover .chat-tooltip {
+  display: block;
   opacity: 1;
   transform: translatey(-10%) scale(1);
 }
@@ -146,10 +174,11 @@
   margin-right: 70px;
   color: white;
   border-radius: 10px;
+  margin: 0px 10px;
 }
 
-.search-results button:hover {
-  font-weight: 900;
+.search-results svg {
+  font-size: 24px;
 }
 
 .pagination {

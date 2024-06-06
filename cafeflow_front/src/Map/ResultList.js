@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
 function getCongestionLevel(congestion) {
   return congestion > 80 ? "혼잡" : congestion > 50 ? "적정" : "원활";
@@ -30,11 +31,7 @@ function ResultList({ markersData, onMarkerClick }) {
         allResults.map((item, index) => (
           <li key={index} onClick={() => onMarkerClick(item)}>
             <span className="si-goo">{item.address}</span>
-            <span
-              className="maejang-name"
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-            >
+            <span className="maejang-name">
               {item.name} - {getCongestionLevel(item.congestion)}{" "}
               <span
                 className="congestion-indicator"
@@ -51,7 +48,14 @@ function ResultList({ markersData, onMarkerClick }) {
                 {item.description}
               </div>
             </span>
-            <button>조회</button>
+            <button className="chat-icon">
+              조회
+              <div className="chat-tooltip">매장 조회</div>
+            </button>
+            <button className="chat-icon">
+              <IoChatboxEllipsesOutline />
+              <div className="chat-tooltip">채팅 문의</div>
+            </button>
           </li>
         ))
       )}

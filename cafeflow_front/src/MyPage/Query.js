@@ -7,8 +7,8 @@ function Query() {
       <Sidebar />
       <div className="mypage-card">
         <div className="mypage-header">
-          <p className="header-font">회원 조회</p>
-          <p className="h6-font">닉네임을 통해 유저를 검색 해요</p>
+          <p className="header-font">채팅 목록</p>
+          <p className="h6-font">진행 중인 채팅을 확인 해보세요</p>
         </div>
       </div>
     </div>

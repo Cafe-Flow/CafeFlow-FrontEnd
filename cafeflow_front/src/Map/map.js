@@ -99,6 +99,7 @@ function MapInfo() {
         showMarker(map, marker);
         visibleMarkersData.push({
           id: marker.id,
+          memberId: marker.memberId,
           lat: position.lat(),
           lng: position.lng(),
           name: marker.name,
@@ -234,6 +235,7 @@ function MapInfo() {
         },
       });
       marker.id = item.id;
+      marker.memberId = item.memberId;
       marker.name = item.name;
       marker.description = item.description;
       marker.address = item.address;

@@ -6,19 +6,14 @@ import { CiShoppingBasket } from "react-icons/ci";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 function OrderList() {
-  const [selectedItem, setSelectedItem] = useState("음료");
   const [selectedDetails, setSelectedDetails] = useState({
     전체상품: true,
-    카페인: false,
+    커피: false,
+    라떼: false,
     티: false,
     스무디: false,
     주스: false,
   });
-
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-  };
-
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
 
@@ -46,7 +41,6 @@ function OrderList() {
       setSelectedDetails({
         전체상품: true,
         커피: false,
-        디카페인: false,
         라떼: false,
         티: false,
         스무디: false,
@@ -75,7 +69,6 @@ function OrderList() {
       },
       []
     );
-
     console.log("Selected Menu Items: ", selectedMenuItems);
     return selectedMenuItems;
   };
@@ -126,18 +119,7 @@ function OrderList() {
   return (
     <div className="orderlist-page">
       <div className="orderlist-top">
-        <h3>{selectedItem}</h3>
-        <ul className="orderlist-list">
-          {["음료", "푸드", "기타"].map((item) => (
-            <li
-              key={item}
-              className={selectedItem === item ? "active" : ""}
-              onClick={() => handleItemClick(item)}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
+        <h3>메뉴</h3>
         <div onClick={handleCartClick} className="orderlist-bucket">
           <CiShoppingBasket />
           장바구니
@@ -174,33 +156,29 @@ function OrderList() {
             </div>
           )}
         </div>
-        {selectedItem === "음료" && (
-          <>
-            <ul className="orderlist-list-detail">
-              {["전체상품", "커피", "라떼", "티", "스무디", "주스"].map(
-                (detail) => (
-                  <li key={detail}>
-                    <input
-                      type="checkbox"
-                      id={detail}
-                      checked={selectedDetails[detail]}
-                      onChange={() => handleDetailChange(detail)}
-                    />
-                    <label htmlFor={detail} style={{ cursor: "pointer" }}>
-                      {detail}
-                    </label>
-                  </li>
-                )
-              )}
-            </ul>
-            <div className="orderlist-content">
-              <MenuItemBar
-                items={getSelectedMenuItems()}
-                onAddToCart={handleAddToCart}
-              />
-            </div>
-          </>
-        )}
+        <ul className="orderlist-list-detail">
+          {["전체상품", "커피", "라떼", "티", "스무디", "주스"].map(
+            (detail) => (
+              <li key={detail}>
+                <input
+                  type="checkbox"
+                  id={detail}
+                  checked={selectedDetails[detail]}
+                  onChange={() => handleDetailChange(detail)}
+                />
+                <label htmlFor={detail} style={{ cursor: "pointer" }}>
+                  {detail}
+                </label>
+              </li>
+            )
+          )}
+        </ul>
+        <div className="orderlist-content">
+          <MenuItemBar
+            items={getSelectedMenuItems()}
+            onAddToCart={handleAddToCart}
+          />
+        </div>
       </div>
     </div>
   );
