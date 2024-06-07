@@ -7,6 +7,7 @@ import ResultList from "./ResultList";
 import Pagination from "./Pagination";
 import { useNavermaps } from "react-naver-maps";
 import MarkerClustering from "./MarkerClustering";
+import CustomError from "../Component/CustomError";
 
 function MapInfo() {
   const mapRef = useRef(null);
@@ -20,6 +21,8 @@ function MapInfo() {
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [cluster, setCluster] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const customControlRef = useRef(null);
   const navermaps = useNavermaps();
 
@@ -175,7 +178,8 @@ function MapInfo() {
         setMarkersData(data);
         createMarkers(data);
       } catch (error) {
-        console.error("API로부터 데이터를 가져오는 중 오류 발생:", error);
+        setErrorMessage("API 호출 에러가 발생하였습니다");
+        setShowError(true);
       }
     };
 
@@ -209,7 +213,8 @@ function MapInfo() {
         }
       );
     } else {
-      console.log("Geolocation is not supported by this browser.");
+      setErrorMessage("사용자 위치 추적 에러");
+      setShowError(true);
     }
   }, [navermaps]);
 
@@ -240,6 +245,20 @@ function MapInfo() {
       marker.description = item.description;
       marker.address = item.address;
       marker.congestion = item.traffic;
+
+      naver.maps.Event.addListener(marker, "click", () => {
+        handleMarkerClick({
+          id: item.id,
+          memberId: item.memberId,
+          lat: mapy,
+          lng: mapx,
+          name: item.name,
+          address: item.address,
+          description: item.description,
+          congestion: item.traffic,
+        });
+      });
+
       return marker;
     });
 
@@ -273,18 +292,19 @@ function MapInfo() {
       function (status, response) {
         if (status !== naver.maps.Service.Status.OK) {
           console.error("API 요청에 실패했습니다.", response);
-          alert("API 요청 중 문제가 발생했습니다.");
+          setErrorMessage("API 요청 중 문제가 발생했습니다.");
+          setShowError(true);
           return;
         }
 
         if (response.v2.addresses.length === 0) {
           console.log("검색 결과가 없습니다.", response);
-          alert("검색 결과가 없습니다.");
+          setErrorMessage("올바른 형식으로 검색 해주세요! (EX.경북 구미시)");
+          setShowError(true);
           return;
         }
 
         const item = response.v2.addresses[0];
-        console.log("검색 결과:", response.v2.addresses);
         const newLocation = new naver.maps.LatLng(item.y, item.x);
         setSearchResults(response.v2.addresses);
         setCurrentPage(1);
@@ -292,12 +312,10 @@ function MapInfo() {
         if (mapInstanceRef.current) {
           mapInstanceRef.current.setCenter(newLocation);
 
-          // searchMarkerRef를 사용하여 검색 결과 마커를 관리
           if (searchMarkerRef.current) {
             searchMarkerRef.current.setMap(null);
           }
 
-          // 새로운 검색 결과 마커 생성
           searchMarkerRef.current = new naver.maps.Marker({
             position: newLocation,
             map: mapInstanceRef.current,
@@ -321,6 +339,7 @@ function MapInfo() {
     const newLocation = new navermaps.LatLng(marker.lat, marker.lng);
     if (mapInstanceRef.current) {
       mapInstanceRef.current.setCenter(newLocation);
+      mapInstanceRef.current.setZoom(14);
     }
   };
 
@@ -338,7 +357,8 @@ function MapInfo() {
           }
         },
         (error) => {
-          console.error("Error getting current position: ", error);
+          setErrorMessage("사용자 위치 추적 에러");
+          setShowError(true);
         }
       );
     }
@@ -415,6 +435,13 @@ function MapInfo() {
         paginate={paginate}
         currentPage={currentPage}
       />
+      <CustomError
+        show={showError}
+        handleClose={() => setShowError(false)}
+        handleConfirm={() => setShowError(false)}
+      >
+        {errorMessage}
+      </CustomError>
     </>
   );
 }

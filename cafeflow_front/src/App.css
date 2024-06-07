@@ -9,18 +9,18 @@ img {
   user-select: none;
 }
 
-.hide-on-expanded {
-  font-size: large;
-  display: flex;
-  justify-content: flex-end;
-  flex-grow: 1;
-}
-
 .Logo-font {
   font-family: "Times New Roman", Times, serif;
   font-weight: 900;
   font-size: 40px;
   color: #d5c4a1 !important;
+}
+
+.hide-on-expanded {
+  font-size: large;
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
 }
 
 .nav-container {
@@ -46,11 +46,12 @@ img {
 
 .nav-element {
   position: relative;
-  padding: 5px 30px 5px 30px;
+  padding: 10px 30px;
   font-family: "Nanum Gothic", sans-serif;
   font-weight: 400;
   font-size: 20px;
   white-space: nowrap;
+  margin: 0 20px;
 }
 
 .nav-side-element1 {
@@ -58,7 +59,6 @@ img {
   position: relative;
   margin-bottom: 80px;
   font-size: 15px;
-  padding-right: 15px;
 }
 
 .mypage-tooltip {
@@ -159,7 +159,7 @@ img {
   position: absolute;
   left: 100%;
   right: 100%;
-  bottom: -38px;
+  bottom: -36px;
   height: 4px;
   background-color: black;
   transition: left 0.3s ease, right 0.3s ease;

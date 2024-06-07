@@ -34,8 +34,8 @@ function Sidebar() {
         </li>
         <li>
           <Link
-            to="/mypage/query"
-            className={isActive("/mypage/query") ? "active" : ""}
+            to="/mypage/chatrooms"
+            className={isActive("/mypage/chatrooms") ? "active" : ""}
           >
             <IoChatboxEllipsesOutline /> 채팅 목록
           </Link>

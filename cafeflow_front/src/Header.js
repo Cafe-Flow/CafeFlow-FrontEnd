@@ -122,7 +122,7 @@ function Header() {
                       <Link to="/mypage/password">비밀번호 변경</Link>
                     </li>
                     <li>
-                      <Link to="/mypage/chat">채팅 목록</Link>
+                      <Link to="/mypage/chatrooms">채팅 목록</Link>
                     </li>
                     <li>
                       <Link to="/mypage/delete">회원 탈퇴</Link>
