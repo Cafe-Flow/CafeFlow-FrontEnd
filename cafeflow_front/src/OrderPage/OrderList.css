@@ -53,7 +53,7 @@
   gap: 10px;
   border: 2px solid #ccc;
   width: 100%;
-
+  user-select: none;
   border-radius: 5px;
 }
 
@@ -92,7 +92,7 @@
   border-radius: 10px;
   border: 2px solid forestgreen;
   position: relative;
-  margin-bottom: 20px;
+  margin: 20px 0;
   cursor: pointer;
 }
 

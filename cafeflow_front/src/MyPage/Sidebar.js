@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./mypage.css";
-import { MdAccountCircle, MdVpnKey, MdSearch, MdDelete } from "react-icons/md";
+import { MdAccountCircle, MdVpnKey, MdDelete } from "react-icons/md";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
 function Sidebar() {
   const location = useLocation();
@@ -33,10 +34,10 @@ function Sidebar() {
         </li>
         <li>
           <Link
-            to="/mypage/query"
-            className={isActive("/mypage/query") ? "active" : ""}
+            to="/mypage/chatrooms"
+            className={isActive("/mypage/chatrooms") ? "active" : ""}
           >
-            <MdSearch /> 회원 조회
+            <IoChatboxEllipsesOutline /> 채팅 목록
           </Link>
         </li>
         <li>

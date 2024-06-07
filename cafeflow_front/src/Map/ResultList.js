@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import MainChat from "../Chat/MainChat";
 
 function getCongestionLevel(congestion) {
   return congestion > 80 ? "혼잡" : congestion > 50 ? "적정" : "원활";
@@ -11,47 +13,93 @@ function getCongestionColor(congestion) {
 function ResultList({ markersData, onMarkerClick }) {
   const allResults = markersData;
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [selectedReceiverId, setSelectedReceiverId] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [selectedName, setSelectedName] = useState(null);
+  const [senderId, setSenderId] = useState(null);
 
-  const handleMouseEnter = (index) => {
-    setHoveredItem(index);
+  const handleChatClick = (receiverId, itemId, name) => {
+    setSelectedReceiverId(receiverId);
+    setSelectedItemId(itemId);
+    setSelectedName(name);
+    setIsChatOpen(true);
   };
 
-  const handleMouseLeave = () => {
-    setHoveredItem(null);
+  const handleCloseChat = () => {
+    setIsChatOpen(false);
+    setSelectedReceiverId(null);
+    setSelectedItemId(null);
+    setSelectedName(null);
   };
+
+  useEffect(() => {
+    const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (storedUserInfo) {
+      setSenderId(storedUserInfo.id);
+    }
+  }, []);
 
   return (
-    <ul className="search-results">
-      {allResults.length === 0 ? (
-        <li>
-          <h5>결과가 없습니다.</h5>
-        </li>
-      ) : (
-        allResults.map((item, index) => (
-          <li key={index} onClick={() => onMarkerClick(item)}>
-            <span className="si-goo">{item.address}</span>
-            <span
-              className="maejang-name"
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-            >
-              {item.name} - {getCongestionLevel(item.congestion)}{" "}
-              <span
-                className="congestion-indicator"
-                style={{
-                  backgroundColor: getCongestionColor(item.congestion),
-                  marginLeft: "10px",
-                }}
-              ></span>
-              {hoveredItem === index && (
-                <div className="description-box">{item.description}</div>
-              )}
-            </span>
-            <button>조회</button>
+    <div>
+      <ul className="search-results">
+        {allResults.length === 0 ? (
+          <li>
+            <h5>결과가 없습니다.</h5>
           </li>
-        ))
-      )}
-    </ul>
+        ) : (
+          allResults.map((item) => (
+            <li key={item.id} onClick={() => onMarkerClick(item)}>
+              <span className="si-goo">{item.address}</span>
+              <span className="maejang-name">
+                {item.name} - {getCongestionLevel(item.congestion)}{" "}
+                <span
+                  className="congestion-indicator"
+                  style={{
+                    backgroundColor: getCongestionColor(item.congestion),
+                    marginLeft: "10px",
+                  }}
+                ></span>
+                <div
+                  className={`description-box ${
+                    hoveredItem === item.id ? "visible" : ""
+                  }`}
+                >
+                  {item.description}
+                </div>
+              </span>
+              <button className="chat-icon">
+                조회
+                <div className="chat-tooltip">매장 조회</div>
+              </button>
+              <button
+                className="chat-icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleChatClick(item.memberId, item.id, item.name);
+                }}
+              >
+                <IoChatboxEllipsesOutline />
+                <div className="chat-tooltip">1대1 문의</div>
+              </button>
+              {isChatOpen &&
+                selectedReceiverId === item.memberId &&
+                selectedItemId === item.id && (
+                  <div className="chat-popup">
+                    <MainChat
+                      userId={senderId}
+                      cafeOwnerId={selectedReceiverId}
+                      name={selectedName}
+                      isUser={true}
+                      onClose={handleCloseChat}
+                    />
+                  </div>
+                )}
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
   );
 }
 export default ResultList;

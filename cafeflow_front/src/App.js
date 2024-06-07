@@ -11,15 +11,16 @@ import DetailBoard from "./CommunityPage/DetailBoard.js";
 import Modify from "./MyPage/Modify.js";
 import Delete from "./MyPage/Delete.js";
 import Password from "./MyPage/Password.js";
-import Query from "./MyPage/Query.js";
+import Query from "./MyPage/Chatrooms.js";
 import NewBoard from "./CommunityPage/NewBoard.js";
 import Shoplist from "./ShopPage/ShopList.js";
 import Shop from "./ShopPage/Shop.js";
-import ShopRegister from "./ShopPage/ShopRegister.js"; 
+import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatView from "./SeatPage/SeatView.js";
 import SeatRegister from "./SeatPage/SeatRegister.js";
 import OrderList from "./OrderPage/OrderList.js";
 import MainChat from "./Chat/MainChat.js";
+import Chatrooms from "./MyPage/Chatrooms.js";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
             <Route path="/mypage/modify" element={<Modify />} />
             <Route path="/mypage/delete" element={<Delete />} />
             <Route path="/mypage/password" element={<Password />} />
-            <Route path="/mypage/query" element={<Query />} />
+            <Route path="/mypage/chatrooms" element={<Chatrooms />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/adminsignup" element={<AdminSignupPage />} />
             <Route path="/usersignup" element={<UserSignupPage />} />

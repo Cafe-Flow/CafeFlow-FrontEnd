@@ -13,6 +13,11 @@ function Header() {
   const [nickname, setNickname] = useState("");
   const location = useLocation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+
+  const toggleTooltip = () => {
+    setTooltipVisible(!tooltipVisible);
+  };
 
   useEffect(() => {
     console.log("start");
@@ -89,15 +94,47 @@ function Header() {
           <div className="hide-on-expanded">
             {isLoggedIn ? (
               <>
-                <Link className="nav-side-element1" to={"/mypage/modify"}>
+                <p className="nav-side-element1" onClick={toggleTooltip}>
                   <span className="name-style">{nickname}</span> 님
-                </Link>
-                <Link
-                  className="nav-side-element2"
-                  onClick={handleShowLogoutModal}
+                </p>
+                <div
+                  className={`mypage-tooltip ${
+                    tooltipVisible ? "" : "invisible"
+                  }`}
                 >
-                  로그아웃
-                </Link>
+                  <div className="mypage-tooltip-top">
+                    <Link to="/mypage/modify">
+                      <img
+                        src={`data:image/jpeg;base64,${userInfo.image}`}
+                        alt="User Avatar"
+                      />
+                    </Link>
+                    <div className="mypage-tooltip-top-user">
+                      <p>{userInfo.nickname}</p>
+                      <p>{userInfo.email}</p>
+                    </div>
+                  </div>
+                  <ul>
+                    <li>
+                      <Link to="/mypage/modify">내 정보</Link>
+                    </li>
+                    <li>
+                      <Link to="/mypage/password">비밀번호 변경</Link>
+                    </li>
+                    <li>
+                      <Link to="/mypage/chatrooms">채팅 목록</Link>
+                    </li>
+                    <li>
+                      <Link to="/mypage/delete">회원 탈퇴</Link>
+                    </li>
+                  </ul>
+                  <Link
+                    className="mypage-tooltip-logout"
+                    onClick={handleShowLogoutModal}
+                  >
+                    로그아웃
+                  </Link>
+                </div>
               </>
             ) : (
               <a className="nav-side-element2" href="/login">
