@@ -3,6 +3,8 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import MainChat from "../Chat/MainChat";
 import CustomCheckModal from "../Component/CustomCheckModal";
+import "./mypage.css";
+import ChatPopup from "../Chat/ChatPopUp";
 
 function Chatrooms() {
   const [chatRooms, setChatRooms] = useState([]);
@@ -18,7 +20,6 @@ function Chatrooms() {
 
   useEffect(() => {
     const updateUserInfo = () => {
-      console.log("start");
       const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
       if (storedUserInfo) {
         setUserType(storedUserInfo.userType);
@@ -29,50 +30,82 @@ function Chatrooms() {
     updateUserInfo();
   }, []);
 
+  const fetchChatRooms = async () => {
+    try {
+      let response;
+      const token = localStorage.getItem("userToken");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      if (userType === "ADMIN") {
+        response = await axios.get(`/chat/rooms/cafeOwner/${userMemberId}`, {
+          headers,
+        });
+      } else if (userType === "USER") {
+        response = await axios.get(`/chat/rooms/user/${userMemberId}`, {
+          headers,
+        });
+      }
+
+      if (response && response.data) {
+        const rooms = response.data;
+        const updatedRooms = await Promise.all(
+          rooms.map(async (room) => {
+            const unreadMessages = await fetchUnreadMessages(
+              room.id,
+              userMemberId,
+              headers
+            );
+            return { ...room, unreadMessagesCount: unreadMessages.length };
+          })
+        );
+        setChatRooms(updatedRooms);
+      }
+    } catch (error) {
+      setError("채팅 목록을 불러오는 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!userType || !userMemberId) {
       return;
     }
 
-    const fetchChatRooms = async () => {
-      try {
-        console.log("Fetching chat rooms...");
-        let response;
-        const token = localStorage.getItem("userToken");
-        const headers = { Authorization: `Bearer ${token}` };
-
-        if (userType === "ADMIN") {
-          response = await axios.get(`/chat/rooms/cafeOwner/${userMemberId}`, {
-            headers,
-          });
-        } else if (userType === "USER") {
-          console.log("Fetching as USER");
-          response = await axios.get(`/chat/rooms/user/${userMemberId}`, {
-            headers,
-          });
-        }
-
-        if (response && response.data) {
-          setChatRooms(response.data);
-          console.log(response);
-        }
-      } catch (error) {
-        setError("채팅 목록을 불러오는 중 오류가 발생했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchChatRooms();
   }, [userType, userMemberId]);
 
-  const handleChatClick = (receiverId, name) => {
+  const fetchUnreadMessages = async (roomId, userId, headers) => {
+    try {
+      const response = await axios.get(
+        `/chat/unread-messages/${roomId}?userId=${userId}`,
+        { headers }
+      );
+      return response.data.filter(
+        (message) => message.receiverReadStatus === false
+      );
+    } catch (error) {
+      console.error(
+        "읽지 않은 메시지를 불러오는 중 오류가 발생했습니다.",
+        error
+      );
+      return [];
+    }
+  };
+
+  const handleChatClick = (receiverId, name, roomId) => {
     setSelectedReceiverId(receiverId);
     setSelectedName(name);
+    setChatRooms((prevChatRooms) =>
+      prevChatRooms.map((room) =>
+        room.id === roomId ? { ...room, unreadMessagesCount: 0 } : room
+      )
+    );
     setIsChatOpen(true);
   };
 
   const handleCloseChat = () => {
+    fetchChatRooms();
     setIsChatOpen(false);
   };
 
@@ -83,7 +116,6 @@ function Chatrooms() {
 
       await axios.delete(`/chat/rooms/${roomIdToDelete}`, { headers });
 
-      // 삭제 후, 채팅 목록을 다시 불러옵니다.
       setChatRooms(chatRooms.filter((room) => room.id !== roomIdToDelete));
       setShowDeleteModal(false);
     } catch (error) {
@@ -115,13 +147,18 @@ function Chatrooms() {
                 {userType === "USER" ? (
                   <>
                     <p>{room.cafeOwnerUsername}</p>
-
+                    {room.unreadMessagesCount > 0 && (
+                      <div className="unread-badge">
+                        {room.unreadMessagesCount}
+                      </div>
+                    )}
                     <div className="chat-list-buttons">
                       <span
                         onClick={() =>
                           handleChatClick(
                             room.cafeOwnerId,
-                            room.cafeOwnerUsername
+                            room.cafeOwnerUsername,
+                            room.id
                           )
                         }
                       >
@@ -135,10 +172,19 @@ function Chatrooms() {
                 ) : (
                   <>
                     <p>{room.userUsername}</p>
+                    {room.unreadMessagesCount > 0 && (
+                      <div className="unread-badge">
+                        {room.unreadMessagesCount}
+                      </div>
+                    )}
                     <div className="chat-list-buttons">
                       <span
                         onClick={() =>
-                          handleChatClick(room.userId, room.userUsername)
+                          handleChatClick(
+                            room.userId,
+                            room.userUsername,
+                            room.id
+                          )
                         }
                       >
                         채팅방 입장
@@ -155,25 +201,29 @@ function Chatrooms() {
         )}
       </div>
       {isChatOpen && (
-        <div className="chat-list-popup">
+        <>
           {userType === "USER" ? (
-            <MainChat
-              userId={userMemberId}
-              cafeOwnerId={selectedReceiverId}
-              name={selectedName}
-              isUser={true}
-              onClose={handleCloseChat}
-            />
+            <ChatPopup className="chat-list-popup">
+              <MainChat
+                userId={userMemberId}
+                cafeOwnerId={selectedReceiverId}
+                name={selectedName}
+                isUser={true}
+                onClose={handleCloseChat}
+              />
+            </ChatPopup>
           ) : (
-            <MainChat
-              userId={selectedReceiverId}
-              cafeOwnerId={userMemberId}
-              name={selectedName}
-              isUser={false}
-              onClose={handleCloseChat}
-            />
+            <ChatPopup className="chat-list-popup">
+              <MainChat
+                userId={selectedReceiverId}
+                cafeOwnerId={userMemberId}
+                name={selectedName}
+                isUser={false}
+                onClose={handleCloseChat}
+              />
+            </ChatPopup>
           )}
-        </div>
+        </>
       )}
 
       <CustomCheckModal

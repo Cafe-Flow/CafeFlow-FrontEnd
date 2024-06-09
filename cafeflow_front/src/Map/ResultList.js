@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 import MainChat from "../Chat/MainChat";
+import ChatPopup from "../Chat/ChatPopUp";
 
 function getCongestionLevel(congestion) {
   return congestion > 80 ? "혼잡" : congestion > 50 ? "적정" : "원활";
@@ -68,10 +70,12 @@ function ResultList({ markersData, onMarkerClick }) {
                   {item.description}
                 </div>
               </span>
-              <button className="chat-icon">
-                조회
-                <div className="chat-tooltip">매장 조회</div>
-              </button>
+              <Link to={`/shop/${item.id}`}>
+                <button className="chat-icon">
+                  조회
+                  <div className="chat-tooltip">매장 조회</div>
+                </button>
+              </Link>
               <button
                 className="chat-icon"
                 onClick={(e) => {
@@ -85,7 +89,7 @@ function ResultList({ markersData, onMarkerClick }) {
               {isChatOpen &&
                 selectedReceiverId === item.memberId &&
                 selectedItemId === item.id && (
-                  <div className="chat-popup">
+                  <ChatPopup className="chat-popup">
                     <MainChat
                       userId={senderId}
                       cafeOwnerId={selectedReceiverId}
@@ -93,7 +97,7 @@ function ResultList({ markersData, onMarkerClick }) {
                       isUser={true}
                       onClose={handleCloseChat}
                     />
-                  </div>
+                  </ChatPopup>
                 )}
             </li>
           ))

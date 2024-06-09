@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Client } from "@stomp/stompjs";
 import "./mainchat.css";
+import axios from "axios";
 
 function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
   const [messages, setMessages] = useState([]);
@@ -9,6 +10,7 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
   const [chatRoomId, setChatRoomId] = useState(null);
   const chatWindowRef = useRef(null);
   const [loading, setLoading] = useState(true);
+  const clientRef = useRef(null);
 
   useEffect(() => {
     if (!userId || !cafeOwnerId) {
@@ -65,37 +67,51 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
     };
   }, [userId, cafeOwnerId]);
 
-  const fetchChatHistory = (roomId) => {
+  const fetchChatHistory = async (roomId) => {
     const token = localStorage.getItem("userToken");
     const headers = {
       Authorization: `Bearer ${token}`,
     };
 
-    fetch(`/chat/history/${roomId}`, {
-      method: "GET",
-      headers: headers,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setMessages(data.reverse());
-        setTimeout(() => {
-          scrollToBottom();
-        }, 100);
-      })
-      .catch((error) => {
-        console.error("Error fetching chat history:", error);
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      const response = await fetch(`/chat/history/${roomId}`, {
+        method: "GET",
+        headers: headers,
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setMessages(data.reverse());
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+
+      const unreadMessages = data.filter(
+        (message) =>
+          (isUser &&
+            !message.receiverReadStatus &&
+            message.receiverId === userId) ||
+          (!isUser &&
+            !message.receiverReadStatus &&
+            message.receiverId === cafeOwnerId)
+      );
+
+      await markMessagesAsRead(unreadMessages.map((message) => message.id));
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const initializeWebSocket = (roomId) => {
+    if (clientRef.current) {
+      return;
+    }
+
     const newClient = new Client({
       brokerURL: "ws://localhost:8080/ws",
       onConnect: () => {
@@ -103,6 +119,7 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
         newClient.subscribe(`/topic/messages/${roomId}`, (message) => {
           const body = JSON.parse(message.body);
           setMessages((prevMessages) => [body, ...prevMessages]);
+
           setTimeout(() => {
             scrollToBottom();
           }, 100);
@@ -119,27 +136,45 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
 
     newClient.activate();
     setClient(newClient);
+    clientRef.current = newClient;
   };
 
   const sendMessage = () => {
     if (input.trim() && client) {
+      const tempId = `temp-${Date.now()}`;
       const newMessage = {
+        id: tempId,
         senderId: isUser ? userId : cafeOwnerId,
         receiverId: isUser ? cafeOwnerId : userId,
         chatRoomId: chatRoomId,
         content: input,
+        senderReadStatus: true,
+        receiverReadStatus: false,
+      };
+
+      // 임시 메시지를 상태에 추가
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      // 백엔드로 전송할 메시지 (id를 제외)
+      const backendMessage = {
+        senderId: newMessage.senderId,
+        receiverId: newMessage.receiverId,
+        chatRoomId: newMessage.chatRoomId,
+        content: newMessage.content,
+        senderReadStatus: newMessage.senderReadStatus,
+        receiverReadStatus: newMessage.receiverReadStatus,
       };
 
       client.publish({
         destination: "/app/chat/send",
-        body: JSON.stringify(newMessage),
+        body: JSON.stringify(backendMessage),
       });
 
-      console.log("보내기");
+      console.log(input);
       setInput("");
       setTimeout(() => {
         scrollToBottom();
-      }, 100); // 상태 업데이트 후 스크롤 이동을 보장하기 위해 약간의 지연 추가
+      }, 100);
     }
   };
 
@@ -154,6 +189,35 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
   const scrollToBottom = () => {
     if (chatWindowRef.current) {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  };
+
+  const markMessagesAsRead = async (messageIds) => {
+    if (messageIds.length > 0) {
+      const token = localStorage.getItem("userToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      try {
+        const response = await axios.post(
+          `/chat/read?userId=${isUser ? userId : cafeOwnerId}`,
+          { messageIds },
+          { headers }
+        );
+
+        console.log("Messages marked as read:", response.data);
+        setMessages((prevMessages) =>
+          prevMessages.map((message) =>
+            messageIds.includes(message.id)
+              ? { ...message, receiverReadStatus: true }
+              : message
+          )
+        );
+      } catch (error) {
+        console.error("Error marking messages as read:", error);
+      }
     }
   };
 
@@ -175,17 +239,26 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
           <span>정보 불러오는중..</span>
         ) : (
           messages.map((message, index) => (
-            <div
-              className={`message ${
-                (isUser && message.senderId === userId) ||
-                (!isUser && message.senderId === cafeOwnerId)
-                  ? "message-right"
-                  : "message-left"
-              }`}
-              key={index}
-            >
-              {message.content}
-            </div>
+            <React.Fragment key={message.id || `temp-${index}`}>
+              <div
+                className={`message ${
+                  (isUser && message.senderId === userId) ||
+                  (!isUser && message.senderId === cafeOwnerId)
+                    ? "message-right"
+                    : "message-left"
+                }`}
+              >
+                {!message.receiverReadStatus && (
+                  <p
+                    className="unread-indicator"
+                    key={`unread-${message.id || `temp-${index}`}`}
+                  >
+                    읽지 않음
+                  </p>
+                )}
+                {message.content}
+              </div>
+            </React.Fragment>
           ))
         )}
       </div>

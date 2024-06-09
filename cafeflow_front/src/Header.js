@@ -4,6 +4,7 @@ import CustomCheckModal from "./Component/CustomCheckModal";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Container } from "react-bootstrap";
 import { useUser } from "./MainPage/UserContext";
+import axios from "axios";
 
 function Header() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ function Header() {
   const location = useLocation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
   const toggleTooltip = () => {
     setTooltipVisible(!tooltipVisible);
@@ -96,6 +98,11 @@ function Header() {
               <>
                 <p className="nav-side-element1" onClick={toggleTooltip}>
                   <span className="name-style">{nickname}</span> 님
+                  {unreadMessageCount > 0 && (
+                    <span className="unread-count-badge">
+                      {unreadMessageCount}
+                    </span>
+                  )}
                 </p>
                 <div
                   className={`mypage-tooltip ${
