@@ -81,6 +81,7 @@
   max-width: 40%;
   flex-grow: 0;
   align-self: flex-start;
+  position: relative;
 }
 
 .message-right {
@@ -112,4 +113,11 @@
   color: white;
   border: none;
   border-radius: 10px;
+}
+
+.unread-indicator {
+  font-size: 14px;
+  position: absolute;
+  left: -60px;
+  top: 0px;
 }
