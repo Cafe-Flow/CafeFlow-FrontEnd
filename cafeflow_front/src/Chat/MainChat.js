@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Client } from "@stomp/stompjs";
 import "./mainchat.css";
+import axios from "axios";
 
 function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
   const [messages, setMessages] = useState([]);
@@ -86,6 +87,17 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
         setTimeout(() => {
           scrollToBottom();
         }, 100);
+
+        const unreadMessages = data.filter(
+          (message) =>
+            (isUser &&
+              !message.receiverReadStatus &&
+              message.receiverId === userId) ||
+            (!isUser &&
+              !message.receiverReadStatus &&
+              message.receiverId === cafeOwnerId)
+        );
+        markMessagesAsRead(unreadMessages.map((message) => message.id));
       })
       .catch((error) => {
         console.error("Error fetching chat history:", error);
@@ -94,7 +106,6 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
         setLoading(false);
       });
   };
-
   const initializeWebSocket = (roomId) => {
     const newClient = new Client({
       brokerURL: "ws://localhost:8080/ws",
@@ -103,6 +114,7 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
         newClient.subscribe(`/topic/messages/${roomId}`, (message) => {
           const body = JSON.parse(message.body);
           setMessages((prevMessages) => [body, ...prevMessages]);
+
           setTimeout(() => {
             scrollToBottom();
           }, 100);
@@ -135,11 +147,11 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
         body: JSON.stringify(newMessage),
       });
 
-      console.log("보내기");
+      console.log(input);
       setInput("");
       setTimeout(() => {
         scrollToBottom();
-      }, 100); // 상태 업데이트 후 스크롤 이동을 보장하기 위해 약간의 지연 추가
+      }, 100);
     }
   };
 
@@ -154,6 +166,29 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
   const scrollToBottom = () => {
     if (chatWindowRef.current) {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  };
+
+  const markMessagesAsRead = (messageIds) => {
+    if (messageIds.length > 0) {
+      const token = localStorage.getItem("userToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      axios
+        .post(
+          `/chat/read?userId=${isUser ? userId : cafeOwnerId}`,
+          { messageIds },
+          { headers }
+        )
+        .then((response) => {
+          console.log("Messages marked as read:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error marking messages as read:", error);
+        });
     }
   };
 
