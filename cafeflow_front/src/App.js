@@ -18,6 +18,7 @@ import Shop from "./ShopPage/Shop.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatRegister from "./SeatPage/SeatRegister.js"; 
 import SeatView from "./SeatPage/SeatView.js";
+import Example from "./ShopPage/example.js";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/shopregister" element={<ShopRegister />} />
             <Route path="/seat" element={<SeatRegister />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
+            <Route path="/example" element={<Example />} />
           </Routes>
         </div>
       </div>
