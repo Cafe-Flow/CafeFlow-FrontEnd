@@ -17,6 +17,7 @@ import Shoplist from "./ShopPage/ShopList.js";
 import Shop from "./ShopPage/Shop.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatView from "./SeatPage/SeatView.js";
+import Example from "./ShopPage/example.js";
 import SeatRegister from "./SeatPage/SeatRegister.js";
 import OrderList from "./OrderPage/OrderList.js";
 import MainChat from "./Chat/MainChat.js";
@@ -47,6 +48,7 @@ function App() {
             <Route path="/shopregister" element={<ShopRegister />} />
             <Route path="/seat" element={<SeatRegister />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
+            <Route path="/example" element={<Example />} />
             <Route path="/chat" element={<MainChat />} />
           </Routes>
         </div>
