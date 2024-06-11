@@ -35,7 +35,7 @@ function LoginPage() {
 
   async function handleUserInfoFetch(token) {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/me", {
+      const response = await fetch("/api/auth/me", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ function LoginPage() {
 
     if (validateForm()) {
       setIsLoading(true);
-      const loginUrl = "http://localhost:8080/api/auth/login";
+      const loginUrl = "/api/auth/login";
 
       try {
         const response = await fetch(loginUrl, {

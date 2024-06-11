@@ -9,11 +9,11 @@
   position: relative;
   width: 80%;
   max-width: 600px;
+  display: flex;
 }
 
 .search-box {
   margin-top: 30px;
-  margin-bottom: 30px;
 }
 
 .search-input {
@@ -24,7 +24,7 @@
 
 .search-icon {
   position: absolute;
-  right: 0px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -39,4 +39,19 @@
 
 .search-input:hover {
   border: 2px solid black;
+}
+
+.search-filter {
+  padding: 5px;
+  margin-right: 20px;
+  border-radius: 10px;
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 900;
+  border: 2px soild black;
+}
+
+.search-filter option {
+  transition: 0.3s;
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 900;
 }

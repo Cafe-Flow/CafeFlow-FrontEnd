@@ -9,8 +9,15 @@ function Boardlist() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
+  const [originalPosts, setOriginalPosts] = useState([]);
   const resultsPerPage = 8;
   const [totalResults, setTotalResults] = useState(0);
+
+  const options = [
+    { value: "title", label: "게시글 제목" },
+    { value: "content", label: "게시글 내용" },
+    { value: "authorNickname", label: "작성자" },
+  ];
 
   useEffect(() => {
     fetchPosts();
@@ -19,22 +26,21 @@ function Boardlist() {
   const fetchPosts = async () => {
     try {
       const userToken = localStorage.getItem("userToken");
-      const response = await fetch(
-        "http://localhost:8080/api/community/posts",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      const response = await fetch("/api/community/posts", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      setOriginalPosts(data);
       sortPosts("최신순", data);
+      console.log(data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
@@ -57,11 +63,24 @@ function Boardlist() {
     }
     setSearchResults(newSortedPosts);
     setTotalResults(newSortedPosts.length);
-    setCurrentPage(1); // 정렬 후 페이지를 1로 리셋
+    setCurrentPage(1);
   };
 
-  const handleSearch = (searchTerm) => {
-    console.log("검색 실행:", searchTerm);
+  const handleSearch = (searchTerm, filter) => {
+    if (!searchTerm.trim()) {
+      setSearchResults(originalPosts);
+      setTotalResults(originalPosts.length);
+      setCurrentPage(1);
+      return;
+    }
+    const filteredResults = originalPosts.filter(
+      (post) =>
+        post[filter] &&
+        post[filter].toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setSearchResults(filteredResults);
+    setTotalResults(filteredResults.length);
+    setCurrentPage(1);
   };
 
   const handleCreatePost = () => {
@@ -73,7 +92,6 @@ function Boardlist() {
   };
 
   const indexOfLastPost = currentPage * resultsPerPage;
-  const indexOfFirstPost = indexOfLastPost - resultsPerPage;
   const currentPosts = searchResults.slice(
     (currentPage - 1) * resultsPerPage,
     currentPage * resultsPerPage
@@ -81,7 +99,7 @@ function Boardlist() {
 
   return (
     <>
-      <SearchSection onSearch={handleSearch} />
+      <SearchSection onSearch={handleSearch} options={options} />
       <ListSection
         posts={currentPosts}
         sortPosts={(sortType) => sortPosts(sortType, searchResults)}

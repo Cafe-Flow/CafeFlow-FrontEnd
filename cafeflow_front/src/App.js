@@ -15,10 +15,12 @@ import Query from "./MyPage/Query.js";
 import NewBoard from "./CommunityPage/NewBoard.js";
 import Shoplist from "./ShopPage/ShopList.js";
 import Shop from "./ShopPage/Shop.js";
-import ShopRegister from "./ShopPage/ShopRegister.js";
-import SeatRegister from "./SeatPage/SeatRegister.js"; 
+import ShopRegister from "./ShopPage/ShopRegister.js"; 
 import SeatView from "./SeatPage/SeatView.js";
 import Example from "./ShopPage/example.js";
+import SeatRegister from "./SeatPage/SeatRegister.js";
+import OrderList from "./OrderPage/OrderList.js";
+import MainChat from "./Chat/MainChat.js";
 
 function App() {
   return (
@@ -36,6 +38,7 @@ function App() {
             <Route path="/adminsignup" element={<AdminSignupPage />} />
             <Route path="/usersignup" element={<UserSignupPage />} />
             <Route path="/location" element={<MapPage />} />
+            <Route path="/order/orderlist" element={<OrderList />} />
             <Route path="/community" element={<Boardlist />} />
             <Route path="/create-post" element={<NewBoard />} />
             <Route path="/community/:postId" element={<DetailBoard />} />
@@ -45,6 +48,7 @@ function App() {
             <Route path="/seat" element={<SeatRegister />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
             <Route path="/example" element={<Example />} />
+            <Route path="/chat" element={<MainChat />} />
           </Routes>
         </div>
       </div>

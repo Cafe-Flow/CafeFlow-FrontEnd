@@ -24,6 +24,14 @@ function ListSection({ posts, sortPosts }) {
     sortPosts(sortType);
   };
 
+  if (loading === false && posts.length === 0) {
+    return (
+      <>
+        <p className="h6-font">일치하는 결과가 없습니다</p>
+        <span className="sad-imoji">(｡•́︿•̀｡) 슬퍼요</span>
+      </>
+    );
+  }
   return (
     <>
       <div className="post-sort list-container">
