@@ -2,18 +2,11 @@
   text-align: center;
   width: 100%;
   margin: 0 auto;
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 img {
   user-select: none;
-}
-
-.hide-on-expanded {
-  font-size: large;
-  display: flex;
-  justify-content: flex-end;
-  flex-grow: 1;
 }
 
 .Logo-font {
@@ -21,6 +14,13 @@ img {
   font-weight: 900;
   font-size: 40px;
   color: #d5c4a1 !important;
+}
+
+.hide-on-expanded {
+  font-size: large;
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
 }
 
 .nav-container {
@@ -32,7 +32,7 @@ img {
 }
 
 .custom-navbar-brand {
-  width: 340px;
+  width: 200px;
   margin-right: auto;
 }
 
@@ -46,26 +46,82 @@ img {
 
 .nav-element {
   position: relative;
-  padding: 5px 30px 5px 30px;
+  padding: 10px 30px;
   font-family: "Nanum Gothic", sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 20px;
   white-space: nowrap;
+  margin: 0 20px;
 }
 
 .nav-side-element1 {
+  user-select: none;
   position: relative;
-  top: -20px;
-  left: 0;
+  margin-bottom: 80px;
   font-size: 15px;
-  font-weight: 100;
-  padding-right: 15px;
-  font-weight: 500;
+}
+
+.mypage-tooltip {
+  position: absolute;
+  top: 40px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  z-index: 10;
+  height: 380px;
+  width: 250px;
+  text-align: left;
+  flex-direction: column;
+}
+
+.mypage-tooltip-top {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.mypage-tooltip-top-user {
+  flex-direction: column;
+}
+
+.mypage-tooltip-top-user p {
+  margin: 17px 0;
+  font-size: 14px;
+}
+
+.mypage-tooltip ul {
+  list-style: none;
+  padding: 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.mypage-tooltip ul li {
+  margin: 25px;
+  font-size: 15px;
+}
+
+.mypage-tooltip img {
+  margin: 14px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  user-select: none;
+}
+
+.mypage-tooltip.invisible {
+  display: none;
+}
+
+.mypage-tooltip-logout {
+  font-size: 15px;
+  margin: 25px;
+}
+
+.mypage-tooltip-logout:hover {
+  text-decoration: underline;
 }
 
 .name-style {
-  color: #d5c4a1;
-  font-weight: bold;
+  color: #ccc;
   padding: 5px;
   white-space: nowrap;
 }
@@ -73,11 +129,13 @@ img {
 .nav-side-element2 {
   padding-left: 15px;
   position: relative;
-  top: -20px;
-  left: 0;
+  margin-bottom: 80px;
   font-size: 15px;
-  font-weight: 900;
   white-space: nowrap;
+}
+
+.nav-side-element2:hover {
+  text-decoration: underline;
 }
 
 .custom-navbar-style {
@@ -93,7 +151,6 @@ img {
 .nav-element.active,
 .nav-element:hover,
 .name-style:hover {
-  font-weight: 900;
   color: black;
 }
 
@@ -102,8 +159,8 @@ img {
   position: absolute;
   left: 100%;
   right: 100%;
-  bottom: -15px;
-  height: 3px;
+  bottom: -36px;
+  height: 4px;
   background-color: black;
   transition: left 0.3s ease, right 0.3s ease;
 }

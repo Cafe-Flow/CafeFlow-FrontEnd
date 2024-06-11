@@ -1,6 +1,6 @@
 .mypage {
   display: flex;
-  height: 60vh;
+  height: 55vh;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -34,7 +34,7 @@
 .mypage-card {
   flex: 1;
   background-color: #fff;
-  height: 640px;
+  height: 60vh;
   overflow: auto;
 }
 
@@ -49,7 +49,7 @@
 
 .header-font {
   font-size: 21px;
-  font-weight: 900;
+  font-weight: 500;
 }
 
 .mypage-modify-display p {
@@ -131,6 +131,9 @@
   .mypage-sidebar {
     display: none;
   }
+  .chat-list {
+    width: 100%;
+  }
 }
 
 .form-label {
@@ -152,4 +155,87 @@
 
 .form-modify-button:hover {
   background-color: #7bb5b1;
+}
+
+.chat-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+}
+
+.chat-list li {
+  position: relative;
+  flex: 0 1 calc(30% - 16px);
+  display: flex;
+  border: none;
+  background-color: #f1f1f1;
+  height: 130px;
+  margin: 0 auto;
+  border-radius: 10px;
+  margin-bottom: 90px;
+  transition: transform 0.3s;
+}
+
+.chat-list li::after {
+  content: "";
+  position: absolute;
+  bottom: -100px; /* 세모가 붙을 위치 조정 */
+  left: 55%; /* 세모가 중앙에 위치하도록 */
+  transform: translateX(-50%); /* 세모를 중앙 정렬 */
+  border-width: 50px; /* 세모의 크기 */
+  border-style: solid;
+  border-color: #f1f1f1 transparent transparent transparent; /* 세모의 색상 설정 */
+}
+
+.chat-list li:hover {
+  transform: scale(1.04);
+}
+
+.chat-list li span {
+  background-color: #ccc;
+  margin: 10px 0px;
+  padding: 10px 30px;
+  border-radius: 10px;
+  align-items: flex-end;
+}
+
+.chat-list-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-list li span:hover {
+  background-color: black;
+  color: white;
+}
+
+.chat-list li p {
+  padding: 20px;
+  font-size: 18px;
+  width: 50%;
+  align-self: center;
+  font-weight: 900;
+  font-family: "Nanum Gothic", sans-serif;
+}
+
+.unread-badge {
+  position: absolute;
+  left: 95%;
+  top: -5%;
+  width: 9%;
+  height: 20%;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+}
+
+.chat-list-popup {
+  top: 0;
+  right: 0;
+  position: absolute;
+  width: 400px;
+  height: 250px;
+  z-index: 1000;
 }

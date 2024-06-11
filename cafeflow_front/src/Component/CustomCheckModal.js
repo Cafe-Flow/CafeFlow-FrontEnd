@@ -7,7 +7,7 @@ function CustomCheckModal({ show, handleClose, children, handleConfirm }) {
       <Modal.Header closeButton>
         <Modal.Title className="Logo-font">CafeFlow</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="h6-font" style={{ fontSize: "20px" }}>
+      <Modal.Body className="h6-font" style={{ fontSize: "18px" }}>
         {children}
       </Modal.Body>
       <Modal.Footer>
