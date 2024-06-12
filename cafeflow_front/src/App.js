@@ -16,6 +16,7 @@ import Shoplist from "./ShopPage/ShopList.js";
 import Shop from "./ShopPage/Shop.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatView from "./SeatPage/SeatView.js";
+import Example from "./ShopPage/example.js";
 import SeatRegister from "./SeatPage/SeatRegister.js";
 import Example from "./ShopPage/example.js";
 import OrderList from "./OrderPage/OrderList.js";
