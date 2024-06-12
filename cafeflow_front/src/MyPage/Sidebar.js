@@ -3,9 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import "./mypage.css";
 import { MdAccountCircle, MdVpnKey, MdDelete } from "react-icons/md";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import { useUser } from "../MainPage/UserContext";
 
 function Sidebar() {
   const location = useLocation();
+  const { userInfo, setUserInfo } = useUser();
   const isActive = (path) => {
     return location.pathname === path;
   };
@@ -16,6 +18,16 @@ function Sidebar() {
         <p className="h6-font" style={{ fontSize: "20px" }}>
           마이 페이지
         </p>
+        {userInfo.userType === "ADMIN" && (
+          <li>
+            <Link
+              to="/mypage/my-cafe"
+              className={isActive("/mypage/my-cafe") ? "active" : ""}
+            >
+              <MdDelete /> 내 매장
+            </Link>
+          </li>
+        )}
         <li>
           <Link
             to="/mypage/modify"

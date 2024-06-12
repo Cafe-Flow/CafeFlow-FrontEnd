@@ -8,6 +8,8 @@ import Pagination from "./Pagination";
 import { useNavermaps } from "react-naver-maps";
 import MarkerClustering from "./MarkerClustering";
 import CustomError from "../Component/CustomError";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 
 function MapInfo() {
   const mapRef = useRef(null);
@@ -25,6 +27,9 @@ function MapInfo() {
   const [errorMessage, setErrorMessage] = useState("");
   const customControlRef = useRef(null);
   const navermaps = useNavermaps();
+  const [isChecking, setIsChecking] = useState(false);
+  const [dots, setDots] = useState("");
+  const stompClientRef = useRef(null);
 
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
@@ -59,14 +64,6 @@ function MapInfo() {
     anchor: new navermaps.Point(15, 15),
   };
 
-  function getCongestionLevel(congestion) {
-    return congestion > 80 ? "혼잡" : congestion > 50 ? "적정" : "원활";
-  }
-
-  function getCongestionColor(congestion) {
-    return congestion > 80 ? "red" : congestion > 50 ? "blue" : "green";
-  }
-
   function convertCoords(x, y) {
     const xString = x.toString();
     const yString = y.toString();
@@ -91,6 +88,51 @@ function MapInfo() {
     updateMarkers(map, dummyMarkersRef.current);
   };
 
+  const handleSimulateButtonClick = () => {
+    setIsChecking((prevIsChecking) => {
+      if (!prevIsChecking) {
+        connectWebSocket();
+      } else {
+        disconnectWebSocket();
+      }
+      return !prevIsChecking;
+    });
+  };
+
+  const connectWebSocket = () => {
+    const socket = new SockJS("http://localhost:8080/ws");
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect(
+      {},
+      () => {
+        stompClient.subscribe("/topic/cafe", (message) => {
+          const updatedCafe = JSON.parse(message.body);
+          console.log("Received message:", message);
+          updateMarkerTraffic(
+            updatedCafe.cafeId,
+            updatedCafe.traffic,
+            updatedCafe.watingTime
+          );
+        });
+        console.log("WebSocket connected");
+      },
+      (error) => {
+        console.error("WebSocket connection error:", error);
+      }
+    );
+
+    stompClientRef.current = stompClient;
+  };
+
+  const disconnectWebSocket = () => {
+    if (stompClientRef.current) {
+      stompClientRef.current.disconnect(() => {
+        console.log("WebSocket disconnected");
+      });
+    }
+  };
+
   const updateMarkers = (map, markers) => {
     const mapBounds = map.getBounds();
     const visibleMarkersData = [];
@@ -100,15 +142,25 @@ function MapInfo() {
 
       if (mapBounds.hasLatLng(position)) {
         showMarker(map, marker);
+
+        const addressParts = marker.address.split(" ");
+        const address =
+          addressParts.length >= 2
+            ? `${addressParts[0]} ${addressParts[1]}`
+            : marker.address;
+        const detailAddress = marker.address;
+
         visibleMarkersData.push({
           id: marker.id,
           memberId: marker.memberId,
           lat: position.lat(),
           lng: position.lng(),
           name: marker.name,
-          address: marker.address,
+          address: address,
+          detailAddress: detailAddress,
           description: marker.description,
-          congestion: marker.congestion,
+          traffic: marker.traffic,
+          watingTime: marker.watingTime,
         });
       } else {
         hideMarker(marker);
@@ -120,8 +172,25 @@ function MapInfo() {
   };
 
   useEffect(() => {
+    let interval;
+    if (isChecking) {
+      interval = setInterval(() => {
+        setDots((prevDots) => {
+          if (prevDots.length >= 3) {
+            return "";
+          }
+          return prevDots + ".";
+        });
+      }, 500);
+    } else {
+      setDots("");
+    }
+    return () => clearInterval(interval);
+  }, [isChecking]);
+
+  useEffect(() => {
     const mapOptions = {
-      center: new navermaps.LatLng(37.5666103, 126.9783882),
+      center: new navermaps.LatLng(36.14591781218163, 128.3935552490008),
       logoControl: false,
       mapDataControl: false,
       scaleControl: false,
@@ -218,16 +287,41 @@ function MapInfo() {
     }
   }, [navermaps]);
 
+  const updateMarkerTraffic = (cafeId, traffic, watingTime) => {
+    setMarkersData((prevMarkers) =>
+      prevMarkers.map((marker) =>
+        marker.id === cafeId ? { ...marker, traffic, watingTime } : marker
+      )
+    );
+
+    dummyMarkersRef.current.forEach((marker) => {
+      if (marker.id === cafeId) {
+        const newTraffic = traffic;
+        marker.traffic = newTraffic;
+        marker.watingTime = watingTime;
+
+        const markerContent = `
+          <div class="custom-marker" data-congestion="${newTraffic}">
+            <p>${marker.name}</p>
+            <span class="congestion-indicator" style="background-color: ${newTraffic};"></span>
+          </div>`;
+
+        marker.setIcon({
+          content: markerContent,
+          size: new naver.maps.Size(38, 58),
+          anchor: new navermaps.Point(58, 40),
+        });
+      }
+    });
+  };
+
   const createMarkers = (data) => {
     const markers = data.map((item) => {
       const { mapx, mapy } = convertCoords(item.mapx, item.mapy);
-      const congestionColor = getCongestionColor(item.traffic);
       const markerContent = `
-        <div class="custom-marker" data-congestion="${getCongestionLevel(
-          item.congestion
-        )}">
+        <div class="custom-marker" data-congestion="${item.traffic}">
           <p>${item.name}</p>
-          <span class="congestion-indicator" style="background-color: ${congestionColor};"></span>
+          <span class="congestion-indicator" style="background-color: ${item.traffic};"></span>
         </div>`;
 
       const marker = new naver.maps.Marker({
@@ -244,7 +338,8 @@ function MapInfo() {
       marker.name = item.name;
       marker.description = item.description;
       marker.address = item.address;
-      marker.congestion = item.traffic;
+      marker.traffic = item.traffic;
+      marker.watingTime = item.watingTime;
 
       naver.maps.Event.addListener(marker, "click", () => {
         handleMarkerClick({
@@ -255,7 +350,8 @@ function MapInfo() {
           name: item.name,
           address: item.address,
           description: item.description,
-          congestion: item.traffic,
+          traffic: item.traffic,
+          watingTime: item.watingTime,
         });
       });
 
@@ -397,6 +493,22 @@ function MapInfo() {
         searchResults={searchResults}
         onResultClick={handleResultClick}
       />
+      <div className="simulate-button-content">
+        <button
+          className={`simulate-button ${isChecking ? "active" : ""}`}
+          onClick={handleSimulateButtonClick}
+        >
+          ● 실시간 확인
+        </button>
+        {isChecking && (
+          <>
+            <div className="loading-indicator"></div>
+            <div className="loading-container">
+              <span>실시간 집계 중입니다{dots}</span>
+            </div>
+          </>
+        )}
+      </div>
       <div className="map-container">
         <div className="map-content">
           <div
