@@ -48,6 +48,7 @@ function App() {
             <Route path="/shop/:idx/orderlist" element={<OrderList />} />
             <Route path="/shopregister" element={<ShopRegister />} />
             <Route path="/seat" element={<SeatRegister />} />
+            <Route path="/example" element={<Example />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
           </Routes>
         </div>
