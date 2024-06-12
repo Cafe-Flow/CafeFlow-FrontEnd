@@ -22,6 +22,7 @@ import SeatRegister from "./SeatPage/SeatRegister.js";
 import OrderList from "./OrderPage/OrderList.js";
 import MainChat from "./Chat/MainChat.js";
 import Chatrooms from "./MyPage/Chatrooms.js";
+import ShopModify from "./ShopPage/ShopModify.js";
 
 function App() {
   return (
@@ -44,11 +45,12 @@ function App() {
             <Route path="/create-post" element={<NewBoard />} />
             <Route path="/community/:postId" element={<DetailBoard />} />
             <Route path="/shop" element={<Shoplist />} />
-            <Route path="/shop/:idx" element={<Shop />} />
+            <Route path="/example/:idx" element={<Shop />} />
             <Route path="/shopregister" element={<ShopRegister />} />
             <Route path="/seat" element={<SeatRegister />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
-            <Route path="/example" element={<Example />} />
+            <Route path="/shop/:idx" element={<Example />} />
+            <Route path="/modify/:idx" element={<ShopModify />} />
             <Route path="/chat" element={<MainChat />} />
           </Routes>
         </div>

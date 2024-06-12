@@ -45,7 +45,6 @@ body{
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     text-align: left;
-    padding-left: 70px ;
   }
 
   .place_details2 {
@@ -54,7 +53,6 @@ body{
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     text-align: left;
-    padding-left: 70px;
     overflow: hidden;
   }
 
@@ -172,4 +170,73 @@ body{
 
 .tit_detail{
     margin-top: -5px;
+}
+
+.inner_place .admin_modify{
+    color: red;
+}
+
+.name_with_rate{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.review_with_rate{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.center_image_input{
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.image_container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* Space between items */
+}
+
+.review_images {
+  flex: 1 1 calc(33.333% - 16px);
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.review_images img {
+  width: 100%;
+  height: auto;
+}
+
+.view_more {
+  flex: 1 1 calc(33.333% - 16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  text-align: center;
+}
+
+.modal_image_container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.modal_review_images {
+  flex: 1 1 calc(33.333% - 16px);
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.modal_review_images img {
+  width: 100%;
+  height: auto;
 }

@@ -1,3 +1,6 @@
+*{
+  font-family: sans-serif;
+}
 .center-div {
     width: 800px; /* div의 너비 */
     margin: 0 auto; /* 좌우 여백을 자동으로 조정하여 가운데 정렬 */
@@ -88,3 +91,57 @@
     margin-top: 20px;
     height: 200px; /* Set the height to a fixed value */
   }
+  .dropzone {
+    width: 98%;
+    margin: 1%;
+    border: 2px dashed #AAA !important;
+    border-radius: 5px;
+    -webkit-transition: .2s;
+    transition: .2s;
+    background: #EEE;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .dropzone.dz-drag-hover {
+    border: 2px solid #3498db !important;
+  }
+  
+  .dz-message.needsclick img {
+    width: 50px;
+    display: block;
+    margin: auto;
+    opacity: .6;
+    margin-bottom: 15px;
+  }
+  
+  span.plus {
+    display: none;
+  }
+  
+  .dropzone.dz-started .dz-message {
+    display: inline-block !important;
+    width: 120px;
+    float: right;
+    border: 1px solid rgba(238, 238, 238, 0.36);
+    border-radius: 30px;
+    height: 120px;
+    margin: 16px;
+    -webkit-transition: .2s;
+    transition: .2s;
+  }
+  
+  .dropzone.dz-started .dz-message span.text {
+    display: none;
+  }
+  
+  .dropzone.dz-started .dz-message span.plus {
+    display: block;
+    font-size: 70px;
+    color: #AAA;
+    line-height: 110px;
+  }
+
+  .dropzone-container{
+    text-align: center;
+  }
+  /*# sourceMappingURL=ss.css.map */

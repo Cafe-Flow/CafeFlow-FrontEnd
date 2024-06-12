@@ -7,7 +7,8 @@ import Card from "react-bootstrap/Card";
 import "./Shop.css";
 import Button from "react-bootstrap/Button";
 import Carousel from "react-bootstrap/Carousel";
-import SeatView from "../SeatPage/SeatView"; // SeatView import 추가
+import SeatView from "../SeatPage/SeatView";
+import { useDropzone } from "react-dropzone"; // react-dropzone import 추가
 
 function Shop() {
   let { idx } = useParams();
@@ -18,6 +19,8 @@ function Shop() {
   const [comment, setComment] = useState(""); // 리뷰 내용 state
   const [seats, setSeats] = useState([]); // State to store seat data
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
+  const [file, setFile] = useState(null); // File state 추가
+  const [files, setFiles] = useState([]); // File state 추가
   const Array = [0, 1, 2, 3, 4];
 
   useEffect(() => {
@@ -77,17 +80,28 @@ function Shop() {
 
   const handleSubmitReview = async () => {
     try {
+      // Retrieve token from localStorage
+      const token = localStorage.getItem("userToken");
+  
       // 리뷰 작성을 위한 데이터 객체 생성
       const reviewData = {
         rating: rating,
         comment: comment,
         image: reviewImg // 이미지 데이터 추가
       };
+  
       // 서버에 리뷰 작성 요청
       await axios.post(
         `http://localhost:8080/api/cafe/${idx}/review`,
-        reviewData
+        reviewData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the Authorization header
+            "Content-Type": "multipart/form-data",
+          }
+        }
       );
+  
       // 리뷰 작성 후 서버에서 리뷰 목록을 다시 가져옴
       let url = `http://localhost:8080/api/cafe/${idx}/review`;
       if (sortBy === "0") {
@@ -97,7 +111,12 @@ function Shop() {
       } else if (sortBy === "2") {
         url += "?sort-by=lowest-rating";
       }
-      const updatedReviews = await axios.get(url);
+      const updatedReviews = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}` // Include token in the Authorization header
+        }
+      });
+  
       // 가져온 리뷰 목록으로 상태 업데이트
       setReviews(updatedReviews.data);
     } catch (error) {
@@ -105,34 +124,80 @@ function Shop() {
     }
   };
   
+  const onDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result.split(",")[1]; // Base64 문자열 추출
+      setReviewImg(base64String); // reviewImg 상태 업데이트
+    };
+    reader.readAsDataURL(file); // 파일을 Base64로 변환
+  };
 
-  
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   accept: "image/*",
+  //   onDrop,
+  // });
+
+  const handleFileChange = (e) => {
+    const uploadedFile = e.target.files[0];
+    setFile(uploadedFile);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      // Replace 'https://httpbin.org/post' with your actual API endpoint
+      const response = await fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('File uploaded successfully');
+        // You can handle success response here
+      } else {
+        console.error('Failed to upload file');
+        // You can handle error response here
+      }
+    } catch (error) {
+      console.error('Error occurred while uploading file:', error);
+    }
+  };
 
   let cafeName = cafeData ? cafeData.name : "알 수 없음";
   let address = cafeData ? cafeData.address : "알 수 없음";
   let reviewCount = cafeData ? cafeData.reviewCount : 0;
   let reviewsRating = cafeData ? cafeData.reviewsRating : 0;
   let description = cafeData ? cafeData.description : "알 수 없음";
-  let cafeImage =  cafeData ? `data:image/png;base64,${cafeData.image}` : "";
+  let cafeImage = cafeData ? `data:image/png;base64,${cafeData.image}` : "";
   let mapx = cafeData ? cafeData.mapx : 0;
   let mapy = cafeData ? cafeData.mapy : 0;
 
-  const mapRef = useRef(null);
-  
-  useEffect(() => {
-    const { naver } = window;
-    if (mapRef.current && naver) {
-      const location = new naver.maps.LatLng(mapx, mapy);
-      const map = new naver.maps.Map(mapRef.current, {
-        center: location,
-        zoom: 17, // 지도 확대 정도
-      });
-      new naver.maps.Marker({
-        position: location,
-        map,
-      });
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*",
+    onDrop: (acceptedFiles) => {
+      setFiles(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        )
+      );
     }
-  }, []);
+  });
+
+  const thumbs = files.map((file) => (
+    <div className="thumb" key={file.name}>
+      <div className="thumb-inner">
+        <img src={file.preview} className="thumb-img" alt={file.name} />
+      </div>
+    </div>
+  ));
+
 
   console.log("image", cafeImage)
 
@@ -214,6 +279,13 @@ function Shop() {
             onChange={(e) => setComment(e.target.value)}
           />
         </FloatingLabel>
+        <section className="dropzone-container">
+          <div {...getRootProps({ className: "dropzone" })}>
+            <input {...getInputProps()} />
+            <p>이미지를 업로드하려면 클릭하거나 여기에 파일을 드롭하세요.</p>
+            <aside className="thumbs-container">{thumbs}</aside>
+          </div>
+        </section>
         <div className="star-ratings">
           <div className="star-rating space-x-4 mx-auto">
             {Array.map((value, index) => (
@@ -242,10 +314,7 @@ function Shop() {
               리뷰 작성
             </Button>{" "}
           </div>
-          <input
-            type="file"
-            onChange={(e) => setReviewImg(e.target.files[0])}
-          />
+          
           <div className="post-sort list-container">
             <p
               className={sortBy === "0" ? "active" : ""}
@@ -272,12 +341,14 @@ function Shop() {
           {reviews.map((review, index) => (
             <div key={index} className="review">
               <Card id="reviews">
-                <Card.Header style={{ textAlign: "start" }}>{reviews.id}</Card.Header>
+                <Card.Header style={{ textAlign: "start" }}>{review.nickname}</Card.Header>
+                <Card.Body  style={{ textAlign: "start" }}>
+                <Card.Img variant="top" src={`${review.image}`} />
+                </Card.Body>
                 <Card.Body style={{ textAlign: "start" }}>{review.comment}</Card.Body>
                 <Card.Body style={{ textAlign: "end" }}>
                   {"⭐️".repeat(review.rating)}
                 </Card.Body>
-                <Card.Img variant="top" src={reviews ? `data:image/png;base64,${reviews.image}` : ""} />
               </Card>
             </div>
           ))}
