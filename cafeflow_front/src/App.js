@@ -17,6 +17,7 @@ import Shop from "./ShopPage/Shop.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatView from "./SeatPage/SeatView.js";
 import SeatRegister from "./SeatPage/SeatRegister.js";
+import Example from "./ShopPage/example.js";
 import OrderList from "./OrderPage/OrderList.js";
 import Chatrooms from "./MyPage/Chatrooms.js";
 import CafeList from "./MyPage/CafeList.js";
@@ -48,8 +49,9 @@ function App() {
             <Route path="/shop/:idx/orderlist" element={<OrderList />} />
             <Route path="/shopregister" element={<ShopRegister />} />
             <Route path="/seat" element={<SeatRegister />} />
-            <Route path="/example" element={<Example />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
+            <Route path="/example" element={<Example />} />
+            <Route path="/chat" element={<MainChat />} />
           </Routes>
         </div>
       </div>
