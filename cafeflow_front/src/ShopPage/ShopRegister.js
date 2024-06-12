@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import './ShopRegister.css';
 import useSeatStore from '../SeatPage/SeatStore';
 import SeatRegister from '../SeatPage/SeatRegister';
+import { useDropzone } from 'react-dropzone';
+import Dropzone from './dropzone';
 
 function ShopRegister() {
     const navigate = useNavigate();
@@ -12,14 +14,14 @@ function ShopRegister() {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
-    const [cafeList, setCafeList] = useState([]); // Added cafeList state
-    const [selectedCafe, setSelectedCafe] = useState(null); // Added selectedCafe state
+    const [cafeList, setCafeList] = useState([]);
+    const [selectedCafe, setSelectedCafe] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [imageFile, setImageFile] = useState(null); // 추가
-    const seats = useSeatStore((state) => state.seats); // Get seats from the store
-    const setSeats = useSeatStore((state) => state.setSeats); // Get function to update seats from the store
+    const [imageFile, setImageFile] = useState(null);
+    const seats = useSeatStore((state) => state.seats);
+    const setSeats = useSeatStore((state) => state.setSeats);
     const [errors, setErrors] = useState({
         nameError: '',
         addressError: '',
@@ -48,26 +50,25 @@ function ShopRegister() {
         try {
             const isAdmin = localStorage.getItem("userInfo");
     
-            // Parse the userInfo JSON string
             const userInfo = JSON.parse(isAdmin);
     
-            // Check if the userType is ADMIN
             if (userInfo && userInfo.userType === "ADMIN") {
-                // Proceed with the POST request
+                console.log("Image File:", imageFile); // Add this log to check the imageFile
+
+
                 const token = localStorage.getItem("userToken");
     
-                // Create a FormData object
                 const formData = new FormData();
                 formData.append('name', name);
                 formData.append('address', address);
                 formData.append('description', description);
                 formData.append('mapx', selectedCafe.mapx);
                 formData.append('mapy', selectedCafe.mapy);
-                formData.append('image', imageFile); // Assuming `imageFile` is the file object for the image
+                formData.append('image', imageFile);
     
                 const headers = {
                     Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data", // Important for form-data
+                    "Content-Type": "multipart/form-data",
                 };
     
                 const response = await axios.post('http://localhost:8080/api/register-cafe', formData, { headers });
@@ -98,14 +99,11 @@ function ShopRegister() {
                     }
                 );
     
-                // Clear the seats data after successful registration
                 setSeats([]);
     
-                // 모달 닫기 및 페이지 이동
                 setShowModal(false);
                 navigate(`/shop/${shopid}`);
             } else {
-                // Display an error message or handle the case where the user is not an ADMIN
                 console.error('User is not an ADMIN');
             }
         } catch (error) {
@@ -128,7 +126,7 @@ function ShopRegister() {
     };
 
     const handleSeatData = (data) => {
-        setSeats(data); // 기존의 좌석 데이터 대신 새로운 좌석 데이터로 업데이트
+        setSeats(data);
     };
 
     const handleKeyPress = (e) => {
@@ -147,7 +145,7 @@ function ShopRegister() {
             }
             const data = await response.json();
             setCafeList(data.items);
-            setShowSearchModal(true); // Show search modal when search is performed
+            setShowSearchModal(true);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -155,7 +153,6 @@ function ShopRegister() {
         }
     };
 
-    // State for search results modal
     const [showSearchModal, setShowSearchModal] = useState(false);
 
     const handleSearchModalClose = () => {
@@ -164,29 +161,51 @@ function ShopRegister() {
 
     const handleCompleteSelection = () => {
         if (selectedCafe) {
-            setName(selectedCafe.title.replace(/<[^>]+>/g, '')); // Set the name to the title of the selected cafe
-            setAddress(selectedCafe.address); // Set the address to the address of the selected cafe
-            setSelectedCafe(selectedCafe); // Set the selected cafe item
+            setName(selectedCafe.title.replace(/<[^>]+>/g, ''));
+            setAddress(selectedCafe.address);
+            setSelectedCafe(selectedCafe);
         }
         setShowSearchModal(false);
     };
 
+    const handleFileChange = (e) => {
+        setImageFile(e.target.files[0]);
+    };
+
+     // Dropzone configuration
+     const onDrop = (acceptedFiles) => {
+        // Handle dropped files here
+        const file = acceptedFiles[0];
+        setImageFile(file);
+    };
+
+    const handleImageDrop = (acceptedFiles) => {
+        // 이미지 파일을 드롭하면 호출되는 함수
+        setImageFile(acceptedFiles[0]); // 첫 번째 이미지 파일만 사용
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+
     return (
         <div className="register-cafe">
             <div className='h2-font'><p>카페등록</p></div>
-            <div class="cafe-register-img"><img src='/img/cafe-img.png' /></div>
+            <div className="cafe-register-img"><img src='/img/cafe-img.png' /></div>
             <br />
             <div id="cafe-description">
                 <h2>카페 검색 및 선택</h2>
+                {/* Search input */}
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="검색어를 입력하세요"
-                    style={{ padding: '10px', width: '300px' }}
+                    style={{ padding: '10px', width: '420px' }}
                 />
+                {/* Search button */}
                 <Button onClick={handleSearch} className="research-button" style={{ background: "black", padding: '10px 20px', marginLeft: '10px' }}>검색</Button>
+                {/* Selected cafe information */}
                 {selectedCafe && (
                     <div>
                         <h2 dangerouslySetInnerHTML={{ __html: selectedCafe.title }} />
@@ -212,23 +231,21 @@ function ShopRegister() {
                     <Form.Control.Feedback type="invalid">{errors.descriptionError}</Form.Control.Feedback>
                 </FloatingLabel>
             </div>
-            <div id="cafe-image">
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setImageFile(e.target.files[0])}
-                />
-            </div>
+            <Dropzone onDrop={handleImageDrop} uploadedFiles={imageFile ? [imageFile] : []} style={{ padding: '10px', width: '600px' }} />
+            {/* Next button */}
             <Button onClick={handleNextButtonClick} className="register-button" style={{ background: "black" }}>다음</Button>
 
             {/* Modal for SeatRegister */}
             <Modal show={showModal} onHide={handleModalClose} dialogClassName="modal-xl">
+                {/* Modal header */}
                 <Modal.Header closeButton>
                     <Modal.Title>좌석 등록</Modal.Title>
                 </Modal.Header>
+                {/* Modal body */}
                 <Modal.Body>
                     <SeatRegister existingSeats={seats} />
                 </Modal.Body>
+                {/* Modal footer */}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleModalClose}>닫기</Button>
                     <Button variant="primary" onClick={handleModalSubmit}>등록</Button>
@@ -237,11 +254,14 @@ function ShopRegister() {
 
             {/* Modal for search results */}
             <Modal show={showSearchModal} onHide={handleSearchModalClose}>
+                {/* Modal header */}
                 <Modal.Header closeButton>
                     <Modal.Title>카페 검색 결과</Modal.Title>
                 </Modal.Header>
+                {/* Modal body */}
                 <Modal.Body>
                     <ul>
+                        {/* Display search results */}
                         {cafeList.map((cafe, index) => (
                             <li
                                 key={index}
@@ -251,7 +271,7 @@ function ShopRegister() {
                                     cursor: 'pointer',
                                     backgroundColor: selectedCafe === cafe ? '#e0e0e0' : 'transparent'
                                 }}
-                                onClick={() => handleCafeSelection(cafe)} // 카페 선택 핸들러 추가
+                                onClick={() => handleCafeSelection(cafe)} // Handle cafe selection
                             >
                                 <h2 dangerouslySetInnerHTML={{ __html: cafe.title }} />
                                 <p>주소: {cafe.address}</p>
@@ -263,6 +283,7 @@ function ShopRegister() {
                         ))}
                     </ul>
                 </Modal.Body>
+                {/* Modal footer */}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleSearchModalClose}>닫기</Button>
                     <Button variant="primary" onClick={handleCompleteSelection}>완료</Button>

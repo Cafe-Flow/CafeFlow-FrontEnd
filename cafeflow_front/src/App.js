@@ -20,6 +20,7 @@ import Example from "./ShopPage/example.js";
 import SeatRegister from "./SeatPage/SeatRegister.js";
 import OrderList from "./OrderPage/OrderList.js";
 import Chatrooms from "./MyPage/Chatrooms.js";
+import ShopModify from "./ShopPage/ShopModify.js";
 import CafeList from "./MyPage/CafeList.js";
 import AddMenu from "./OrderPage/AddMenu.js";
 
@@ -44,13 +45,15 @@ function App() {
             <Route path="/create-post" element={<NewBoard />} />
             <Route path="/community/:postId" element={<DetailBoard />} />
             <Route path="/shop" element={<Shoplist />} />
-            <Route path="/shop/:idx" element={<Shop />} />
+            <Route path="/example/:idx" element={<Shop />} />
+            <Route path="/seat" element={<SeatRegister />} />
+            <Route path="/seat/:cafeId" element={<SeatView />} />
+            <Route path="/shop/:idx" element={<Example />} />
+            <Route path="/modify/:idx" element={<ShopModify />} />
+            <Route path="/chat" element={<MainChat />} />
             <Route path="/shop/:idx/addmenu" element={<AddMenu />} />
             <Route path="/shop/:idx/orderlist" element={<OrderList />} />
             <Route path="/shopregister" element={<ShopRegister />} />
-            <Route path="/seat" element={<SeatRegister />} />
-            <Route path="/seat/:cafeId" element={<SeatView />} />
-            <Route path="/example" element={<Example />} />C
           </Routes>
         </div>
       </div>
