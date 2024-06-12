@@ -24,7 +24,6 @@ img {
 }
 
 .nav-container {
-  font-size: large;
   display: flex;
   justify-content: center;
   flex-grow: 1;
@@ -32,16 +31,11 @@ img {
 }
 
 .custom-navbar-brand {
-  width: 200px;
-  margin-right: auto;
+  height: 70px;
 }
 
 .custom-navbar-container {
   display: flex;
-}
-
-.custom-navbar-style {
-  width: 100%;
 }
 
 .nav-element {
@@ -57,8 +51,10 @@ img {
 .nav-side-element1 {
   user-select: none;
   position: relative;
-  margin-bottom: 80px;
+  top: -20px;
   font-size: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .mypage-tooltip {
@@ -68,7 +64,6 @@ img {
   border: 1px solid #ccc;
   border-radius: 10px;
   z-index: 10;
-  height: 380px;
   width: 250px;
   text-align: left;
   flex-direction: column;
@@ -83,6 +78,12 @@ img {
   flex-direction: column;
 }
 
+.mypage-tooltip-top-user span {
+  color: #ccc;
+  font-weight: 900;
+  user-select: none;
+}
+
 .mypage-tooltip-top-user p {
   margin: 17px 0;
   font-size: 14px;
@@ -91,6 +92,7 @@ img {
 .mypage-tooltip ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   border-bottom: 1px solid #ccc;
 }
 
@@ -115,7 +117,6 @@ img {
   font-size: 15px;
   margin: 25px;
 }
-
 .mypage-tooltip-logout:hover {
   text-decoration: underline;
 }
@@ -129,7 +130,7 @@ img {
 .nav-side-element2 {
   padding-left: 15px;
   position: relative;
-  margin-bottom: 80px;
+  top: -20px;
   font-size: 15px;
   white-space: nowrap;
 }
@@ -159,8 +160,8 @@ img {
   position: absolute;
   left: 100%;
   right: 100%;
-  bottom: -36px;
-  height: 4px;
+  bottom: -23px;
+  height: 3px;
   background-color: black;
   transition: left 0.3s ease, right 0.3s ease;
 }

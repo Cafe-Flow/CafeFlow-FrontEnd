@@ -22,6 +22,9 @@ function MainSection() {
                 </p>
                 <Button
                   className="card-button"
+                  onClick={() => {
+                    navigate("/location");
+                  }}
                   style={{
                     fontFamily: "'Nanum Gothic', 'sans-serif'",
                     fontSize: "20px",
@@ -53,6 +56,9 @@ function MainSection() {
                 </p>
                 <Button
                   className="card-button"
+                  onClick={() => {
+                    navigate("/order/orderlist");
+                  }}
                   style={{
                     fontFamily: "'Roboto', sans-serif",
                     fontSize: "20px",
@@ -87,7 +93,7 @@ function MainSection() {
                 <Button
                   className="card-button"
                   onClick={() => {
-                    navigate("./community");
+                    navigate("/community");
                   }}
                   style={{
                     fontFamily: "'Roboto', sans-serif",

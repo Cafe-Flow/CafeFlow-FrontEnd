@@ -4,14 +4,17 @@ import { Link } from "react-router-dom";
 import MainChat from "../Chat/MainChat";
 import ChatPopup from "../Chat/ChatPopUp";
 
-function getCongestionLevel(congestion) {
-  return congestion > 80 ? "혼잡" : congestion > 50 ? "적정" : "원활";
+function getCongestionLevel(traffic) {
+  if (traffic === "RED") {
+    return "혼잡";
+  } else if (traffic === "BLUE") {
+    return "적정";
+  } else if (traffic === "GREEN") {
+    return "원활";
+  } else {
+    return "적정";
+  }
 }
-
-function getCongestionColor(congestion) {
-  return congestion > 80 ? "red" : congestion > 50 ? "blue" : "green";
-}
-
 function ResultList({ markersData, onMarkerClick }) {
   const allResults = markersData;
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -54,20 +57,25 @@ function ResultList({ markersData, onMarkerClick }) {
             <li key={item.id} onClick={() => onMarkerClick(item)}>
               <span className="si-goo">{item.address}</span>
               <span className="maejang-name">
-                {item.name} - {getCongestionLevel(item.congestion)}{" "}
+                {item.name} - {getCongestionLevel(item.traffic)}{" "}
                 <span
                   className="congestion-indicator"
                   style={{
-                    backgroundColor: getCongestionColor(item.congestion),
+                    backgroundColor: item.traffic,
                     marginLeft: "10px",
                   }}
                 ></span>
+                {item.traffic === "RED" && (
+                  <span style={{ marginLeft: "10px" }}>
+                    예상 대기 시간 {item.watingTime}분
+                  </span>
+                )}
                 <div
                   className={`description-box ${
                     hoveredItem === item.id ? "visible" : ""
                   }`}
                 >
-                  {item.description}
+                  {item.detailAddress}
                 </div>
               </span>
               <Link to={`/shop/${item.id}`}>

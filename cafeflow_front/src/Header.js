@@ -117,11 +117,26 @@ function Header() {
                       />
                     </Link>
                     <div className="mypage-tooltip-top-user">
-                      <p>{userInfo.nickname}</p>
+                      {userInfo.userType === "USER" ? (
+                        <p>
+                          {userInfo.nickname}
+                          <span> 서비스 이용자</span>
+                        </p>
+                      ) : (
+                        <p>
+                          {userInfo.nickname}
+                          <span> 카페 관리자</span>
+                        </p>
+                      )}
                       <p>{userInfo.email}</p>
                     </div>
                   </div>
                   <ul>
+                    {userInfo.userType === "ADMIN" && (
+                      <li>
+                        <Link to="/mypage/my-cafe">내 매장</Link>
+                      </li>
+                    )}
                     <li>
                       <Link to="/mypage/modify">내 정보</Link>
                     </li>
@@ -135,12 +150,12 @@ function Header() {
                       <Link to="/mypage/delete">회원 탈퇴</Link>
                     </li>
                   </ul>
-                  <Link
+                  <div
                     className="mypage-tooltip-logout"
                     onClick={handleShowLogoutModal}
                   >
                     로그아웃
-                  </Link>
+                  </div>
                 </div>
               </>
             ) : (
