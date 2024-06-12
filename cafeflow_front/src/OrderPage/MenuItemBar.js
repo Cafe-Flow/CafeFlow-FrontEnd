@@ -39,17 +39,24 @@ function MenuItemBar({ items, onAddToCart }) {
   return (
     <div className="menu-list">
       {items.map((item) => (
-        <div key={item.name} className="menu-item">
-          <img src={item.image} alt={item.name} />
+        <div key={item.id} className="menu-item">
+          <img
+            src={
+              item.image
+                ? `data:image/jpeg;base64,${item.image}`
+                : "/img/default1.jpg"
+            }
+            alt={item.basicMenuName}
+          />
           <div className="menu-item-bar">
             <p>
-              {item.name} {item.price}원
+              {item.basicMenuName} {item.price}원
             </p>
             <FaBasketShopping
-              onClick={(e) => handleBasketClick(item.name, e)}
+              onClick={(e) => handleBasketClick(item.basicMenuName, e)}
               style={{ cursor: "pointer" }}
             />
-            {showQuantity[item.name] && (
+            {showQuantity[item.basicMenuName] && (
               <div
                 className="quantity-container"
                 onClick={(e) => e.stopPropagation()}

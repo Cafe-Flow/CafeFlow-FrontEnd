@@ -109,7 +109,11 @@ function MapInfo() {
         stompClient.subscribe("/topic/cafe", (message) => {
           const updatedCafe = JSON.parse(message.body);
           console.log("Received message:", message);
-          updateMarkerTraffic(updatedCafe.cafeId, updatedCafe.traffic);
+          updateMarkerTraffic(
+            updatedCafe.cafeId,
+            updatedCafe.traffic,
+            updatedCafe.watingTime
+          );
         });
         console.log("WebSocket connected");
       },
@@ -156,6 +160,7 @@ function MapInfo() {
           detailAddress: detailAddress,
           description: marker.description,
           traffic: marker.traffic,
+          watingTime: marker.watingTime,
         });
       } else {
         hideMarker(marker);
@@ -282,11 +287,18 @@ function MapInfo() {
     }
   }, [navermaps]);
 
-  const updateMarkerTraffic = (cafeId, traffic) => {
+  const updateMarkerTraffic = (cafeId, traffic, watingTime) => {
+    setMarkersData((prevMarkers) =>
+      prevMarkers.map((marker) =>
+        marker.id === cafeId ? { ...marker, traffic, watingTime } : marker
+      )
+    );
+
     dummyMarkersRef.current.forEach((marker) => {
       if (marker.id === cafeId) {
         const newTraffic = traffic;
         marker.traffic = newTraffic;
+        marker.watingTime = watingTime;
 
         const markerContent = `
           <div class="custom-marker" data-congestion="${newTraffic}">
@@ -327,6 +339,7 @@ function MapInfo() {
       marker.description = item.description;
       marker.address = item.address;
       marker.traffic = item.traffic;
+      marker.watingTime = item.watingTime;
 
       naver.maps.Event.addListener(marker, "click", () => {
         handleMarkerClick({
@@ -338,6 +351,7 @@ function MapInfo() {
           address: item.address,
           description: item.description,
           traffic: item.traffic,
+          watingTime: item.watingTime,
         });
       });
 
@@ -484,7 +498,7 @@ function MapInfo() {
           className={`simulate-button ${isChecking ? "active" : ""}`}
           onClick={handleSimulateButtonClick}
         >
-          실시간 확인
+          ● 실시간 확인
         </button>
         {isChecking && (
           <>

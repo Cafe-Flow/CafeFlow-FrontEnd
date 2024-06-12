@@ -137,7 +137,7 @@ function Chatrooms() {
           <p className="h6-font">진행 중인 채팅을 확인 해보세요</p>
         </div>
         {loading ? (
-          <p>불러오는 중...</p>
+          <p>채팅 목록을 불러오는 중...</p>
         ) : error ? (
           <p>{error}</p>
         ) : (

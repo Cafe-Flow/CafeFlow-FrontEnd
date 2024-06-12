@@ -65,6 +65,11 @@ function ResultList({ markersData, onMarkerClick }) {
                     marginLeft: "10px",
                   }}
                 ></span>
+                {item.traffic === "RED" && (
+                  <span style={{ marginLeft: "10px" }}>
+                    예상 대기 시간 {item.watingTime}분
+                  </span>
+                )}
                 <div
                   className={`description-box ${
                     hoveredItem === item.id ? "visible" : ""
