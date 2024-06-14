@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './ShopRegister.css';
 import useSeatStore from '../SeatPage/SeatStore';
 import SeatRegister from '../SeatPage/SeatRegister';
-import { useDropzone } from 'react-dropzone';
 import Dropzone from './dropzone';
 
 function ShopRegister() {
@@ -19,7 +18,7 @@ function ShopRegister() {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [imageFile, setImageFile] = useState(null);
+    const [imageFile, setImageFile] = useState(null); // 이미지 파일 상태 추가
     const seats = useSeatStore((state) => state.seats);
     const setSeats = useSeatStore((state) => state.setSeats);
     const [errors, setErrors] = useState({
@@ -53,9 +52,8 @@ function ShopRegister() {
             const userInfo = JSON.parse(isAdmin);
     
             if (userInfo && userInfo.userType === "ADMIN") {
-                console.log("Image File:", imageFile); // Add this log to check the imageFile
-
-
+                console.log("Image File:", imageFile); // 확인용 로그
+    
                 const token = localStorage.getItem("userToken");
     
                 const formData = new FormData();
@@ -110,7 +108,6 @@ function ShopRegister() {
             console.error('Error registering cafe:', error);
         }
     };
-    
 
     const validateForm = () => {
         let isValid = true;
@@ -168,33 +165,18 @@ function ShopRegister() {
         setShowSearchModal(false);
     };
 
-    const handleFileChange = (e) => {
-        setImageFile(e.target.files[0]);
-    };
-
-     // Dropzone configuration
-     const onDrop = (acceptedFiles) => {
-        // Handle dropped files here
-        const file = acceptedFiles[0];
+    const handleImageDrop = (file) => {
+        console.log('Image file:', file);
         setImageFile(file);
     };
-
-    const handleImageDrop = (acceptedFiles) => {
-        // 이미지 파일을 드롭하면 호출되는 함수
-        setImageFile(acceptedFiles[0]); // 첫 번째 이미지 파일만 사용
-    };
-
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
 
     return (
         <div className="register-cafe">
             <div className='h2-font'><p>카페등록</p></div>
-            <div className="cafe-register-img"><img src='/img/cafe-img.png' /></div>
+            <div className="cafe-register-img"><img src='/img/cafe-img.png' alt="카페 등록 이미지" /></div>
             <br />
             <div id="cafe-description">
                 <h2>카페 검색 및 선택</h2>
-                {/* Search input */}
                 <input
                     type="text"
                     value={searchTerm}
@@ -203,9 +185,7 @@ function ShopRegister() {
                     placeholder="검색어를 입력하세요"
                     style={{ padding: '10px', width: '420px' }}
                 />
-                {/* Search button */}
                 <Button onClick={handleSearch} className="research-button" style={{ background: "black", padding: '10px 20px', marginLeft: '10px' }}>검색</Button>
-                {/* Selected cafe information */}
                 {selectedCafe && (
                     <div>
                         <h2 dangerouslySetInnerHTML={{ __html: selectedCafe.title }} />
@@ -213,7 +193,7 @@ function ShopRegister() {
                         <p>도로명 주소: {selectedCafe.roadAddress}</p>
                         <a href={selectedCafe.link} target="_blank" rel="noopener noreferrer">
                             웹사이트 방문
-                        </a>
+                        </a>                        
                     </div>
                 )}
                 {loading && <p>로딩 중...</p>}
@@ -231,37 +211,29 @@ function ShopRegister() {
                     <Form.Control.Feedback type="invalid">{errors.descriptionError}</Form.Control.Feedback>
                 </FloatingLabel>
             </div>
-            <Dropzone onDrop={handleImageDrop} uploadedFiles={imageFile ? [imageFile] : []} style={{ padding: '10px', width: '600px' }} />
-            {/* Next button */}
+            <Dropzone onDrop={handleImageDrop} />
             <Button onClick={handleNextButtonClick} className="register-button" style={{ background: "black" }}>다음</Button>
 
-            {/* Modal for SeatRegister */}
             <Modal show={showModal} onHide={handleModalClose} dialogClassName="modal-xl">
-                {/* Modal header */}
+
                 <Modal.Header closeButton>
                     <Modal.Title>좌석 등록</Modal.Title>
                 </Modal.Header>
-                {/* Modal body */}
                 <Modal.Body>
                     <SeatRegister existingSeats={seats} />
                 </Modal.Body>
-                {/* Modal footer */}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleModalClose}>닫기</Button>
                     <Button variant="primary" onClick={handleModalSubmit}>등록</Button>
                 </Modal.Footer>
             </Modal>
 
-            {/* Modal for search results */}
             <Modal show={showSearchModal} onHide={handleSearchModalClose}>
-                {/* Modal header */}
                 <Modal.Header closeButton>
                     <Modal.Title>카페 검색 결과</Modal.Title>
                 </Modal.Header>
-                {/* Modal body */}
                 <Modal.Body>
                     <ul>
-                        {/* Display search results */}
                         {cafeList.map((cafe, index) => (
                             <li
                                 key={index}
@@ -283,7 +255,6 @@ function ShopRegister() {
                         ))}
                     </ul>
                 </Modal.Body>
-                {/* Modal footer */}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleSearchModalClose}>닫기</Button>
                     <Button variant="primary" onClick={handleCompleteSelection}>완료</Button>
