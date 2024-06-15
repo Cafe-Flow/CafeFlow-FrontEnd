@@ -42,9 +42,9 @@
 }
 
 .chat-popup {
-  top: -500px;
-  right: 0;
-  position: absolute;
+  top: 30%;
+  right: 50%;
+  position: fixed;
   width: 400px;
   height: 250px;
   z-index: 1000;

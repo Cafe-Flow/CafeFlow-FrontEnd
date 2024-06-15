@@ -55,3 +55,11 @@
   font-family: "Nanum Gothic", sans-serif;
   font-weight: 900;
 }
+
+.none-page {
+  margin: 150px auto;
+}
+
+.none-page p {
+  font-size: 80px;
+}
