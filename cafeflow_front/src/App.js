@@ -27,6 +27,7 @@ import CafeList from "./MyPage/CafeList.js";
 import AddMenu from "./OrderPage/AddMenu.js";
 import None from "./MainPage/None.js";
 import CustomError from "./Component/CustomError";
+import MainChat from "./Chat/MainChat.js";
 
 function App() {
   const location = useLocation();
