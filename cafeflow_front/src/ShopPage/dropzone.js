@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import "./Shop.css";
 
-function Dropzone() {
+function Dropzone({ onDrop }) {
   const [files, setFiles] = useState([]);
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/*",
-    onDrop: (acceptedFiles) => {
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -15,7 +14,16 @@ function Dropzone() {
           })
         )
       );
-    }
+      if (onDrop) {
+        onDrop(acceptedFiles[0]); // 여기서는 첫 번째 파일만 전달하도록 설정했습니다. 필요에 따라 수정 가능합니다.
+      }
+    },
+    [onDrop]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*",
+    onDrop: handleDrop
   });
 
   const thumbs = files.map((file) => (
