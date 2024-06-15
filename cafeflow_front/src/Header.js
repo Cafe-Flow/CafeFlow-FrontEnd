@@ -4,18 +4,16 @@ import CustomCheckModal from "./Component/CustomCheckModal";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Container } from "react-bootstrap";
 import { useUser } from "./MainPage/UserContext";
-import axios from "axios";
 
 function Header() {
   const navigate = useNavigate();
-  const { userInfo, setUserInfo } = useUser();
+  const { userInfo, setUserInfo, login, logout } = useUser();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [nickname, setNickname] = useState("");
   const location = useLocation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
   const toggleTooltip = () => {
     setTooltipVisible(!tooltipVisible);
@@ -36,6 +34,14 @@ function Header() {
     updateUserInfo();
   }, [setUserInfo]);
 
+  useEffect(() => {
+    if (!userInfo) {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(true);
+    }
+  }, [userInfo]);
+
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("userToken");
@@ -53,7 +59,11 @@ function Header() {
       <Navbar expand="lg" className="custom-navbar-style" expanded={expanded}>
         <Container className="custom-navbar-container">
           <Navbar.Brand href="/" className="custom-navbar-logo">
-            <img className="custom-navbar-brand" src="/img/MainLogo.png" />
+            <img
+              className="custom-navbar-brand"
+              src="/img/MainLogo.png"
+              alt="로고"
+            />
           </Navbar.Brand>
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
@@ -98,11 +108,6 @@ function Header() {
               <>
                 <p className="nav-side-element1" onClick={toggleTooltip}>
                   <span className="name-style">{nickname}</span> 님
-                  {unreadMessageCount > 0 && (
-                    <span className="unread-count-badge">
-                      {unreadMessageCount}
-                    </span>
-                  )}
                 </p>
                 <div
                   className={`mypage-tooltip ${

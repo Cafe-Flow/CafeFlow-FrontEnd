@@ -1,5 +1,7 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import MainPage from "./MainPage/Main.js";
 import LoginPage from "./RegisterPage/Login.js";
 import UserSignupPage from "./RegisterPage/UserSignup.js";
@@ -24,8 +26,52 @@ import ShopModify from "./ShopPage/ShopModify.js";
 import CafeList from "./MyPage/CafeList.js";
 import AddMenu from "./OrderPage/AddMenu.js";
 import MainChat from "./Chat/MainChat.js";
+import None from "./MainPage/None.js";
+import CustomError from "./Component/CustomError";
 
 function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [showErrorModal, setShowErrorModal] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  useEffect(() => {
+    const userToken = localStorage.getItem("userToken");
+
+    if (userToken) {
+      axios.interceptors.request.use(
+        (config) => {
+          config.headers.Authorization = `Bearer ${userToken}`;
+          return config;
+        },
+        (error) => {
+          return Promise.reject(error);
+        }
+      );
+
+      axios.interceptors.response.use(
+        (response) => {
+          return response;
+        },
+        (error) => {
+          if (error.response && error.response.status === 401) {
+            setShowErrorModal(true);
+          }
+          return Promise.reject(error);
+        }
+      );
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("userToken");
+    navigate("/login");
+  };
+
   return (
     <>
       <div className="App">
@@ -51,10 +97,10 @@ function App() {
             <Route path="/seat/:cafeId" element={<SeatView />} />
             <Route path="/shop/:idx" element={<Example />} />
             <Route path="/modify/:idx" element={<ShopModify />} />
-            <Route path="/chat" element={<MainChat />} />
             <Route path="/shop/:idx/addmenu" element={<AddMenu />} />
             <Route path="/shop/:idx/orderlist" element={<OrderList />} />
             <Route path="/shopregister" element={<ShopRegister />} />
+            <Route path="*" element={<None />} />
           </Routes>
         </div>
       </div>
@@ -64,6 +110,13 @@ function App() {
         <p>&copy; 2024 Orange. All rights reserved.</p>
         <a href="https://github.com/Cafe-Flow">Our Web Site</a>
       </footer>
+      <CustomError
+        show={showErrorModal}
+        handleClose={() => setShowErrorModal(false)}
+        handleConfirm={handleLogout}
+      >
+        세션이 만료 되었습니다. 다시 로그인 해주세요.
+      </CustomError>
     </>
   );
 }

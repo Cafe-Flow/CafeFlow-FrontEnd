@@ -4,7 +4,6 @@ import axios from "axios";
 import "./map.css";
 import SearchSection from "./SearchSection";
 import ResultList from "./ResultList";
-import Pagination from "./Pagination";
 import { useNavermaps } from "react-naver-maps";
 import MarkerClustering from "./MarkerClustering";
 import CustomError from "../Component/CustomError";
@@ -27,9 +26,8 @@ function MapInfo() {
   const [errorMessage, setErrorMessage] = useState("");
   const customControlRef = useRef(null);
   const navermaps = useNavermaps();
-  const [isChecking, setIsChecking] = useState(false);
-  const [dots, setDots] = useState("");
   const stompClientRef = useRef(null);
+  const [isListVisible, setIsListVisible] = useState(false);
 
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
@@ -37,8 +35,6 @@ function MapInfo() {
     indexOfFirstResult,
     indexOfLastResult
   );
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const htmlMarker1 = {
     content: '<div class="custom-cluster1">1</div>',
@@ -80,23 +76,20 @@ function MapInfo() {
     marker.setMap(null);
   };
 
+  const toggleListVisibility = () => {
+    setIsListVisible(!isListVisible);
+  };
+
+  const toggleListTrue = () => {
+    setIsListVisible(true);
+  };
+
   const handleLocationButtonClick = (map, dummyMarkersRef) => {
     setMarkersData([]);
     setVisibleMarkers([]);
     setSearchResults([]);
-
+    setIsListVisible(true);
     updateMarkers(map, dummyMarkersRef.current);
-  };
-
-  const handleSimulateButtonClick = () => {
-    setIsChecking((prevIsChecking) => {
-      if (!prevIsChecking) {
-        connectWebSocket();
-      } else {
-        disconnectWebSocket();
-      }
-      return !prevIsChecking;
-    });
   };
 
   const connectWebSocket = () => {
@@ -161,6 +154,9 @@ function MapInfo() {
           description: marker.description,
           traffic: marker.traffic,
           watingTime: marker.watingTime,
+          reviewCount: marker.reviewCount,
+          reviewsRating: marker.reviewsRating,
+          image: marker.image,
         });
       } else {
         hideMarker(marker);
@@ -170,23 +166,6 @@ function MapInfo() {
     setVisibleMarkers(visibleMarkersData);
     setCurrentPage(1);
   };
-
-  useEffect(() => {
-    let interval;
-    if (isChecking) {
-      interval = setInterval(() => {
-        setDots((prevDots) => {
-          if (prevDots.length >= 3) {
-            return "";
-          }
-          return prevDots + ".";
-        });
-      }, 500);
-    } else {
-      setDots("");
-    }
-    return () => clearInterval(interval);
-  }, [isChecking]);
 
   useEffect(() => {
     const mapOptions = {
@@ -203,6 +182,8 @@ function MapInfo() {
     const map = new naver.maps.Map(mapRef.current, mapOptions);
     mapInstanceRef.current = map;
 
+    connectWebSocket();
+
     var locationBtnHtml =
       '<div class="custom-control-button" id="current-location-btn"> ↻ 현재 화면에서 검색</div>';
 
@@ -216,7 +197,7 @@ function MapInfo() {
       customControl.setMap(map);
 
       const controlWrapper = customControl.getElement().parentNode;
-      controlWrapper.style.marginBottom = "40px";
+      controlWrapper.style.marginBottom = "140px";
 
       const locationButton = document.getElementById("current-location-btn");
       locationButton.addEventListener("click", () =>
@@ -285,6 +266,10 @@ function MapInfo() {
       setErrorMessage("사용자 위치 추적 에러");
       setShowError(true);
     }
+
+    return () => {
+      disconnectWebSocket();
+    };
   }, [navermaps]);
 
   const updateMarkerTraffic = (cafeId, traffic, watingTime) => {
@@ -340,6 +325,9 @@ function MapInfo() {
       marker.address = item.address;
       marker.traffic = item.traffic;
       marker.watingTime = item.watingTime;
+      marker.reviewCount = item.reviewCount;
+      marker.reviewsRating = item.reviewsRating;
+      marker.image = item.image;
 
       naver.maps.Event.addListener(marker, "click", () => {
         handleMarkerClick({
@@ -352,6 +340,9 @@ function MapInfo() {
           description: item.description,
           traffic: item.traffic,
           watingTime: item.watingTime,
+          reviewCount: item.reviewCount,
+          reviewsRating: item.reviewsRating,
+          image: item.image,
         });
       });
 
@@ -487,27 +478,13 @@ function MapInfo() {
 
   return (
     <>
-      <SearchSection
-        placeholder="지역을 검색하여 카페를 찾으세요 예시.(경북 구미시)"
-        onSearch={searchLocation}
-        searchResults={searchResults}
-        onResultClick={handleResultClick}
-      />
-      <div className="simulate-button-content">
-        <button
-          className={`simulate-button ${isChecking ? "active" : ""}`}
-          onClick={handleSimulateButtonClick}
-        >
-          ● 실시간 확인
-        </button>
-        {isChecking && (
-          <>
-            <div className="loading-indicator"></div>
-            <div className="loading-container">
-              <span>실시간 집계 중입니다{dots}</span>
-            </div>
-          </>
-        )}
+      <div className="map-container-top">
+        <SearchSection
+          placeholder="지역을 검색하여 카페를 찾으세요 예시.(경북 구미시)"
+          onSearch={searchLocation}
+          searchResults={searchResults}
+          onResultClick={handleResultClick}
+        />
       </div>
       <div className="map-container">
         <div className="map-content">
@@ -517,36 +494,33 @@ function MapInfo() {
           ></div>
         </div>
         <div className="congestion-sentence">
-          <button onClick={moveToCurrentLocation}>↻ 내 위치</button>
           <h6>
             원활
-            <span
-              className="congestion-indicator1"
-              style={{ backgroundColor: "green" }}
-            ></span>{" "}
-            적정
-            <span
-              className="congestion-indicator1"
-              style={{ backgroundColor: "blue" }}
-            ></span>{" "}
-            혼잡
-            <span
-              className="congestion-indicator1"
-              style={{ backgroundColor: "red" }}
-            ></span>{" "}
+            <span style={{ backgroundColor: "green" }}></span> 적정
+            <span style={{ backgroundColor: "blue" }}></span> 혼잡
+            <span style={{ backgroundColor: "red" }}></span>{" "}
           </h6>
         </div>
+        <div className="congestion-sentence-add">
+          <p>사용중인 좌석</p>
+          <p> ~30%이내 | ~70%이내 | ~100%</p>
+        </div>
+        <div
+          className={`result-list-container ${isListVisible ? "" : "hidden"}`}
+          id="result-list-container"
+        >
+          <ResultList
+            markersData={currentMarkers}
+            onMarkerClick={handleMarkerClick}
+          />
+        </div>
+        <button
+          className={`toggle-button ${isListVisible ? "visible" : "hidden"}`}
+          onClick={toggleListVisibility}
+        >
+          {isListVisible ? "◀" : "▶"}
+        </button>
       </div>
-      <ResultList
-        markersData={currentMarkers}
-        onMarkerClick={handleMarkerClick}
-      />
-      <Pagination
-        resultsPerPage={resultsPerPage}
-        totalResults={visibleMarkers.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
       <CustomError
         show={showError}
         handleClose={() => setShowError(false)}

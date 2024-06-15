@@ -152,17 +152,13 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
         receiverReadStatus: false,
       };
 
-      // 임시 메시지를 상태에 추가
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setMessages((prevMessages) => [newMessage, ...prevMessages]);
 
-      // 백엔드로 전송할 메시지 (id를 제외)
       const backendMessage = {
         senderId: newMessage.senderId,
         receiverId: newMessage.receiverId,
         chatRoomId: newMessage.chatRoomId,
         content: newMessage.content,
-        senderReadStatus: newMessage.senderReadStatus,
-        receiverReadStatus: newMessage.receiverReadStatus,
       };
 
       client.publish({
