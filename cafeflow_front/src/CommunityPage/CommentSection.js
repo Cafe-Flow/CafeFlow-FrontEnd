@@ -4,11 +4,13 @@ import { timeSince } from "./Time";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaSpinner } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { useUser } from "../MainPage/UserContext";
 
 function CommentSection({ comments, postId }) {
   const [commentList, setCommentList] = useState(
     [...comments].sort((a, b) => b.id - a.id)
   );
+  const { userInfo } = useUser();
   const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -86,7 +88,11 @@ function CommentSection({ comments, postId }) {
   return (
     <div className="comment-section">
       <div className="comment-input">
-        <img className="profile-img" src="/img/newjeans.png" alt="Profile" />
+        <img
+          className="profile-img"
+          src={`data:image/jpeg;base64,${userInfo.image}`}
+          alt="Profile"
+        />
         <input
           type="text"
           value={newComment}
@@ -209,7 +215,11 @@ function CommentItem({
   return (
     <>
       <div className="comment-item">
-        <img className="profile-img1" src="/img/newjeans.png" alt="Profile" />
+        <img
+          className="profile-img1"
+          src={`data:image/jpeg;base64,${comment.authorImage}`}
+          alt="Profile"
+        />
         <div className="comment-box">
           <div className="comment-top">
             <span className="comment-text">
