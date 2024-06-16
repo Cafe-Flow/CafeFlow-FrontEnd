@@ -1,42 +1,193 @@
-import React, { useState, useEffect, useRef } from "react";
+import { LiaMapMarkerSolid } from "react-icons/lia";
+import { MdOutlineDescription } from "react-icons/md";
+import { IoIosCafe } from "react-icons/io";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
-import "./Shop.css";
+import "./Shop.css"
 import Button from "react-bootstrap/Button";
-import Carousel from "react-bootstrap/Carousel";
-import SeatView from "../SeatPage/SeatView";
+import SeatView from "../SeatPage/SeatView"; // SeatView import 추가
 import { useDropzone } from "react-dropzone"; // react-dropzone import 추가
+import Modal from 'react-modal';
+import './styles.css';
+import Dropzone from './dropzone';
 
-function Shop() {
+// Modal styles
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+Modal.setAppElement('#root'); // Adjust this according to your app structure
+
+
+function PlaceInfo() {
+    let { idx } = useParams();
+    const [cafeData, setCafeData] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [rating, setRating] = useState(0); // 리뷰 평점 state
+    const [comment, setComment] = useState(""); // 리뷰 내용 state
+    const [seats, setSeats] = useState([]); // State to store seat data
+    const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
+    const Array = [0, 1, 2, 3, 4];
+
+
+    useEffect(() => {
+        const fetchCafeData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8080/api/cafe/${idx}`
+            );
+            setCafeData(response.data);
+          } catch (error) {
+            console.error("카페 데이터를 불러오는 중 오류 발생:", error);
+          }
+        };
+    
+        fetchCafeData();
+      }, [idx]);
+    
+      useEffect(() => {
+        const fetchReviews = async () => {
+          try {
+            let url = `http://localhost:8080/api/cafe/${idx}/review`;
+            if (sortBy === "0") {
+              url += "?sort-by=created-at";
+            } else if (sortBy === "1") {
+              url += "?sort-by=highest-rating";
+            } else if (sortBy === "2") {
+              url += "?sort-by=lowest-rating";
+            }
+            const response = await axios.get(url);
+            setReviews(response.data);
+          } catch (error) {
+            console.error("Error fetching reviews:", error);
+          }
+        };
+    
+        fetchReviews();
+      }, [idx, sortBy]); // Added sortBy to the dependency array
+    
+      useEffect(() => {
+        const fetchSeatInfo = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8080/api/cafe/${idx}/seat`
+            );
+            if (response.status === 200) {
+              setSeats(response.data); // 좌석 데이터 상태 업데이트
+            } else {
+              console.error("좌석 정보를 불러오는 데 실패했습니다.");
+            }
+          } catch (error) {
+            console.error("좌석 정보를 불러오는 데 실패했습니다:", error);
+          }
+        };
+    
+        fetchSeatInfo();
+      }, [idx]);
+
+    let cafeName = cafeData ? cafeData.name : "알 수 없음";
+    let address = cafeData ? cafeData.address : "알 수 없음";
+    let reviewCount = cafeData ? cafeData.reviewCount : 0;
+    let reviewsRating = cafeData ? cafeData.reviewsRating : 0;
+    let updatedAt = cafeData ? cafeData.updatedAt : "알 수 없음";
+    let description = cafeData ? cafeData.description : "알 수 없음";
+    let cafeImage = cafeData ? `data:image/png;base64,${cafeData.image}` : "";
+
+    return (
+        <div data-viewid="basicInfoTop" data-root="">
+            <div className="details_present" style={{ background: "none" }}>
+                <a href="#none" className="link_present" data-logtarget="" data-logevent="info_pannel,main_pic">
+                    <span className="bg_present" style={{ backgroundImage: "url(/img/cafelistimg.jpg)" }}></span>
+                    <span className="bg_present" style={{ backgroundImage: `url(${cafeImage})` }}></span>
+                    <span className="frame_g"></span>
+                </a>
+            </div>
+            <div className="place_details">
+                <div className="inner_place">
+                    <div className="info">
+                        <h2 className="tit_location">{cafeName}</h2>
+                        <div className="location_evaluation">
+                            <span className="txt_location">
+                                리뷰
+                                <a href="#none" className="link_evaluation" data-cnt="9" data-target="comment" data-logtarget="" data-logevent="info_pannel,point">
+                                    <span className="color_b">{reviewsRating}</span>
+                                    ({reviewCount})
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="info_list">
+                        <div className="detail_placeinfo">
+                            <h3 class="tit_subject">상세정보</h3>
+                            <span class="info_revise">
+                                업데이트
+                                <span> | </span>
+                                <span class="date_revise">
+                                  {updatedAt.split('T')[0]}
+                                </span>
+                            </span>
+                        </div>
+                        <div className="list_place">
+                            <div class="location_detail">
+                                <h4 class="tit_detail"><LiaMapMarkerSolid/></h4>
+                                <span class="txt_address">
+                                    {address}
+                                </span>
+                            </div>
+                            <div class="location_detail">
+                                <h4 class="tit_detail"><MdOutlineDescription/></h4>
+                                <div class="phone-number">{description}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function OwnerCertification() {
   let { idx } = useParams();
-  const [cafeData, setCafeData] = useState(null);
-  const [reviews, setReviews] = useState([]);
-  const [reviewImg, setReviewImg] = useState(null);
+  return (
+    <div className="place_details">
+      <div className="inner_place">
+        <IoIosCafe/> 
+        <a className="admin_modify" href={`/modify/${idx}`}>관리자라면 가게를 관리하고 수정해보세요!</a>
+      </div>
+    </div>
+  );
+}
+const MenuInfo = () => (
+    <div className="place_details">
+      <div className="inner_place">
+        <div className="tit_subject">
+          메뉴
+        </div>
+        <br/>
+      </div>
+    </div>
+);
+
+function Comment() {
+  let { idx } = useParams();
   const [rating, setRating] = useState(0); // 리뷰 평점 state
   const [comment, setComment] = useState(""); // 리뷰 내용 state
-  const [seats, setSeats] = useState([]); // State to store seat data
+  const [reviewImg, setReviewImg] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
-  const [file, setFile] = useState(null); // File state 추가
-  const [files, setFiles] = useState([]); // File state 추가
+  const [imageFile, setImageFile] = useState(null);
   const Array = [0, 1, 2, 3, 4];
-
-  useEffect(() => {
-    const fetchCafeData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/cafe/${idx}`
-        );
-        setCafeData(response.data);
-      } catch (error) {
-        console.error("카페 데이터를 불러오는 중 오류 발생:", error);
-      }
-    };
-
-    fetchCafeData();
-  }, [idx]);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -58,51 +209,22 @@ function Shop() {
 
     fetchReviews();
   }, [idx, sortBy]); // Added sortBy to the dependency array
-
-  useEffect(() => {
-    const fetchSeatInfo = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/cafe/${idx}/seat`
-        );
-        if (response.status === 200) {
-          setSeats(response.data); // 좌석 데이터 상태 업데이트
-        } else {
-          console.error("좌석 정보를 불러오는 데 실패했습니다.");
-        }
-      } catch (error) {
-        console.error("좌석 정보를 불러오는 데 실패했습니다:", error);
-      }
-    };
-
-    fetchSeatInfo();
-  }, [idx]);
-
+  
   const handleSubmitReview = async () => {
     try {
-      // Retrieve token from localStorage
       const token = localStorage.getItem("userToken");
   
-      // 리뷰 작성을 위한 데이터 객체 생성
-      const reviewData = {
-        rating: rating,
-        comment: comment,
-        image: reviewImg // 이미지 데이터 추가
+      const formData = new FormData();
+      formData.append('rating', rating);
+      formData.append('comment', comment);
+      formData.append('image', imageFile); // Append the first file from files array
+      
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       };
   
-      // 서버에 리뷰 작성 요청
-      await axios.post(
-        `http://localhost:8080/api/cafe/${idx}/review`,
-        reviewData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token in the Authorization header
-            "Content-Type": "multipart/form-data",
-          }
-        }
-      );
-  
-      // 리뷰 작성 후 서버에서 리뷰 목록을 다시 가져옴
+      const response = await axios.post(`http://localhost:8080/api/cafe/${idx}/review`, formData, { headers });
       let url = `http://localhost:8080/api/cafe/${idx}/review`;
       if (sortBy === "0") {
         url += "?sort-by=created-at";
@@ -111,181 +233,78 @@ function Shop() {
       } else if (sortBy === "2") {
         url += "?sort-by=lowest-rating";
       }
-      const updatedReviews = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}` // Include token in the Authorization header
-        }
-      });
-  
-      // 가져온 리뷰 목록으로 상태 업데이트
+      const updatedReviews = await axios.get(url);
+      
+      console.log("Review submitted:", response.data);
+
       setReviews(updatedReviews.data);
     } catch (error) {
-      console.error("리뷰 작성 중 오류 발생:", error);
+      console.error("Error submitting review:", error);
     }
   };
   
-  const onDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64String = reader.result.split(",")[1]; // Base64 문자열 추출
-      setReviewImg(base64String); // reviewImg 상태 업데이트
-    };
-    reader.readAsDataURL(file); // 파일을 Base64로 변환
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
   };
 
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   accept: "image/*",
-  //   onDrop,
-  // });
-
-  const handleFileChange = (e) => {
-    const uploadedFile = e.target.files[0];
-    setFile(uploadedFile);
+  const closeModal = () => {
+    setModalIsOpen(false);
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      // Replace 'https://httpbin.org/post' with your actual API endpoint
-      const response = await fetch('https://httpbin.org/post', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        console.log('File uploaded successfully');
-        // You can handle success response here
-      } else {
-        console.error('Failed to upload file');
-        // You can handle error response here
-      }
-    } catch (error) {
-      console.error('Error occurred while uploading file:', error);
-    }
+  const handleImageDrop = (file) => {
+    setImageFile(file);
   };
-
-  let cafeName = cafeData ? cafeData.name : "알 수 없음";
-  let address = cafeData ? cafeData.address : "알 수 없음";
-  let reviewCount = cafeData ? cafeData.reviewCount : 0;
-  let reviewsRating = cafeData ? cafeData.reviewsRating : 0;
-  let description = cafeData ? cafeData.description : "알 수 없음";
-  let cafeImage = cafeData ? `data:image/png;base64,${cafeData.image}` : "";
-  let mapx = cafeData ? cafeData.mapx : 0;
-  let mapy = cafeData ? cafeData.mapy : 0;
-
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/*",
-    onDrop: (acceptedFiles) => {
-      setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        )
-      );
-    }
-  });
-
-  const thumbs = files.map((file) => (
-    <div className="thumb" key={file.name}>
-      <div className="thumb-inner">
-        <img src={file.preview} className="thumb-img" alt={file.name} />
-      </div>
-    </div>
-  ));
-
-
-  console.log("image", cafeImage)
 
   return (
-    <div className="Shop">
-      <div className="container">
-        <div className="cafe-img">
-          <Carousel>
-            <Carousel.Item>
-              <img  src={cafeImage} alt="Cafe Image" />
-              <Carousel.Caption>
-                <h3>First slide label</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img src="/img/cafelistimg.jpg" alt="Your Image" />
-              <Carousel.Caption>
-                <h3>Second slide label</h3>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </p>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img src="/img/cafelistimg.jpg" alt="Your Image" />
-              <Carousel.Caption>
-                <h3>Third slide label</h3>
-                <p>
-                  Praesent commodo cursus magna, vel scelerisque nisl
-                  consectetur.
-                </p>
-              </Carousel.Caption>
-            </Carousel.Item>
-          </Carousel>
-        </div>
-        <div className="cafe-container">
-          <div className="cafe-content">
-            <div className="cafe-name-container">
-              <h2>{cafeName}</h2>
-              <p>
-                ⭐️{reviewsRating} ({reviewCount})
-              </p>
-            </div>
-            <div className="cafe-content2">
-              <Card>
-                <Card.Img variant="top" src="/img/map_dummy.png" />
-                <div id="map">
-
-                </div>
-                <Card.Body>
-                  <Card.Text>{address}</Card.Text>
-                </Card.Body>
-              </Card>
-            </div>
-            <br />
-            <Card>
-              <Card.Body>
-                <Card.Text>{description}</Card.Text>
-              </Card.Body>
-            </Card>
-          </div>
-          <div className="seat-content">
-            <SeatView seats={seats} cafeId={idx} />
-          </div>
-        </div>
-        <br />
-        {/* SeatView 컴포넌트에 idx 전달 */}
+    <>
+    <div className="place_details">
+    <div className="inner_place">
+      <div className="tit_subject">
+        리뷰 사진
       </div>
-      <br />
-      <div className="center-div">
-        <FloatingLabel controlId="Textarea2" label="Reviews">
-          <Form.Control
-            as="textarea"
-            style={{ height: "100px" }}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
-        </FloatingLabel>
-        <section className="dropzone-container">
-          <div {...getRootProps({ className: "dropzone" })}>
-            <input {...getInputProps()} />
-            <p>이미지를 업로드하려면 클릭하거나 여기에 파일을 드롭하세요.</p>
-            <aside className="thumbs-container">{thumbs}</aside>
+      <br/>
+      <div>
+      <div className="image_container">
+        {reviews.slice(0, 6).map((review, index) => (
+          <div key={index} className="review_images">
+            <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
           </div>
-        </section>
+        ))}
+        {reviews.length > 6 && (
+          <div className="view_more" onClick={openModal}>
+            View More
+          </div>
+        )}
+      </div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="All Images"
+      >
+        <h2 className="tit_subject">리뷰 사진</h2>
+        <br/>
+        <div className="modal_image_container">
+          {reviews.map((review, index) => (
+            <div key={index} className="modal_review_images">
+              <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
+            </div>
+          ))}
+        </div>
+        <br/>
+        <button onClick={closeModal}>Close</button>
+      </Modal>
+    </div>  
+    </div>
+  </div>
+    <div className="place_details">
+      <div className="inner_place">
+        <div className="review_with_rate">
+        <div className="tit_subject">
+          리뷰를 작성해보세요!
+        </div>
         <div className="star-ratings">
           <div className="star-rating space-x-4 mx-auto">
             {Array.map((value, index) => (
@@ -302,20 +321,39 @@ function Shop() {
                   htmlFor={`star-${5 - value}`} // 별점 표시를 수정함
                   className="star pr-4"
                 >
-                  ★
+                  ♬
                 </label>
               </React.Fragment>
             ))}
           </div>
         </div>
+        </div>
+        <br/>
+        <FloatingLabel controlId="Textarea2" label="Reviews">
+          <Form.Control
+            as="textarea"
+            style={{ height: "100px" }}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </FloatingLabel>
         <div className="review-buttons">
+          <Dropzone onDrop={handleImageDrop} />
           <div className="review-button">
             <Button variant="dark" onClick={handleSubmitReview}>
               리뷰 작성
-            </Button>{" "}
+            </Button>
           </div>
-          
-          <div className="post-sort list-container">
+        </div>
+      </div>
+    </div>
+    <div className="place_details">
+      <div className="inner_place">
+        <div className="tit_subject">
+          리뷰 목록
+        </div>
+        <br/>
+        <div className="post-sort list-container">
             <p
               className={sortBy === "0" ? "active" : ""}
               onClick={() => setSortBy("0")}
@@ -335,28 +373,134 @@ function Shop() {
               평점낮은순
             </p>
           </div>
-        </div>
-        <br />
-        <div className="cafe-reviews">
-          {reviews.map((review, index) => (
-            <div key={index} className="review">
-              <Card id="reviews">
-                <Card.Header style={{ textAlign: "start" }}>{review.nickname}</Card.Header>
-                <Card.Body  style={{ textAlign: "start" }}>
-                <Card.Img variant="top" src={`${review.image}`} />
-                </Card.Body>
-                <Card.Body style={{ textAlign: "start" }}>{review.comment}</Card.Body>
-                <Card.Body style={{ textAlign: "end" }}>
-                  {"⭐️".repeat(review.rating)}
-                </Card.Body>
-              </Card>
-            </div>
-          ))}
-        </div>
+          <div className="cafe-reviews">
+  {sortBy !== "0" ? (
+    // Display reviews in normal order
+    reviews.map((review, index) => (
+      <div key={index} className="review">
+        <Card id="reviews">
+          <Card.Header className="name_with_rate" style={{ textAlign: "start" }}>
+            <div>{review.nickname}</div>
+            <div>{"⭐️".repeat(review.rating)}</div>
+          </Card.Header>
+          <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
+          <div style={{ textAlign: "start" }}>{review.comment}</div>
+        </Card>
+        <br/>
       </div>
-      <br />
+    ))
+  ) : (
+    // Display reviews in reverse order
+    reviews.slice().reverse().map((review, index) => (
+      <div key={index} className="review">
+        <Card id="reviews">
+          <Card.Header className="name_with_rate" style={{ textAlign: "start" }}>
+            <div>{review.nickname}</div>
+            <div>{"⭐️".repeat(review.rating)}</div>
+          </Card.Header>
+          <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
+          <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
+        </Card>
+        <br/>
+      </div>
+    ))
+  )}
+</div>
+
+      </div>
     </div>
+    </>
   );
+}
+
+const FindWay = () => (
+  <div className="place_details">
+    <div className="inner_place">
+      <div className="tit_subject">
+        찾아오시는 길
+      </div>
+      <br/>
+    </div>
+  </div>
+);
+
+function Shop() {
+    let { idx } = useParams();
+    const [reviews, setReviews] = useState([]);
+    const [seats, setSeats] = useState([]); // State to store seat data
+    const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
+    const [isAdmin, setIsAdmin] = useState(false); // State to hold whether user is admin
+    const Array = [0, 1, 2, 3, 4];
+  
+    useEffect(() => {
+      const fetchReviews = async () => {
+        try {
+          let url = `http://localhost:8080/api/cafe/${idx}/review`;
+          if (sortBy === "0") {
+            url += "?sort-by=created-at";
+          } else if (sortBy === "1") {
+            url += "?sort-by=highest-rating";
+          } else if (sortBy === "2") {
+            url += "?sort-by=lowest-rating";
+          }
+          console.log("URL:", url);
+          const response = await axios.get(url);
+          setReviews(response.data);
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+        }
+      };
+  
+      fetchReviews();
+    }, [idx, sortBy]); // Added sortBy to the dependency array
+  
+    useEffect(() => {
+      const fetchSeatInfo = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/api/cafe/${idx}/seat`
+          );
+          if (response.status === 200) {
+            setSeats(response.data); // 좌석 데이터 상태 업데이트
+          } else {
+            console.error("좌석 정보를 불러오는 데 실패했습니다.");
+          }
+        } catch (error) {
+          console.error("좌석 정보를 불러오는 데 실패했습니다:", error);
+        }
+      };
+  
+      fetchSeatInfo();
+
+      // Check if user is ADMIN
+      const userInfo = localStorage.getItem("userInfo");
+      if (userInfo) {
+        const { userType } = JSON.parse(userInfo);
+        if (userType === "ADMIN") {
+          setIsAdmin(true);
+        }
+      }
+    }, [idx]);
+    
+    return (
+        <div className="container">
+            <PlaceInfo />
+            {isAdmin && <OwnerCertification/>}
+            <FindWay/>
+            <MenuInfo/>
+            <div className="place_details">
+              <div className="inner_place">
+                <div className="tit_subject">
+                  좌석 현황
+                </div>
+                <div className="seat_place">
+                  <SeatView seats={seats} cafeId={idx}/>
+                </div>
+              </div>
+            </div>
+            <Comment/>
+        </div>
+    );
 }
 
 export default Shop;
