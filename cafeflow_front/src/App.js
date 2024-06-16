@@ -28,6 +28,7 @@ import AddMenu from "./OrderPage/AddMenu.js";
 import MainChat from "./Chat/MainChat.js";
 import None from "./MainPage/None.js";
 import CustomError from "./Component/CustomError";
+import EditBoard from "./CommunityPage/EditBoard.js";
 
 function App() {
   const location = useLocation();
@@ -89,8 +90,12 @@ function App() {
             <Route path="/usersignup" element={<UserSignupPage />} />
             <Route path="/location" element={<MapPage />} />
             <Route path="/community" element={<Boardlist />} />
-            <Route path="/create-post" element={<NewBoard />} />
+            <Route path="/community/create-post" element={<NewBoard />} />
             <Route path="/community/:postId" element={<DetailBoard />} />
+            <Route
+              path="/community/edit-post/:postId"
+              element={<EditBoard />}
+            />
             <Route path="/shop" element={<Shoplist />} />
             <Route path="/example/:idx" element={<Shop />} />
             <Route path="/seat" element={<SeatRegister />} />

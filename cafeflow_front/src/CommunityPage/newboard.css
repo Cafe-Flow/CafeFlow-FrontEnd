@@ -2,6 +2,11 @@
   font-size: 45px;
 }
 
+.detail-post-container h3 {
+  font-family: "Nanum Gothic", sans-serif;
+  padding: 20px;
+}
+
 .newboard-icon:hover {
   color: #999;
 }
@@ -12,14 +17,25 @@
   padding-bottom: 40px;
 }
 
-.newboard-content-control {
+.floating-label .newboard-content-control {
   height: 20vh;
 }
 
 .newboard-img-control {
-  width: 50%;
+  width: 30%;
   min-width: 340px;
-  margin-bottom: 100px;
+}
+
+.image-preview {
+  margin: 30px 0;
+  text-align: start;
+}
+
+.image-preview img {
+  max-width: 50%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .newboard-submit-button {
@@ -30,9 +46,10 @@
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
+  margin-top: 40px;
+  border: none;
 }
 
 .newboard-submit-button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
+  background-color: #2f3133;
 }

@@ -5,7 +5,10 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useNavigate } from "react-router-dom";
 import { timeSince } from "./Time.js";
 import { FaRegHeart } from "react-icons/fa6";
-import Pagination from "../Pagination.js";
+import { useUser } from "../MainPage/UserContext.js";
+import { MdModeEdit } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
+import CustomCheckModal from "../Component/CustomCheckModal.js";
 
 function ListSection({ posts, sortPosts }) {
   const [loading, setLoading] = useState(true);
@@ -60,7 +63,7 @@ function ListSection({ posts, sortPosts }) {
               .fill(0)
               .map((_, index) => (
                 <div key={index} className="custom-post-container">
-                  <Skeleton height={230} width={300} />
+                  <Skeleton height={180} width={300} />
                   <Skeleton
                     height={30}
                     width={200}
@@ -93,11 +96,42 @@ function Card({
   createdAt,
   likesCount,
   views,
+  fetchPosts,
 }) {
+  const { userInfo } = useUser();
   const navigate = useNavigate();
+  const [modalShow, setModalShow] = useState(false);
 
   const handleClick = () => {
     navigate(`/community/${id}`);
+  };
+
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    navigate(`/community/edit-post/${id}`);
+  };
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    try {
+      await fetch(`/api/community/posts/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      navigate(0);
+      setModalShow(false);
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+  const handleModalClose = () => setModalShow(false);
+
+  const handleModalShow = (e) => {
+    e.stopPropagation();
+    setModalShow(true);
   };
 
   return (
@@ -123,13 +157,28 @@ function Card({
           <span className="custom-post-time">{timeSince(createdAt)}</span>
         </div>
         <div className="custom-post-bottom">
-          <span className="custom-post-likesCount">
-            <FaRegHeart />
-            {likesCount}
-          </span>
-          <span className="custom-post-view">조회 {views}</span>
+          {userInfo.nickname === authorNickname && (
+            <div className="custom-post-actions">
+              <MdModeEdit onClick={handleEdit} />
+              <MdDeleteForever onClick={handleModalShow} />
+            </div>
+          )}
+          <div className="custom-post-meta">
+            <span className="custom-post-likesCount">
+              <FaRegHeart />
+              {likesCount}
+            </span>
+            <span className="custom-post-view">조회 {views}</span>
+          </div>
         </div>
       </div>
+      <CustomCheckModal
+        show={modalShow}
+        handleClose={handleModalClose}
+        handleConfirm={handleDelete}
+      >
+        게시글을 정말 삭제하시겠습니까?
+      </CustomCheckModal>
     </div>
   );
 }

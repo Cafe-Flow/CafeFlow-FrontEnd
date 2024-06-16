@@ -93,7 +93,7 @@ function DetailBoard() {
             }
             alt="Post"
           />
-          <p className="name-style">{post.authorNickname}</p>
+          <p>{post.authorNickname}</p>
         </div>
         <div className="detail-post-top">
           <p className="detail-post-title">{post.title}</p>

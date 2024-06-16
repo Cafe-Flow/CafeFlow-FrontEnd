@@ -84,7 +84,7 @@ function Boardlist() {
   };
 
   const handleCreatePost = () => {
-    navigate("/create-post");
+    navigate("/community/create-post");
   };
 
   const paginate = (pageNumber) => {
@@ -110,9 +110,9 @@ function Boardlist() {
         totalResults={totalResults}
         paginate={setCurrentPage}
       />
-      <div className="create-post-button" onClick={handleCreatePost}>
-        +
-      </div>
+      <button className="create-post-button" onClick={handleCreatePost}>
+        게시글 작성
+      </button>
     </>
   );
 }

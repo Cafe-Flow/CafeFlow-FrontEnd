@@ -9,6 +9,12 @@
   align-items: center;
 }
 
+.detail-post-container img,
+.comment-section img,
+.custom-post-container img {
+  user-select: none;
+}
+
 .community-container {
   max-width: 1280px;
 }
@@ -77,16 +83,30 @@
 .custom-post-bottom {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding: 8px 12px;
+  justify-content: space-between;
   margin-top: 10px;
 }
 
-.custom-post-bottom > span {
+.custom-post-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.custom-post-meta {
   display: flex;
   align-items: center;
-  color: #333;
-  font-size: 0.9rem;
+  gap: 5px;
+  margin-left: auto;
+}
+
+.custom-post-actions svg {
+  width: 40px;
+  height: 25px;
+  border-radius: 10px;
+}
+
+.custom-post-actions svg:hover {
+  background-color: #ccc;
 }
 
 .custom-post-likesCount svg {
@@ -94,14 +114,6 @@
   height: 20px;
   margin-right: 6px;
   color: #6c757d;
-}
-
-.custom-post-likesCount {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  color: #333;
-  margin-right: 10px;
 }
 
 .post-sort {
@@ -410,28 +422,18 @@ input[type="text"] {
 }
 
 .create-post-button {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  width: 56px;
-  height: 56px;
   background-color: black;
   color: white;
-  border-radius: 50%;
-  display: flex;
-  font-weight: 900;
-  font-size: 40px;
-  padding-bottom: 10px;
-  justify-content: center;
-  align-items: center;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  font-size: 16px;
 }
 
 .create-post-button:hover {
-  background-color: #7bb5b1;
+  background-color: #2f3133;
 }
-
 .sad-imoji {
   font-size: 30px;
   transition: 0.3s;
