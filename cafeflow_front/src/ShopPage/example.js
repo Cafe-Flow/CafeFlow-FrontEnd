@@ -11,9 +11,9 @@ import "./Shop.css"
 import Button from "react-bootstrap/Button";
 import SeatView from "../SeatPage/SeatView"; // SeatView import 추가
 import { useDropzone } from "react-dropzone"; // react-dropzone import 추가
-import { useUser } from "../MainPage/UserContext";
 import Modal from 'react-modal';
 import './styles.css';
+import { useUser } from "../MainPage/UserContext";
 import Dropzone from './dropzone';
 
 // Modal styles
@@ -31,7 +31,7 @@ const customStyles = {
 Modal.setAppElement('#root'); // Adjust this according to your app structure
 
 
-function PlaceInfo({cafeData}) {
+function PlaceInfo({ cafeData }) {
     let { idx } = useParams();
     const [reviews, setReviews] = useState([]);
     const [rating, setRating] = useState(0); // 리뷰 평점 state
@@ -39,7 +39,7 @@ function PlaceInfo({cafeData}) {
     const [seats, setSeats] = useState([]); // State to store seat data
     const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
     const Array = [0, 1, 2, 3, 4];
-
+    
       useEffect(() => {
         const fetchReviews = async () => {
           try {
@@ -160,9 +160,9 @@ const MenuInfo = ({ isAdmin }) => {
     navigate(`/shop/${idx}/orderlist`);
   };
 
-  const handleAddOrderClick = () => {
-    navigate(`/shop/${idx}/addmenu`);
-  };
+    const handleAddOrderClick = () => {
+      navigate(`/shop/${idx}/addmenu`);
+    };
 
   return (
     <div className="place_details" style={{ textAlign: "center" }}>
@@ -175,13 +175,7 @@ const MenuInfo = ({ isAdmin }) => {
           비대면으로 메뉴 주문
         </div>
         <br />
-        {isAdmin === "ADMIN" ? (
-          <span className="menuInfo-addmenu" onClick={handleAddOrderClick}>
-            카페 메뉴 추가하기
-          </span>
-        ) : (
-          <></>
-        )}
+        {isAdmin === "ADMIN" ? <span className="menuInfo-addmenu" onClick={handleAddOrderClick}>카페 메뉴 추가하기</span> : <></>}
       </div>
     </div>
   );
@@ -220,6 +214,8 @@ function Comment() {
   
   const handleSubmitReview = async () => {
     try {
+      console.log("Image File:", imageFile); // Add this log to check the imageFile
+      
       const token = localStorage.getItem("userToken");
   
       const formData = new FormData();
@@ -228,43 +224,50 @@ function Comment() {
       formData.append('image', imageFile); // Append the first file from files array
       
       const headers = {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       };
   
-      const response = await axios.post(`http://localhost:8080/api/cafe/${idx}/review`, formData, { headers });
-      let url = `http://localhost:8080/api/cafe/${idx}/review`;
-      if (sortBy === "0") {
-        url += "?sort-by=created-at";
-      } else if (sortBy === "1") {
-        url += "?sort-by=highest-rating";
-      } else if (sortBy === "2") {
-        url += "?sort-by=lowest-rating";
-      }
-      const updatedReviews = await axios.get(url);
-      
-      console.log("Review submitted:", response.data);
-
+      await axios.post(`http://localhost:8080/api/cafe/${idx}/review`, formData, { headers });
+      const updatedReviews = await axios.get(`http://localhost:8080/api/cafe/${idx}/review`);
       setReviews(updatedReviews.data);
     } catch (error) {
       console.error("Error submitting review:", error);
     }
   };
   
-  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
-  const handleImageDrop = (file) => {
+  // Dropzone configuration
+  const onDrop = (acceptedFiles) => {
+    // Handle dropped files here
+    const file = acceptedFiles[0];
     setImageFile(file);
   };
 
+
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+  
+    const openModal = () => {
+      setModalIsOpen(true);
+    };
+  
+    const closeModal = () => {
+      setModalIsOpen(false);
+    };
+
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
+    const handleImageDrop = (acceptedFiles) => {
+      // 이미지 파일을 드롭하면 호출되는 함수
+      setImageFile(acceptedFiles[0]); // 첫 번째 이미지 파일만 사용
+  };
+
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  
   return (
     <>
     <div className="place_details">
@@ -276,7 +279,7 @@ function Comment() {
       <div>
       <div className="image_container">
         {reviews.slice(0, 6).map((review, index) => (
-          <div key={index} className="review_images">
+          <div key={index} className="review_images" onLoad={console.log(review.image)}>
             <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
           </div>
         ))}
@@ -346,12 +349,14 @@ function Comment() {
           />
         </FloatingLabel>
         <div className="review-buttons">
-          <Dropzone onDrop={handleImageDrop} />
+          <section className="dropzone-container">
+          <Dropzone onDrop={handleImageDrop} uploadedFiles={imageFile ? [imageFile] : []} style={{ padding: '10px', width: '600px' }} />
           <div className="review-button">
             <Button variant="dark" onClick={handleSubmitReview}>
               리뷰 작성
             </Button>
           </div>
+        </section>
         </div>
       </div>
     </div>
@@ -391,10 +396,9 @@ function Comment() {
             <div>{review.nickname}</div>
             <div>{"⭐️".repeat(review.rating)}</div>
           </Card.Header>
-          <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
-          <div style={{ textAlign: "start" }}>{review.comment}</div>
+          <img src={`data:image/jpeg;base64,${review.image}`} />
+          <Card.Body style={{ textAlign: "start" }}>{review.comment}</Card.Body>
         </Card>
-        <br/>
       </div>
     ))
   ) : (
@@ -406,10 +410,9 @@ function Comment() {
             <div>{review.nickname}</div>
             <div>{"⭐️".repeat(review.rating)}</div>
           </Card.Header>
-          <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
-          <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
+          <img src={`data:image/jpeg;base64,${review.image}`} />
+          <Card.Body style={{ textAlign: "start" }}>{review.comment}</Card.Body>
         </Card>
-        <br/>
       </div>
     ))
   )}
@@ -432,15 +435,18 @@ const FindWay = () => (
   </div>
 );
 
-function Shop() {
+function Example() {
   let { idx } = useParams();
   const { userInfo } = useUser();
-  const [reviews, setReviews] = useState([]);
-  const [cafeData, setCafeData] = useState(null);
+    const [cafeData, setCafeData] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [rating, setRating] = useState(0); // 리뷰 평점 state
+    const [comment, setComment] = useState(""); // 리뷰 내용 state
     const [seats, setSeats] = useState([]); // State to store seat data
     const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
     const [isAdmin, setIsAdmin] = useState("USER"); // State to hold whether user is admin
     const Array = [0, 1, 2, 3, 4];
+  
   
     useEffect(() => {
       const fetchCafeData = async () => {
@@ -457,8 +463,8 @@ function Shop() {
         }
       };
       fetchCafeData();
-    }, [idx, userInfo.id]);
-    
+    }, [idx, , userInfo.id]);
+
   
     useEffect(() => {
       const fetchReviews = async () => {
@@ -471,7 +477,6 @@ function Shop() {
           } else if (sortBy === "2") {
             url += "?sort-by=lowest-rating";
           }
-          console.log("URL:", url);
           const response = await axios.get(url);
           setReviews(response.data);
         } catch (error) {
@@ -503,10 +508,10 @@ function Shop() {
     
     return (
         <div className="container">
-            <PlaceInfo cafeData={cafeData}/>
-            {isAdmin === "ADMIN" ? <OwnerCertification/> : (<></>)}
+        <PlaceInfo cafeData={cafeData} />
+            {isAdmin === "ADMIN" ? <OwnerCertification/> : (<></>)} 
             <FindWay/>
-            <MenuInfo isAdmin={isAdmin}/>
+        <MenuInfo isAdmin={isAdmin} />
             <div className="place_details">
               <div className="inner_place">
                 <div className="tit_subject">
@@ -522,4 +527,4 @@ function Shop() {
     );
 }
 
-export default Shop;
+export default Example;

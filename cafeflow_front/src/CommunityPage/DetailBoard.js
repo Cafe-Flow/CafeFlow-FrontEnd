@@ -83,7 +83,17 @@ function DetailBoard() {
     <>
       <div className="detail-post-container">
         <div className="detail-post-author">
-          <p className="name-style">{post.authorNickname}</p>
+          <img
+            className="profile-img"
+            style={{ marginTop: "0px" }}
+            src={
+              post.authorImage
+                ? `data:image/jpeg;base64,${post.authorImage}`
+                : "/img/default.png"
+            }
+            alt="Post"
+          />
+          <p>{post.authorNickname}</p>
         </div>
         <div className="detail-post-top">
           <p className="detail-post-title">{post.title}</p>
