@@ -242,7 +242,6 @@ body{
   height: auto;
 }
 
-
 .review_img {
   width: 200px; /* 이미지의 너비를 100%로 설정하여 부모 요소에 맞춤 */
   height: auto; /* 이미지의 높이를 자동으로 설정 */
@@ -253,4 +252,20 @@ body{
   padding: 10px; /* 텍스트 패딩 설정 */
   flex: 1; /* 텍스트 영역이 가능한 한 많은 공간을 차지하도록 설정 */
   background-color: #fff; /* 텍스트 영역의 배경색 설정 */
+}
+
+.menuInfo-addmenu {
+  font-weight: 900;
+  background-color: #fff;
+  padding: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      font-size: 17px;
+    letter-spacing: -2px;
+  
+    padding: 5px;
+        font-weight: 800;
+}
+
+.menuInfo-addmenu:hover {
+  background-color: #ccc;
 }
