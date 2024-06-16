@@ -8,7 +8,7 @@ function SeatView({ seats, cafeId }) {
     
     useEffect(() => {
         // Connect to WebSocket server
-        const socket = new WebSocket('ws://localhost:8080/ws');
+        const socket = new WebSocket('ws://cafeflow.store:8080/ws');
         const stompClient = Stomp.over(socket);
 
         stompClient.connect({}, () => {
@@ -43,7 +43,7 @@ function SeatView({ seats, cafeId }) {
         };
 
         // Create WebSocket connection
-        const socket = new WebSocket('ws://localhost:8080/ws');
+        const socket = new WebSocket('ws://cafeflow.store:8080/ws');
         const stompClient = Stomp.over(socket);
         
         stompClient.connect({}, () => {
