@@ -160,6 +160,10 @@ const MenuInfo = ({ isAdmin }) => {
     navigate(`/shop/${idx}/orderlist`);
   };
 
+    const handleAddOrderClick = () => {
+      navigate(`/shop/${idx}/addmenu`);
+    };
+
   return (
     <div className="place_details" style={{ textAlign: "center" }}>
       <div className="inner_place">
@@ -171,7 +175,7 @@ const MenuInfo = ({ isAdmin }) => {
           비대면으로 메뉴 주문
         </div>
         <br />
-        {isAdmin === "ADMIN" ? <span className="menuInfo-addmenu">카페 메뉴 추가하기</span> : <></>}
+        {isAdmin === "ADMIN" ? <span className="menuInfo-addmenu" onClick={handleAddOrderClick}>카페 메뉴 추가하기</span> : <></>}
       </div>
     </div>
   );

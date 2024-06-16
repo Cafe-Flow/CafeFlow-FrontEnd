@@ -68,20 +68,8 @@ function AddMenu() {
   return (
     <div className="orderlist-page">
       <div className="orderlist-top">
-        <h3>{selectedItem}</h3>
-        <ul className="orderlist-list">
-          {["음료", "푸드", "기타"].map((item) => (
-            <li
-              key={item}
-              className={selectedItem === item ? "active" : ""}
-              onClick={() => handleItemClick(item)}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
+        <h3>메뉴 추가</h3>
         <div className="orderlist-content">
-          <h4>추가할 메뉴를 선택해주세요</h4>
           <>
             <ul className="orderlist-list-detail">
               {Object.keys(selectedDetails).map((detail) => (

@@ -249,3 +249,7 @@ body{
   border-radius: 10px;
   color: white;
 }
+
+.menuInfo-addmenu:hover {
+  background-color: #8a806b;
+}
