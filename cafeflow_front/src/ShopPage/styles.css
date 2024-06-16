@@ -149,8 +149,9 @@ body{
     line-height: 24px;
     padding: 10px 0 0;
     font-weight: 700;
-
   }
+
+
   .info_list{
     text-align: left;
     justify-content: space-between;
@@ -239,4 +240,12 @@ body{
 .modal_review_images img {
   width: 100%;
   height: auto;
+}
+
+.menuInfo-addmenu {
+  font-weight: 900;
+  background-color: #d5c4a1;
+  padding: 5px;
+  border-radius: 10px;
+  color: white;
 }

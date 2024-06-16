@@ -38,54 +38,60 @@ function MenuItemBar({ items, onAddToCart }) {
 
   return (
     <div className="menu-list">
-      {items.map((item) => (
-        <div key={item.id} className="menu-item">
-          <img
-            src={
-              item.image
-                ? `data:image/jpeg;base64,${item.image}`
-                : "/img/default1.jpg"
-            }
-            alt={item.basicMenuName}
-          />
-          <div className="menu-item-bar">
-            <p>
-              {item.basicMenuName} {item.price}원
-            </p>
-            <FaBasketShopping
-              onClick={(e) => handleBasketClick(item.basicMenuName, e)}
-              style={{ cursor: "pointer" }}
+      {items.length === 0 ? (
+        <div className="no-items-message">현재 등록된 메뉴가 존재하지 않습니다.</div>
+      ) : (
+        items.map((item) => (
+          <div key={item.id} className="menu-item">
+            <img
+              src={
+                item.image
+                  ? `data:image/jpeg;base64,${item.image}`
+                  : "/img/default1.jpg"
+              }
+              alt={item.basicMenuName}
             />
-            {showQuantity[item.basicMenuName] && (
-              <div
-                className="quantity-container"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  className="quantity-button"
-                  onClick={() => decreaseQuantity(item.name)}
+            <div className="menu-item-bar">
+              <p>
+                {item.basicMenuName} {item.price}원
+              </p>
+              <FaBasketShopping
+                onClick={(e) => handleBasketClick(item.basicMenuName, e)}
+                style={{ cursor: "pointer" }}
+              />
+              {showQuantity[item.basicMenuName] && (
+                <div
+                  className="quantity-container"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={quantities[item.name] || 1}
-                  readOnly
-                  min="1"
-                />
-                <button
-                  className="quantity-button"
-                  onClick={() => increaseQuantity(item.name)}
-                >
-                  +
-                </button>
-                <p>{item.price * (quantities[item.name] || 1)}원</p>
-                <button onClick={(e) => handleAddToCart(item, e)}>추가</button>
-              </div>
-            )}
+                  <button
+                    className="quantity-button"
+                    onClick={() => decreaseQuantity(item.name)}
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    value={quantities[item.name] || 1}
+                    readOnly
+                    min="1"
+                  />
+                  <button
+                    className="quantity-button"
+                    onClick={() => increaseQuantity(item.name)}
+                  >
+                    +
+                  </button>
+                  <p>{item.price * (quantities[item.name] || 1)}원</p>
+                  <button onClick={(e) => handleAddToCart(item, e)}>
+                    추가
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }

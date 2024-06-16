@@ -2,7 +2,7 @@ import { LiaMapMarkerSolid } from "react-icons/lia";
 import { MdOutlineDescription } from "react-icons/md";
 import { IoIosCafe } from "react-icons/io";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
@@ -13,6 +13,7 @@ import SeatView from "../SeatPage/SeatView"; // SeatView import 추가
 import { useDropzone } from "react-dropzone"; // react-dropzone import 추가
 import Modal from 'react-modal';
 import './styles.css';
+import { useUser } from "../MainPage/UserContext";
 import Dropzone from './dropzone';
 
 // Modal styles
@@ -30,31 +31,14 @@ const customStyles = {
 Modal.setAppElement('#root'); // Adjust this according to your app structure
 
 
-function PlaceInfo() {
+function PlaceInfo({ cafeData }) {
     let { idx } = useParams();
-    const [cafeData, setCafeData] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [rating, setRating] = useState(0); // 리뷰 평점 state
     const [comment, setComment] = useState(""); // 리뷰 내용 state
     const [seats, setSeats] = useState([]); // State to store seat data
     const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
     const Array = [0, 1, 2, 3, 4];
-
-
-    useEffect(() => {
-        const fetchCafeData = async () => {
-          try {
-            const response = await axios.get(
-              `http://localhost:8080/api/cafe/${idx}`
-            );
-            setCafeData(response.data);
-          } catch (error) {
-            console.error("카페 데이터를 불러오는 중 오류 발생:", error);
-          }
-        };
-    
-        fetchCafeData();
-      }, [idx]);
     
       useEffect(() => {
         const fetchReviews = async () => {
@@ -168,16 +152,30 @@ function OwnerCertification() {
     </div>
   );
 }
-const MenuInfo = () => (
-    <div className="place_details">
+
+const MenuInfo = ({ isAdmin }) => {
+  const navigate = useNavigate();
+  let { idx } = useParams();
+  const handleOrderClick = () => {
+    navigate(`/shop/${idx}/orderlist`);
+  };
+
+  return (
+    <div className="place_details" style={{ textAlign: "center" }}>
       <div className="inner_place">
-        <div className="tit_subject">
-          메뉴
+        <div
+          className="tit_subject"
+          style={{ fontSize: "18px", cursor: "pointer" }}
+          onClick={handleOrderClick}
+        >
+          비대면으로 메뉴 주문
         </div>
-        <br/>
+        <br />
+        {isAdmin === "ADMIN" ? <span className="menuInfo-addmenu">카페 메뉴 추가하기</span> : <></>}
       </div>
     </div>
-);
+  );
+};
 
 function Comment() {
   let { idx } = useParams();
@@ -434,15 +432,35 @@ const FindWay = () => (
 );
 
 function Example() {
-    let { idx } = useParams();
+  let { idx } = useParams();
+  const { userInfo } = useUser();
     const [cafeData, setCafeData] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [rating, setRating] = useState(0); // 리뷰 평점 state
     const [comment, setComment] = useState(""); // 리뷰 내용 state
     const [seats, setSeats] = useState([]); // State to store seat data
     const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
-    const [isAdmin, setIsAdmin] = useState(false); // State to hold whether user is admin
+    const [isAdmin, setIsAdmin] = useState("USER"); // State to hold whether user is admin
     const Array = [0, 1, 2, 3, 4];
+  
+  
+    useEffect(() => {
+      const fetchCafeData = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/api/cafe/${idx}`
+          );
+          setCafeData(response.data);
+          if (response.data.memberId === userInfo.id) {
+            setIsAdmin("ADMIN");
+          }
+        } catch (error) {
+          console.error("카페 데이터를 불러오는 중 오류 발생:", error);
+        }
+      };
+      fetchCafeData();
+    }, [idx, , userInfo.id]);
+
   
     useEffect(() => {
       const fetchReviews = async () => {
@@ -482,23 +500,14 @@ function Example() {
       };
   
       fetchSeatInfo();
-
-      // Check if user is ADMIN
-      const userInfo = localStorage.getItem("userInfo");
-      if (userInfo) {
-        const { userType } = JSON.parse(userInfo);
-        if (userType === "ADMIN") {
-          setIsAdmin(true);
-        }
-      }
     }, [idx]);
     
     return (
         <div className="container">
-            <PlaceInfo />
-            {isAdmin && <OwnerCertification/>}
+        <PlaceInfo cafeData={cafeData} />
+            {isAdmin === "ADMIN" ? <OwnerCertification/> : (<></>)} 
             <FindWay/>
-            <MenuInfo/>
+        <MenuInfo isAdmin={isAdmin} />
             <div className="place_details">
               <div className="inner_place">
                 <div className="tit_subject">
