@@ -15,10 +15,9 @@ import Delete from "./MyPage/Delete.js";
 import Password from "./MyPage/Password.js";
 import NewBoard from "./CommunityPage/NewBoard.js";
 import Shoplist from "./ShopPage/ShopList.js";
-import Shop from "./ShopPage/Shop.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatView from "./SeatPage/SeatView.js";
-import Example from "./ShopPage/example.js";
+import Shop from "./ShopPage/Shop.js";
 import SeatRegister from "./SeatPage/SeatRegister.js";
 import OrderList from "./OrderPage/OrderList.js";
 import Chatrooms from "./MyPage/Chatrooms.js";
@@ -92,10 +91,9 @@ function App() {
             <Route path="/create-post" element={<NewBoard />} />
             <Route path="/community/:postId" element={<DetailBoard />} />
             <Route path="/shop" element={<Shoplist />} />
-            <Route path="/example/:idx" element={<Shop />} />
             <Route path="/seat" element={<SeatRegister />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
-            <Route path="/shop/:idx" element={<Example />} />
+            <Route path="/shop/:idx" element={<Shop />} />
             <Route path="/modify/:idx" element={<ShopModify />} />
             <Route path="/shop/:idx/addmenu" element={<AddMenu />} />
             <Route path="/shop/:idx/orderlist" element={<OrderList />} />

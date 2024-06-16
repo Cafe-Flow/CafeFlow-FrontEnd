@@ -240,3 +240,15 @@ body{
   width: 100%;
   height: auto;
 }
+
+.review_img {
+  width: 200px; /* 이미지의 너비를 100%로 설정하여 부모 요소에 맞춤 */
+  height: auto; /* 이미지의 높이를 자동으로 설정 */
+  object-fit: contain; /* 이미지가 자동으로 리사이징됨 */
+}
+
+.review_txt {
+  padding: 10px; /* 텍스트 패딩 설정 */
+  flex: 1; /* 텍스트 영역이 가능한 한 많은 공간을 차지하도록 설정 */
+  background-color: #fff; /* 텍스트 영역의 배경색 설정 */
+}
