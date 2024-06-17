@@ -113,7 +113,7 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
     }
 
     const newClient = new Client({
-      brokerURL: "ws://localhost:8080/ws",
+      brokerURL: "ws://cafeflow.store:8080/ws",
       onConnect: () => {
         console.log("Connected to WebSocket");
         newClient.subscribe(`/topic/messages/${roomId}`, (message) => {

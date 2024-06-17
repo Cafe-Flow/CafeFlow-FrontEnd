@@ -15,7 +15,7 @@ function Shoplist() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let url = "http://cafeflow.store:8080/api/cafe";
+        let url = "/api/cafe";
         if (sortBy === "0") {
           url += "?sort-by=created-at";
         }

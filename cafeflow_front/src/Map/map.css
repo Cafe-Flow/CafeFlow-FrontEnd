@@ -89,7 +89,7 @@
   width: 150px;
   height: 150px;
   border: none;
-  object-fit: fill;
+  object-fit: contain;
 }
 
 .result-results h5 {

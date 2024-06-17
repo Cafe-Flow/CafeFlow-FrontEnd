@@ -44,7 +44,7 @@ function PlaceInfo({cafeData}) {
       useEffect(() => {
         const fetchReviews = async () => {
           try {
-            let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+            let url = `/api/cafe/${idx}/review`;
             if (sortBy === "0") {
               url += "?sort-by=created-at";
             } else if (sortBy === "1") {
@@ -66,7 +66,7 @@ function PlaceInfo({cafeData}) {
         const fetchSeatInfo = async () => {
           try {
             const response = await axios.get(
-              `http://cafeflow.store:8080/api/cafe/${idx}/seat`
+              `/api/cafe/${idx}/seat`
             );
             if (response.status === 200) {
               setSeats(response.data); // 좌석 데이터 상태 업데이트
@@ -201,7 +201,7 @@ function Comment() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+        let url = `/api/cafe/${idx}/review`;
         if (sortBy === "0") {
           url += "?sort-by=created-at";
         } else if (sortBy === "1") {
@@ -233,8 +233,8 @@ function Comment() {
         'Content-Type': 'multipart/form-data',
       };
   
-      const response = await axios.post(`http://cafeflow.store:8080/api/cafe/${idx}/review`, formData, { headers });
-      let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+      const response = await axios.post(`/api/cafe/${idx}/review`, formData, { headers });
+      let url = `/api/cafe/${idx}/review`;
       if (sortBy === "0") {
         url += "?sort-by=created-at";
       } else if (sortBy === "1") {
@@ -447,9 +447,10 @@ function Shop() {
       const fetchCafeData = async () => {
         try {
           const response = await axios.get(
-            `http://cafeflow.store:8080/api/cafe/${idx}`
+            `/api/cafe/${idx}`
           );
           setCafeData(response.data);
+                console.log(response.data);
           if (response.data.memberId === userInfo.id) {
             setIsAdmin("ADMIN");
           }
@@ -458,13 +459,14 @@ function Shop() {
         }
       };
       fetchCafeData();
+
     }, [idx, userInfo.id]);
     
   
     useEffect(() => {
       const fetchReviews = async () => {
         try {
-          let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+          let url = `/api/cafe/${idx}/review`;
           if (sortBy === "0") {
             url += "?sort-by=created-at";
           } else if (sortBy === "1") {
@@ -487,7 +489,7 @@ function Shop() {
       const fetchSeatInfo = async () => {
         try {
           const response = await axios.get(
-            `http://cafeflow.store:8080/api/cafe/${idx}/seat`
+            `/api/cafe/${idx}/seat`
           );
           if (response.status === 200) {
             setSeats(response.data); // 좌석 데이터 상태 업데이트
