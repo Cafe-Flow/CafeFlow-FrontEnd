@@ -44,6 +44,8 @@
   }
   .review{
     align-items: start; /* Align items vertically */
+    display: flex;
+    justify-content: flex-start;
   }
   
   #seatview {
@@ -144,5 +146,18 @@
   .dropzone-container{
     text-align: center;
   }
+  .remove-btn {
+    top: 0;
+    left: 0;
+    margin: 5px;
+    padding: 5px;
+    background-color: rgba(255, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
   
+  .remove-btn:hover {
+    background-color: darkred;
+  }
   /*# sourceMappingURL=ss.css.map */

@@ -34,6 +34,11 @@ function Dropzone({ onDrop }) {
     </div>
   ));
 
+  // 리뷰 작성 후 초기화 함수
+  const resetDropzone = () => {
+    setFiles([]);
+  };
+
   return (
     <section className="dropzone-container">
       <div {...getRootProps({ className: "dropzone" })}>
