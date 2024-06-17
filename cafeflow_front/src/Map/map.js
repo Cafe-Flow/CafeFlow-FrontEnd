@@ -92,31 +92,31 @@ function MapInfo() {
     updateMarkers(map, dummyMarkersRef.current);
   };
 
-  const connectWebSocket = () => {
-    const socket = new SockJS("http://cafeflow.store:8080/ws");
-    const stompClient = Stomp.over(socket);
+const connectWebSocket = () => {
+  const socket = new SockJS("http://cafeflow.store:8080/ws");
+  const stompClient = Stomp.over(socket);
 
-    stompClient.connect(
-      {},
-      () => {
-        stompClient.subscribe("/topic/cafe", (message) => {
-          const updatedCafe = JSON.parse(message.body);
-          console.log("Received message:", message);
-          updateMarkerTraffic(
-            updatedCafe.cafeId,
-            updatedCafe.traffic,
-            updatedCafe.watingTime
-          );
-        });
-        console.log("WebSocket connected");
-      },
-      (error) => {
-        console.error("WebSocket connection error:", error);
-      }
-    );
+  stompClient.connect(
+    {},
+    () => {
+      stompClient.subscribe("/topic/cafe", (message) => {
+        const updatedCafe = JSON.parse(message.body);
+        console.log("Received message:", message);
+        updateMarkerTraffic(
+          updatedCafe.cafeId,
+          updatedCafe.traffic === "YELLOW" ? "BLUE" : updatedCafe.traffic,
+          updatedCafe.watingTime
+        );
+      });
+      console.log("WebSocket connected");
+    },
+    (error) => {
+      console.error("WebSocket connection error:", error);
+    }
+  );
 
-    stompClientRef.current = stompClient;
-  };
+  stompClientRef.current = stompClient;
+};
 
   const disconnectWebSocket = () => {
     if (stompClientRef.current) {
@@ -224,8 +224,11 @@ function MapInfo() {
         const response = await axios.get(
           "/api/cafe?sort-by=created-at"
         );
-        const data = response.data;
-        setMarkersData(data);
+    const data = response.data.map((item) => ({
+      ...item,
+      traffic: item.traffic === "YELLOW" ? "BLUE" : item.traffic,
+    }));
+    setMarkersData(data);
         createMarkers(data);
       } catch (error) {
         setErrorMessage("API 호출 에러가 발생하였습니다");
