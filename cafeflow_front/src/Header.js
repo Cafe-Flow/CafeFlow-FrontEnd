@@ -90,7 +90,7 @@ function Header() {
               >
                 커뮤니티
               </a>
-              <a
+                            <a
                 className={`nav-element ${
                   location.pathname.startsWith("/promotion") ? "active" : ""
                 }`}
@@ -104,7 +104,7 @@ function Header() {
             {isLoggedIn ? (
               <>
                 <p className="nav-side-element1" onClick={toggleTooltip}>
-                  <span className="name-style">{nickname}</span> 님
+                  <span className="name-style">{userInfo.nickname}</span> 님
                 </p>
                 <div
                   className={`mypage-tooltip ${

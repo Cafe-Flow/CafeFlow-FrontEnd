@@ -1,20 +1,10 @@
 import Sidebar from "./Sidebar";
 import React, { useState, useEffect } from "react";
 import { Modal, Form } from "react-bootstrap";
+import { useUser } from "../MainPage/UserContext";
 
 function Modify() {
-  const [userInfo, setUserInfo] = useState({
-    id: "",
-    username: "",
-    nickname: "",
-    email: "",
-    gender: "",
-    age: "",
-    cityId: "",
-    stateId: "",
-    image: null,
-  });
-
+  const { userInfo, setUserInfo } = useUser();
   const [tempUserInfo, setTempUserInfo] = useState({ ...userInfo });
 
   const [states, setStates] = useState([]);
@@ -25,18 +15,48 @@ function Modify() {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
-    if (storedUserInfo) {
-      setUserInfo(storedUserInfo);
+
       console.log(`${localStorage.getItem("userToken")}`);
-      setTempUserInfo(storedUserInfo);
-      setPreviewUrl(`data:image/jpeg;base64,${tempUserInfo.image}`);
-      fetchStates(storedUserInfo.stateId);
-      fetchStateName(storedUserInfo.stateId);
-      fetchCityName(storedUserInfo.stateId, storedUserInfo.cityId);
-    }
+    setPreviewUrl(`data:image/jpeg;base64,${userInfo.image}`);
+  const base64Image = userInfo.image.replace(
+    /^data:image\/(png|jpeg|jpg);base64,/,
+    ""
+  );
+  const imageBlob = base64ToBlob(base64Image, "image/jpeg");
+  const imageFile = blobToFile(imageBlob, "profile.jpg");
+  setImage(imageFile);
+      fetchStates(userInfo.stateId);
+      fetchStateName(userInfo.stateId);
+      fetchCityName(userInfo.stateId, userInfo.cityId);
+
     fetchStates();
   }, []);
+
+
+const base64ToBlob = (base64, contentType = "") => {
+  const base64Data = base64.replace(/^data:image\/(png|jpeg|jpg);base64,/, "");
+  const padding = "=".repeat((4 - (base64Data.length % 4)) % 4);
+  const base64Cleaned = base64Data + padding;
+
+  const byteCharacters = atob(base64Cleaned);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, { type: contentType });
+};
+
+const blobToFile = (blob, fileName) => {
+  return new File([blob], fileName, { type: blob.type });
+};
 
   const fetchStates = async (initialStateId) => {
     const response = await fetch("/api/locations/states");
@@ -57,7 +77,7 @@ function Modify() {
   const handleStateChange = (event) => {
     const stateId = event.target.value;
     fetchCities(stateId);
-    setUserInfo((prev) => ({
+    setTempUserInfo((prev) => ({
       ...prev,
       stateId: stateId,
       cityId: "",
@@ -66,7 +86,7 @@ function Modify() {
 
   const handleCityChange = (event) => {
     const cityId = event.target.value;
-    setUserInfo((prev) => ({
+    setTempUserInfo((prev) => ({
       ...prev,
       cityId: cityId,
     }));
@@ -75,8 +95,6 @@ function Modify() {
   const handleModify = () => {
     const previousImageUrl = `data:image/jpeg;base64,${userInfo.image}`;
     setPreviewUrl(previousImageUrl);
-
-    setTempUserInfo({ ...userInfo });
     setIsModalOpen(true);
   };
 
@@ -90,7 +108,6 @@ function Modify() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setTempUserInfo({ ...userInfo });
     setPreviewUrl(`data:image/jpeg;base64,${userInfo.image}`);
     setImage(null);
   };
@@ -114,6 +131,7 @@ function Modify() {
     formData.append("image", image);
 
     try {
+      console.log(tempUserInfo);
       const response = await fetch(`/api/auth/update-profile/${userInfo.id}`, {
         method: "PUT",
         headers: {
@@ -123,17 +141,18 @@ function Modify() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`에러 발생: ${response.status}`);
       }
-
-      setUserInfo(tempUserInfo);
+      const updatedUserInfo = await response.json();
+      setUserInfo(updatedUserInfo);
+      localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
       alert("프로필이 성공적으로 업데이트되었습니다.");
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("프로필 업데이트에 실패했습니다.");
     } finally {
-      setLoading(false); // 로딩 종료
-      setIsModalOpen(false); // 모달 닫기
+      setLoading(false);
+      setIsModalOpen(false);
     }
   };
 
