@@ -93,7 +93,7 @@ function MapInfo() {
   };
 
   const connectWebSocket = () => {
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS("http://cafeflow.store:8080/ws");
     const stompClient = Stomp.over(socket);
 
     stompClient.connect(
@@ -222,7 +222,7 @@ function MapInfo() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/cafe?sort-by=created-at"
+          "http://cafeflow.store:8080/api/cafe?sort-by=created-at"
         );
         const data = response.data;
         setMarkersData(data);
