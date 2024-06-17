@@ -69,7 +69,7 @@ function ShopRegister() {
                     "Content-Type": "multipart/form-data",
                 };
     
-                const response = await axios.post('http://cafeflow.store:8080/api/register-cafe', formData, { headers });
+                const response = await axios.post('/api/register-cafe', formData, { headers });
     
                 console.log('Cafe registered successfully:', response.data);
                 const shopid = response.data;
@@ -87,7 +87,7 @@ function ShopRegister() {
                 })));
     
                 await axios.post(
-                    `http://cafeflow.store:8080/api/cafe/${shopid}/seat-register`,
+                    `/api/cafe/${shopid}/seat-register`,
                     seatDataForPost,
                     {
                         headers: {
@@ -136,7 +136,7 @@ function ShopRegister() {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://cafeflow.store:8080/api/register-cafe?search=${searchTerm}`);
+            const response = await fetch(`/api/register-cafe?search=${searchTerm}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
