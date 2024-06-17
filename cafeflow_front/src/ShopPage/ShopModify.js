@@ -29,7 +29,7 @@ function PlaceInfo() {
         const fetchCafeData = async () => {
           try {
             const response = await axios.get(
-              `http://cafeflow.store:8080/api/cafe/${idx}`
+              `/api/cafe/${idx}`
             );
             setCafeData(response.data);
           } catch (error) {
@@ -43,7 +43,7 @@ function PlaceInfo() {
       useEffect(() => {
         const fetchReviews = async () => {
           try {
-            let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+            let url = `api/cafe/${idx}/review`;
             if (sortBy === "0") {
               url += "?sort-by=created-at";
             } else if (sortBy === "1") {
@@ -65,7 +65,7 @@ function PlaceInfo() {
         const fetchSeatInfo = async () => {
           try {
             const response = await axios.get(
-              `http://cafeflow.store:8080/api/cafe/${idx}/seat`
+              `/api/cafe/${idx}/seat`
             );
             if (response.status === 200) {
               setSeats(response.data); // 좌석 데이터 상태 업데이트
@@ -89,11 +89,11 @@ function PlaceInfo() {
           };
           // 서버에 리뷰 작성 요청
           await axios.post(
-            `http://cafeflow.store:8080/api/cafe/${idx}/review`,
+            `/api/cafe/${idx}/review`,
             reviewData
           );
           // 리뷰 작성 후 서버에서 리뷰 목록을 다시 가져옴
-          let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+          let url = `/api/cafe/${idx}/review`;
           if (sortBy === "0") {
             url += "?sort-by=created-at";
           } else if (sortBy === "1") {
@@ -218,7 +218,7 @@ function CommentRate() {
       const fetchCafeData = async () => {
         try {
           const response = await axios.get(
-            `http://cafeflow.store:8080/api/cafe/${idx}`
+            `/api/cafe/${idx}`
           );
           setCafeData(response.data);
         } catch (error) {
@@ -233,7 +233,7 @@ function CommentRate() {
       const fetchSeatInfo = async () => {
         try {
           const response = await axios.get(
-            `http://cafeflow.store:8080/api/cafe/${idx}/seat`
+            `/api/cafe/${idx}/seat`
           );
           if (response.status === 200) {
             setSeats(response.data); // 좌석 데이터 상태 업데이트
@@ -257,11 +257,11 @@ function CommentRate() {
         };
         // 서버에 리뷰 작성 요청
         await axios.post(
-          `http://cafeflow.store:8080/api/cafe/${idx}/review`,
+          `/api/cafe/${idx}/review`,
           reviewData
         );
         // 리뷰 작성 후 서버에서 리뷰 목록을 다시 가져옴
-        let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+        let url = `/api/cafe/${idx}/review`;
         if (sortBy === "0") {
           url += "?sort-by=created-at";
         } else if (sortBy === "1") {
@@ -343,7 +343,7 @@ function Comment() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+        let url = `/api/cafe/${idx}/review`;
         if (sortBy === "0") {
           url += "?sort-by=created-at";
         } else if (sortBy === "1") {
@@ -431,7 +431,7 @@ function Example() {
       const fetchCafeData = async () => {
         try {
           const response = await axios.get(
-            `http://cafeflow.store:8080/api/cafe/${idx}`
+            `/api/cafe/${idx}`
           );
           setCafeData(response.data);
         } catch (error) {
@@ -445,7 +445,7 @@ function Example() {
     useEffect(() => {
       const fetchReviews = async () => {
         try {
-          let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+          let url = `/api/cafe/${idx}/review`;
           if (sortBy === "0") {
             url += "?sort-by=created-at";
           } else if (sortBy === "1") {
@@ -467,7 +467,7 @@ function Example() {
       const fetchSeatInfo = async () => {
         try {
           const response = await axios.get(
-            `http://cafeflow.store:8080/api/cafe/${idx}/seat`
+            `/api/cafe/${idx}/seat`
           );
           if (response.status === 200) {
             setSeats(response.data); // 좌석 데이터 상태 업데이트
@@ -491,11 +491,11 @@ function Example() {
         };
         // 서버에 리뷰 작성 요청
         await axios.post(
-          `http://cafeflow.store:8080/api/cafe/${idx}/review`,
+          `/api/cafe/${idx}/review`,
           reviewData
         );
         // 리뷰 작성 후 서버에서 리뷰 목록을 다시 가져옴
-        let url = `http://cafeflow.store:8080/api/cafe/${idx}/review`;
+        let url = `/api/cafe/${idx}/review`;
         if (sortBy === "0") {
           url += "?sort-by=created-at";
         } else if (sortBy === "1") {
