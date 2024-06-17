@@ -190,13 +190,11 @@ function Modify() {
             </p>
           </div>
           <div className="mypage-modify-display">
-            {userInfo.image && (
               <img
                 src={`data:image/jpeg;base64,${userInfo.image}`}
                 className="profile-image"
                 alt="Profile"
               />
-            )}
             <p>
               <span className="nickname-style">{userInfo.nickname}</span>{" "}
               <span
@@ -247,13 +245,11 @@ function Modify() {
           <Form.Group controlId="formProfileImage">
             <Form.Label className="form-label">프로필 이미지</Form.Label>
             <div>
-              {userInfo.image && (
                 <img
                   src={previewUrl}
                   className="profile-image"
                   alt="Profile Preview"
                 />
-              )}
               <Form.Control
                 type="file"
                 name="image/*"
