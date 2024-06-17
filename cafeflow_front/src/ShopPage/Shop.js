@@ -15,6 +15,7 @@ import { useUser } from "../MainPage/UserContext";
 import Modal from 'react-modal';
 import './styles.css';
 import Dropzone from './dropzone';
+import PromotionComponent from "../PromotionPage/PromotionComponent";
 
 // Modal styles
 const customStyles = {
@@ -506,6 +507,7 @@ function Shop() {
             <PlaceInfo cafeData={cafeData}/>
             {isAdmin === "ADMIN" ? <OwnerCertification/> : (<></>)}
             <FindWay/>
+            <PromotionComponent/>
             <MenuInfo isAdmin={isAdmin}/>
             <div className="place_details">
               <div className="inner_place">

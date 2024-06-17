@@ -84,22 +84,19 @@ function Header() {
               </a>
               <a
                 className={`nav-element ${
-                  location.pathname.startsWith("/order") ? "active" : ""
-                }`}
-                href="/"
-              >
-                메뉴 주문
-              </a>
-              <a className="nav-element" href="/">
-                이벤트
-              </a>
-              <a
-                className={`nav-element ${
                   location.pathname.startsWith("/community") ? "active" : ""
                 }`}
                 href="/community"
               >
                 커뮤니티
+              </a>
+              <a
+                className={`nav-element ${
+                  location.pathname.startsWith("/promotion") ? "active" : ""
+                }`}
+                href="/promotion"
+              >
+                이벤트
               </a>
             </div>
           </Navbar.Collapse>

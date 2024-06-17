@@ -86,8 +86,10 @@
 }
 
 .result-results-right img {
-  width: 90%;
+  width: 150px;
+  height: 150px;
   border: none;
+  object-fit: fill;
 }
 
 .result-results h5 {
@@ -189,11 +191,6 @@
   transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
-.chat-icon:hover,
-.search-results button:hover {
-  color: black;
-}
-
 .chat-icon:hover .chat-tooltip {
   display: block;
   opacity: 1;
@@ -203,7 +200,7 @@
 .result-results button {
   flex-shrink: 0;
   border: none;
-  background-color: #d5c4a1;
+  background-color: grey;
   padding: 5px 40px;
   color: white;
   border-radius: 10px;
@@ -254,12 +251,12 @@
 }
 
 .custom-marker {
-  max-width: 150px;
+  max-width: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #f4f1ec;
-  border: 1px solid #d3c1ae;
+  border: 2px solid #d3c1ae;
   border-radius: 20px;
   padding: 8px 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -280,17 +277,8 @@
   overflow: hidden;
   margin: 0;
   flex-grow: 1;
-}
-
-.custom-marker:before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  background-size: cover;
-  transform: translateX(-50%);
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 900;
 }
 
 .custom-marker:after {
@@ -300,7 +288,7 @@
   left: 50%;
   border-width: 8px;
   border-style: solid;
-  border-color: #f4f1ec transparent transparent transparent;
+  border-color: #6d4c41 transparent transparent transparent;
   transform: translateX(-50%);
 }
 

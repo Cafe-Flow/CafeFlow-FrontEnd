@@ -13,15 +13,20 @@ function Delete() {
   const handleDelete = async () => {
     const userId = JSON.parse(localStorage.getItem("userInfo")).id;
     try {
+      
       const response = await fetch(`/api/auth/${userId}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        }
       });
 
       if (response.ok) {
         localStorage.removeItem("userInfo");
         localStorage.removeItem("userToken");
-        navigate("/");
         setShowDeleteModal(false);
+        navigate("/");
+
       } else {
         throw new Error("회원 탈퇴에 실패했습니다.");
       }
