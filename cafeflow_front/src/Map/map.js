@@ -222,7 +222,7 @@ function MapInfo() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://cafeflow.store:8080/api/cafe?sort-by=created-at"
+          "/api/cafe?sort-by=created-at"
         );
         const data = response.data;
         setMarkersData(data);
