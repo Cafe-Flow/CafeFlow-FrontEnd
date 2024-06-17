@@ -1,0 +1,42 @@
+.promotion-box {
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  margin-bottom: 20px;
+  height: 600px;
+  max-height: 800px;
+}
+
+.promotion-box-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.promotion-box p {
+  font-size: 17px;
+  letter-spacing: -2px;
+  padding: 20px 0;
+  font-weight: 700;
+}
+
+.promotion-box button {
+  font-size: 14px;
+  letter-spacing: -2px;
+  margin: 20px 0;
+  font-weight: 700;
+  border: none;
+  background-color: white;
+}
+
+.promotion-box img {
+  width: 100%;
+  height: auto;
+}
+
+.slick-slide img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

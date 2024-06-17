@@ -430,27 +430,6 @@ function MapInfo() {
     }
   };
 
-  const moveToCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const currentLocation = new navermaps.LatLng(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          if (mapInstanceRef.current) {
-            mapInstanceRef.current.setCenter(currentLocation);
-            mapInstanceRef.current.setZoom(14);
-          }
-        },
-        (error) => {
-          setErrorMessage("사용자 위치 추적 에러");
-          setShowError(true);
-        }
-      );
-    }
-  };
-
   const handleResultClick = (result) => {
     const newLocation = new naver.maps.LatLng(result.y, result.x);
     if (mapInstanceRef.current) {
@@ -512,6 +491,7 @@ function MapInfo() {
           <ResultList
             markersData={currentMarkers}
             onMarkerClick={handleMarkerClick}
+            isListVisible={isListVisible}
           />
         </div>
         <button

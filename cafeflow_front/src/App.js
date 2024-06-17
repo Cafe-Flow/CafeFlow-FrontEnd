@@ -28,6 +28,7 @@ import MainChat from "./Chat/MainChat.js";
 import None from "./MainPage/None.js";
 import CustomError from "./Component/CustomError";
 import EditBoard from "./CommunityPage/EditBoard.js";
+import PromotionList from "./PromotionPage/PromotionList.js";
 
 function App() {
   const location = useLocation();
@@ -103,6 +104,7 @@ function App() {
             <Route path="/shop/:idx/addmenu" element={<AddMenu />} />
             <Route path="/shop/:idx/orderlist" element={<OrderList />} />
             <Route path="/shopregister" element={<ShopRegister />} />
+            <Route path="/promotion" element={<PromotionList/>}></Route>
             <Route path="*" element={<None />} />
           </Routes>
         </div>

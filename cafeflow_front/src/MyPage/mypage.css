@@ -181,12 +181,12 @@
 .chat-list li::after {
   content: "";
   position: absolute;
-  bottom: -100px; /* 세모가 붙을 위치 조정 */
-  left: 55%; /* 세모가 중앙에 위치하도록 */
-  transform: translateX(-50%); /* 세모를 중앙 정렬 */
-  border-width: 50px; /* 세모의 크기 */
+  bottom: -100px; 
+  left: 55%; 
+  transform: translateX(-50%);
+  border-width: 50px; 
   border-style: solid;
-  border-color: #f1f1f1 transparent transparent transparent; /* 세모의 색상 설정 */
+  border-color: #f1f1f1 transparent transparent transparent;
 }
 
 .chat-list li:hover {
@@ -232,9 +232,9 @@
 }
 
 .chat-list-popup {
-  top: 0;
-  right: 0;
-  position: absolute;
+  top: 10%;
+  right: 50%;
+  position: fixed;
   width: 400px;
   height: 250px;
   z-index: 1000;

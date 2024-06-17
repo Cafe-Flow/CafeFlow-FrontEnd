@@ -3,18 +3,7 @@ import { useNavigate } from "react-router-dom";
 import MainChat from "../Chat/MainChat";
 import ChatPopup from "../Chat/ChatPopUp";
 
-function getCongestionLevel(traffic) {
-  if (traffic === "RED") {
-    return "혼잡";
-  } else if (traffic === "BLUE") {
-    return "적정";
-  } else if (traffic === "GREEN") {
-    return "원활";
-  } else {
-    return "적정";
-  }
-}
-function ResultList({ markersData, onMarkerClick }) {
+function ResultList({ markersData, onMarkerClick, isListVisible }) {
   const [sortedResults, setSortedResults] = useState(markersData);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -22,7 +11,7 @@ function ResultList({ markersData, onMarkerClick }) {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [selectedName, setSelectedName] = useState(null);
   const [senderId, setSenderId] = useState(null);
-  const [currentSort, setCurrentSort] = useState("최신순");
+  const [currentSort, setCurrentSort] = useState("");
   const navigate = useNavigate();
 
   const handleChatClick = (receiverId, itemId, name) => {
@@ -43,6 +32,7 @@ function ResultList({ markersData, onMarkerClick }) {
     setSortedResults(markersData);
   }, [markersData]);
 
+  
   useEffect(() => {
     const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
     if (storedUserInfo) {
@@ -50,13 +40,11 @@ function ResultList({ markersData, onMarkerClick }) {
     }
   }, []);
 
-  const sortByLatest = () => {
-    const sorted = [...sortedResults].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-    setSortedResults(sorted);
-    setCurrentSort("최신순");
-  };
+    useEffect(() => {
+      if (!isListVisible) {
+        setCurrentSort("");
+      }
+    }, [isListVisible]);
 
   const sortByRating = () => {
     const sorted = [...sortedResults].sort(
@@ -78,12 +66,6 @@ function ResultList({ markersData, onMarkerClick }) {
     <div>
       <h5>↻ 검색 결과</h5>
       <div className="result-results-sort">
-        <button
-          onClick={sortByLatest}
-          className={currentSort === "최신순" ? "active" : ""}
-        >
-          최신순
-        </button>
         <button
           onClick={sortByRating}
           className={currentSort === "별점순" ? "active" : ""}
@@ -130,7 +112,7 @@ function ResultList({ markersData, onMarkerClick }) {
                 )}
                 <span className="result-results-review">
                   {item.reviewsRating === 0 ? (
-                    <span> 현재 리뷰 없음</span>
+                    <span>현재 리뷰 없음</span>
                   ) : (
                     <span>
                       ⭐️ {item.reviewsRating} ({item.reviewCount})

@@ -152,8 +152,6 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
         receiverReadStatus: false,
       };
 
-      setMessages((prevMessages) => [newMessage, ...prevMessages]);
-
       const backendMessage = {
         senderId: newMessage.senderId,
         receiverId: newMessage.receiverId,
