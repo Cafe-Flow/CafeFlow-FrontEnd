@@ -206,7 +206,7 @@ const connectWebSocket = () => {
 
       naver.maps.Event.addListener(map, "zoom_changed", () => {
         const zoomLevel = map.getZoom();
-        if (zoomLevel <= 11) {
+        if (zoomLevel <= 10) {
           customControlRef.current.getElement().style.display = "none";
         } else {
           customControlRef.current.getElement().style.display = "block";
