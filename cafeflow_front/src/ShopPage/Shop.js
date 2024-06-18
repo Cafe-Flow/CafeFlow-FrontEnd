@@ -199,6 +199,7 @@ function Comment() {
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
   const [imageFile, setImageFile] = useState(null);
   const [hoverRating, setHoverRating] = useState(null); // 추가된 hoverRating state
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const arraylist = [0, 1, 2, 3, 4];
 
   useEffect(() => {
@@ -227,19 +228,24 @@ function Comment() {
       const token = localStorage.getItem("userToken");
   
       const formData = new FormData();
-      formData.append('rating', rating);
-      formData.append('comment', comment);
-      
+      formData.append("rating", rating);
+      formData.append("comment", comment);
+  
       if (imageFile) {
-        formData.append('image', imageFile); // Append the first file from files array
+        formData.append("image", imageFile); // Append the first file from files array
       }
-
+  
       const headers = {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       };
   
-      const response = await axios.post(`/api/cafe/${idx}/review`, formData, { headers });
+      const response = await axios.post(
+        `/api/cafe/${idx}/review`,
+        formData,
+        { headers }
+      );
+  
       let url = `/api/cafe/${idx}/review`;
       if (sortBy === "0") {
         url += "?sort-by=created-at";
@@ -258,6 +264,10 @@ function Comment() {
       setRating(0);
       setComment("");
       setImageFile(null);
+      setReviewSubmitted(true);
+  
+      // Clear image previews in Dropzone
+      clearFiles();
     } catch (error) {
       console.error("Error submitting review:", error);
     }
@@ -282,6 +292,12 @@ function Comment() {
     setHoverRating(null); // 클릭 시 hoverRating을 null로 초기화
   };
 
+  const clearFiles = () => {
+    // Implement clearing files in Dropzone component
+    // For example, if Dropzone component manages files state, pass down a prop to clear it
+    setImageFile(null);
+  };
+
   return (
     <>
     <div className="place_details">
@@ -292,8 +308,7 @@ function Comment() {
       <br/>
       <div>
       <div className="image_container">
-      {reviews.slice(0, 6).map((review, index) => (
-          // 리뷰의 이미지가 있는 경우에만 이미지를 렌더링
+      {reviews.filter(review => review.image).slice(0, 6).map((review, index) => (
           review.image && (
             <div key={index} className="review_images">
               <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
@@ -315,19 +330,13 @@ function Comment() {
         <h2 className="tit_subject">리뷰 사진</h2>
         <br/>
         <div className="modal_image_container">
-          {reviews.map((review, index) => (
+          {reviews.filter(review => review.image).map((review, index) => (
             review.image && (
                 <div key={index} className="review_images">
                   <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
                 </div>
               )
             ))}
-            {reviews.length > 6 && (
-              <div className="view_more" onClick={openModal}>
-                View More
-              </div>
-            )}
-          ))}
         </div>
         <br/>
         <button onClick={closeModal}>닫기</button>
@@ -376,7 +385,7 @@ function Comment() {
           />
         </FloatingLabel>
         <div className="review-buttons">
-          <Dropzone onDrop={handleImageDrop} />
+        <Dropzone onDrop={handleImageDrop} clearFiles={clearFiles} />
           <div className="review-button">
             <Button variant="dark" onClick={handleSubmitReview}>
               리뷰 작성

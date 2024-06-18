@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import "./Shop.css";
 
-function Dropzone({ onDrop }) {
+function Dropzone({ onDrop, clearFiles }) {
   const [files, setFiles] = useState([]);
 
   const handleDrop = useCallback(
@@ -15,7 +15,7 @@ function Dropzone({ onDrop }) {
         )
       );
       if (onDrop) {
-        onDrop(acceptedFiles[0]); // 여기서는 첫 번째 파일만 전달하도록 설정했습니다. 필요에 따라 수정 가능합니다.
+        onDrop(acceptedFiles[0]); // Pass the first file if needed
       }
     },
     [onDrop]
@@ -33,11 +33,6 @@ function Dropzone({ onDrop }) {
       </div>
     </div>
   ));
-
-  // 리뷰 작성 후 초기화 함수
-  const resetDropzone = () => {
-    setFiles([]);
-  };
 
   return (
     <section className="dropzone-container">
