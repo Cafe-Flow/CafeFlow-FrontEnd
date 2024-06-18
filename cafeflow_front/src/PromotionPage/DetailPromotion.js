@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./promotionlist.css";
+import "react-loading-skeleton/dist/skeleton.css"; 
 
 
 const DetailPromotion = ({ isOpen, onClose, promotion }) => {

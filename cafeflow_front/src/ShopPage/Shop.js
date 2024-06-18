@@ -500,7 +500,7 @@ function Shop() {
     };
 
     fetchReviews();
-  }, [idx, sortBy]); // Added sortBy to the dependency array
+  }, [idx, sortBy]);
 
   useEffect(() => {
     const fetchSeatInfo = async () => {
@@ -509,7 +509,7 @@ function Shop() {
           `/api/cafe/${idx}/seat`
         );
         if (response.status === 200) {
-          setSeats(response.data); // 좌석 데이터 상태 업데이트
+          setSeats(response.data);
         } else {
           console.error("좌석 정보를 불러오는 데 실패했습니다.");
         }

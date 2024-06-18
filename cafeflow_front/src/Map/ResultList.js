@@ -59,7 +59,7 @@ function ResultList({ markersData, onMarkerClick, isListVisible }) {
       (a, b) => b.reviewCount - a.reviewCount
     );
     setSortedResults(sorted);
-    setCurrentSort("리뷰수");
+    setCurrentSort("리뷰순");
   };
 
   return (
@@ -74,9 +74,9 @@ function ResultList({ markersData, onMarkerClick, isListVisible }) {
         </button>
         <button
           onClick={sortByReviewCount}
-          className={currentSort === "리뷰수" ? "active" : ""}
+          className={currentSort === "리뷰순" ? "active" : ""}
         >
-          리뷰수
+          리뷰순
         </button>
       </div>
       <ul className="result-results">
@@ -93,10 +93,10 @@ function ResultList({ markersData, onMarkerClick, isListVisible }) {
                   <span
                     className="congestion-indicator"
                     style={{
-                      backgroundColor: item.traffic,
+                      backgroundColor: item.traffic === "YELLOW" ? "BLUE" : item.traffic,
                       marginLeft: "10px",
                     }}
-                  ></span>
+                ></span>
                   <div
                     className={`description-box ${
                       hoveredItem === item.id ? "visible" : ""
