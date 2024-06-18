@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import './SeatView.css'; // You can define your own CSS for SeatView
 import Stomp from 'stompjs';
+import axios from 'axios'; // Import Axios for API calls
 
 function SeatView({ seats, cafeId }) {
     const [seatStatuses, setSeatStatuses] = useState({}); // State to manage seat statuses
     
     useEffect(() => {
+        // Function to fetch initial seat statuses from API
+        const fetchInitialSeatStatuses = async () => {
+            try {
+                const response = await axios.get(`/api/cafe/${cafeId}/seat`);
+                const initialSeatStatuses = {};
+                response.data.forEach(seat => {
+                    initialSeatStatuses[seat.seatNumber] = seat.seatStatus;
+                });
+                setSeatStatuses(initialSeatStatuses);
+            } catch (error) {
+                console.error('Error fetching initial seat statuses:', error);
+            }
+        };
+
+        fetchInitialSeatStatuses();
+
         // Connect to WebSocket server
         const socket = new WebSocket('ws://cafeflow.store:8080/ws');
         const stompClient = Stomp.over(socket);
@@ -33,7 +50,6 @@ function SeatView({ seats, cafeId }) {
     // Function to handle seat click
     const handleSeatClick = (seatNumber) => {
         // Toggle seat status between "AVAILABLE" and "OCCUPIED"
-        seatStatuses[seatNumber] = seatStatuses[seatNumber] || "AVAILABLE";
         const newStatus = seatStatuses[seatNumber] === "AVAILABLE" ? "OCCUPIED" : "AVAILABLE";
 
         // Send seat status update to the server
