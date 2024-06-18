@@ -71,9 +71,11 @@ function Header() {
           />
           <Navbar.Collapse id="basic-navbar-nav">
             <div className="nav-container">
-              <a className="nav-element" href="/shop">
-                매장
+            {userInfo.userType === "ADMIN" && (
+              <a className="nav-element" href="/shopregister">
+                매장 등록
               </a>
+            )}
               <a
                 className={`nav-element ${
                   location.pathname.startsWith("/location") ? "active" : ""
