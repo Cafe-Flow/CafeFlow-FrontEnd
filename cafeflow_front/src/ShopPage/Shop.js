@@ -199,7 +199,7 @@ function Comment() {
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
   const [imageFile, setImageFile] = useState(null);
   const [hoverRating, setHoverRating] = useState(null); // 추가된 hoverRating state
-  const Array = [0, 1, 2, 3, 4];
+  const arraylist = [0, 1, 2, 3, 4];
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -332,7 +332,7 @@ function Comment() {
         </div>
         <div className="star-ratings">
           <div className="star-rating space-x-4 mx-auto">
-            {Array.map((value, index) => (
+            {arraylist.map((value, index) => (
               <React.Fragment key={index}>
                 <input
                   type="radio"
@@ -405,27 +405,29 @@ function Comment() {
     // Display reviews in normal order
     reviews.map((review, index) => (
       <div key={index} >
-        <Card id="reviews">
-          <Card.Header className="name_with_rate" style={{ textAlign: "start" }}>
-            <div>{review.nickname}</div>
-            <div>{"⭐️".repeat(review.rating)}</div>
-          </Card.Header>
-          <div className="review">
-            <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
-            <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
-          </div>
-        </Card>
-        <br/>
+      <Card id="reviews">
+        <Card.Header className="name_with_rate" style={{ textAlign: "start" }}>
+        <div>{review.nickname}</div>
+        <div>
+          {Array(review.rating).fill(<PiCoffeeFill color='#6f4e37' />)}
+        </div>
+        </Card.Header>
+        <div className="review">
+        <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
+        <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
+        </div>
+      </Card>
+      <br/>
       </div>
     ))
-  ) : (
+    ) : (
     // Display reviews in reverse order
     reviews.slice().reverse().map((review, index) => (
       <div key={index} >
         <Card id="reviews">
           <Card.Header className="name_with_rate" style={{ textAlign: "start" }}>
             <div>{review.nickname}</div>
-            <div>{"⭐️".repeat(review.rating)}</div>
+            <div>{Array(review.rating).fill(<PiCoffeeFill color='#6f4e37' />)}</div>
           </Card.Header>
           <div className="review">
             <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
