@@ -109,10 +109,11 @@ function MapInfo() {
       () => {
         stompClient.subscribe("/topic/cafe", (message) => {
           const updatedCafe = JSON.parse(message.body);
+          const traffic = updatedCafe.traffic === "YELLOW" ? "BLUE" : updatedCafe.traffic;
           console.log("Received message:", message);
           updateMarkerTraffic(
             updatedCafe.cafeId,
-            updatedCafe.traffic,
+            traffic,
             updatedCafe.watingTime
           );
         });
@@ -187,6 +188,14 @@ function MapInfo() {
       zoom: 14,
       zoomControl: true,
       zoomControlOptions: { position: 3, style: "LARGE" },
+      icon: {
+        content:
+          '<img src="/img/marker.png" alt="내 위치" ' +
+          'style="width: 32px; height: 32px;">',
+        size: new naver.maps.Size(50, 52),
+        origin: new naver.maps.Point(0, 0),
+        anchor: new navermaps.Point(48, 48),
+      },
     };
 
     const map = new naver.maps.Map(mapRef.current, mapOptions);
@@ -246,37 +255,6 @@ function MapInfo() {
 
     fetchData();
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const currentLocation = new naver.maps.LatLng(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          map.setCenter(currentLocation);
-          userLocationMarkerRef.current = new naver.maps.Marker({
-            position: currentLocation,
-            map: map,
-            title: "Your Location",
-            zIndex: 1000,
-            icon: {
-              content:
-                '<img src="/img/marker.png" alt="내 위치" ' +
-                'style="width: 32px; height: 32px;">',
-              size: new naver.maps.Size(50, 52),
-              origin: new naver.maps.Point(0, 0),
-              anchor: new naver.maps.Point(17, 26),
-            },
-          });
-        },
-        (error) => {
-          console.error("오류 : ", error);
-        }
-      );
-    } else {
-      setErrorMessage("사용자 위치 추적 에러");
-      setShowError(true);
-    }
   }, [navermaps]);
 
   useEffect(() => {
@@ -292,6 +270,12 @@ function MapInfo() {
         marker.id === cafeId ? { ...marker, traffic, watingTime } : marker
       )
     );
+    
+        setVisibleMarkers((prevVisibleMarkers) =>
+        prevVisibleMarkers.map((marker) =>
+            marker.id === cafeId ? { ...marker, traffic, watingTime } : marker
+        )
+    );
 
     dummyMarkersRef.current.forEach((marker) => {
       if (marker.id === cafeId) {
@@ -300,15 +284,15 @@ function MapInfo() {
         marker.watingTime = watingTime;
 
         const markerContent = `
-          <div class="custom-marker" data-congestion="${newTraffic}">
-            <p>${marker.name}</p>
-            <span class="congestion-indicator" style="background-color: ${newTraffic};"></span>
-          </div>`;
+         <div class="custom-marker" data-congestion="${marker.traffic}">
+          <p>${marker.name}</p>
+          <span class="congestion-indicator" style="background-color: ${marker.traffic};"></span>
+        </div>`;
 
         marker.setIcon({
           content: markerContent,
-          size: new naver.maps.Size(38, 58),
-          anchor: new navermaps.Point(58, 40),
+          size: new naver.maps.Size(21, 21),
+          anchor: new navermaps.Point(38, 48),
         });
       }
     });
@@ -322,6 +306,7 @@ function MapInfo() {
           <p>${item.name}</p>
           <span class="congestion-indicator" style="background-color: ${item.traffic};"></span>
         </div>`;
+      
 
       const marker = new naver.maps.Marker({
         position: new naver.maps.LatLng(mapy, mapx),
@@ -329,7 +314,7 @@ function MapInfo() {
         icon: {
           content: markerContent,
           size: new naver.maps.Size(38, 58),
-          anchor: new navermaps.Point(58, 40),
+          anchor: new navermaps.Point(38, 48),
         },
       });
       marker.id = item.id;
@@ -365,13 +350,13 @@ function MapInfo() {
 
     const clusterOptions = {
       minClusterSize: 2,
-      maxZoom: 15,
+      maxZoom: 20,
       map: mapInstanceRef.current,
       markers: markers,
       disableClickZoom: false,
       gridSize: 100,
       icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4],
-      indexGenerator: [26, 51, 76, 101],
+      indexGenerator: [10, 20, 30, 50],
       stylingFunction: (clusterMarker, count) => {
         clusterMarker.getElement().querySelector("div:first-child").innerText =
           count;
@@ -428,7 +413,7 @@ function MapInfo() {
                 'style="width: 32px; height: 32px;">',
               size: new naver.maps.Size(25, 26),
               origin: new naver.maps.Point(0, 0),
-              anchor: new naver.maps.Point(15, 26),
+              anchor: new navermaps.Point(38, 48),
             },
           });
         }
@@ -463,7 +448,7 @@ function MapInfo() {
             'style="width: 32px; height: 32px;">',
           size: new naver.maps.Size(25, 26),
           origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(15, 26),
+          anchor: new navermaps.Point(38, 48),
         },
       });
     }
