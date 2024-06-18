@@ -199,11 +199,12 @@ body{
 }
 
 .review_images {
-  flex: 1 1 calc(33.333% - 16px);
+  width: 33.333%;
+  height: 33.333%;
   box-sizing: border-box;
   padding: 10px;
   border: 1px solid #ccc;
-  text-align: center;
+  text-align: left;
   background-color: #f9f9f9;
 }
 
@@ -213,7 +214,7 @@ body{
 }
 
 .view_more {
-  flex: 1 1 calc(33.333% - 16px);
+  flex: 1 1 calc(33.333%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,7 +230,8 @@ body{
 }
 
 .modal_review_images {
-  flex: 1 1 calc(33.333% - 16px);
+  width: 33.333%;
+  height: 33.333%;
   box-sizing: border-box;
   padding: 10px;
   border: 1px solid #ccc;
