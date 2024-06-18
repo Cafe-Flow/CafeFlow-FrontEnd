@@ -33,11 +33,11 @@ function PromotionComponent({cafeid}) {
   
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: promotions.length > 1, // 데이터가 1개 이상일 때만 무한 반복
     speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: promotions.length > 1, // 데이터가 1개 이상일 때만 자동 재생
     autoplaySpeed: 5000,
   };
 

@@ -10,11 +10,12 @@ import Card from "react-bootstrap/Card";
 import "./Shop.css"
 import Button from "react-bootstrap/Button";
 import SeatView from "../SeatPage/SeatView"; // SeatView import 추가
+import { useDropzone } from "react-dropzone"; // react-dropzone import 추가
+import { useUser } from "../MainPage/UserContext";
 import Modal from 'react-modal';
 import './styles.css';
 import Dropzone from './dropzone';
 import PromotionComponent from "../PromotionPage/PromotionComponent";
-import { PiCoffeeFill, PiCoffeeBold, PiCoffeeBeanFill } from "react-icons/pi";
 
 // Modal styles
 const customStyles = {
@@ -25,9 +26,6 @@ const customStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    width: '80vw',  // 원하는 너비를 설정합니다.
-    height: '80vh', // 원하는 높이를 설정합니다.
-    overflow: 'auto' // 내용이 길어질 경우 스크롤이 가능하도록 합니다.
   },
 };
 
@@ -198,7 +196,6 @@ function Comment() {
   const [reviews, setReviews] = useState([]);
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
   const [imageFile, setImageFile] = useState(null);
-  const [hoverRating, setHoverRating] = useState(null); // 추가된 hoverRating state
   const Array = [0, 1, 2, 3, 4];
 
   useEffect(() => {
@@ -230,7 +227,7 @@ function Comment() {
       formData.append('rating', rating);
       formData.append('comment', comment);
       formData.append('image', imageFile); // Append the first file from files array
-  
+      
       const headers = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
@@ -246,15 +243,10 @@ function Comment() {
         url += "?sort-by=lowest-rating";
       }
       const updatedReviews = await axios.get(url);
-  
+      
       console.log("Review submitted:", response.data);
-  
+
       setReviews(updatedReviews.data);
-  
-      // 리뷰 작성 후 input 상태 초기화
-      setRating(0);
-      setComment("");
-      setImageFile(null);
     } catch (error) {
       console.error("Error submitting review:", error);
     }
@@ -272,11 +264,6 @@ function Comment() {
 
   const handleImageDrop = (file) => {
     setImageFile(file);
-  };
-
-  const handleRatingClick = (value) => {
-    setRating(value);
-    setHoverRating(null); // 클릭 시 hoverRating을 null로 초기화
   };
 
   return (
@@ -316,7 +303,7 @@ function Comment() {
           ))}
         </div>
         <br/>
-        <button onClick={closeModal}>닫기</button>
+        <button onClick={closeModal}>Close</button>
       </Modal>
     </div>  
     </div>
@@ -342,10 +329,8 @@ function Comment() {
                 <label
                   htmlFor={`star-${5 - value}`} // 별점 표시를 수정함
                   className="star pr-4"
-                  onMouseEnter={() => setHoverRating(5 - value)}
-                  onMouseLeave={() => setHoverRating(null)}
                 >
-                <PiCoffeeFill color={hoverRating >= 5 - value ? '#6f4e37' : rating >= 5 - value ? '#6f4e37' : 'gray'} />
+                  ♬
                 </label>
               </React.Fragment>
             ))}
@@ -353,7 +338,7 @@ function Comment() {
         </div>
         </div>
         <br/>
-        <FloatingLabel controlId="Textarea2">
+        <FloatingLabel controlId="Textarea2" label="Reviews">
           <Form.Control
             as="textarea"
             style={{ height: "100px" }}
@@ -416,16 +401,14 @@ function Comment() {
   ) : (
     // Display reviews in reverse order
     reviews.slice().reverse().map((review, index) => (
-      <div key={index} >
+      <div key={index} className="review">
         <Card id="reviews">
           <Card.Header className="name_with_rate" style={{ textAlign: "start" }}>
             <div>{review.nickname}</div>
             <div>{"⭐️".repeat(review.rating)}</div>
           </Card.Header>
-          <div className="review">
-            <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
-            <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
-          </div>
+          <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
+          <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
         </Card>
         <br/>
       </div>
@@ -452,92 +435,95 @@ const FindWay = () => (
 
 function Shop() {
   let { idx } = useParams();
-  const [userInfo, setUserInfo] = useState(null); // 유저 정보를 저장할 상태 추가
+  const { userInfo } = useUser();
   const [reviews, setReviews] = useState([]);
   const [cafeData, setCafeData] = useState(null);
-  const [seats, setSeats] = useState([]); // State to store seat data
-  const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
-  const [isAdmin, setIsAdmin] = useState("USER"); // State to hold whether user is admin
-  const Array = [0, 1, 2, 3, 4];
-  useEffect(() => {
-    const fetchCafeData = async () => {
-      try {
-        const response = await axios.get(
-          `/api/cafe/${idx}`
-        );
-        console.log("cafeData", response.data);
-        setCafeData(response.data);
-      } catch (error) {
-        console.error("카페 데이터를 불러오는 중 오류 발생:", error);
-      }
-    };
-
-    fetchCafeData();
-  }, [idx]);
-
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        let url = `/api/cafe/${idx}/review`;
-        if (sortBy === "0") {
-          url += "?sort-by=created-at";
-        } else if (sortBy === "1") {
-          url += "?sort-by=highest-rating";
-        } else if (sortBy === "2") {
-          url += "?sort-by=lowest-rating";
-        }
-        console.log("URL:", url);
-        const response = await axios.get(url);
-        setReviews(response.data);
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      }
-    };
-
-    fetchReviews();
-  }, [idx, sortBy]); // Added sortBy to the dependency array
-
-  useEffect(() => {
-    const fetchSeatInfo = async () => {
-      try {
-        const response = await axios.get(
-          `/api/cafe/${idx}/seat`
-        );
-        if (response.status === 200) {
-          setSeats(response.data); // 좌석 데이터 상태 업데이트
-        } else {
-          console.error("좌석 정보를 불러오는 데 실패했습니다.");
-        }
-      } catch (error) {
-        console.error("좌석 정보를 불러오는 데 실패했습니다:", error);
-      }
-    };
-
-    fetchSeatInfo();
-  }, [idx]);
+    const [seats, setSeats] = useState([]); // State to store seat data
+    const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
+    const [isAdmin, setIsAdmin] = useState("USER"); // State to hold whether user is admin
+    const Array = [0, 1, 2, 3, 4];
   
-  return (
-    <div className="container">
-        <>
-          <PlaceInfo cafeData={cafeData}/>
-          {isAdmin === "ADMIN" && <OwnerCertification/>}
-          <FindWay/>
-          <PromotionComponent/>
-          <MenuInfo isAdmin={isAdmin}/>
-          <div className="place_details">
-            <div className="inner_place">
-              <div className="tit_subject">
-                좌석 현황
-              </div>
-              <div className="seat_place">
-                <SeatView seats={seats} cafeId={idx}/>
+    useEffect(() => {
+      const fetchCafeData = async () => {
+        try {
+          const response = await axios.get(
+            `/api/cafe/${idx}`
+          );
+          setCafeData(response.data);
+                console.log(response.data);
+          if (response.data.memberId === userInfo.id) {
+            setIsAdmin("ADMIN");
+          }
+        } catch (error) {
+          console.error("카페 데이터를 불러오는 중 오류 발생:", error);
+        }
+      };
+      fetchCafeData();
+
+    }, [idx, userInfo.id]);
+    
+  
+    useEffect(() => {
+      const fetchReviews = async () => {
+        try {
+          let url = `/api/cafe/${idx}/review`;
+          if (sortBy === "0") {
+            url += "?sort-by=created-at";
+          } else if (sortBy === "1") {
+            url += "?sort-by=highest-rating";
+          } else if (sortBy === "2") {
+            url += "?sort-by=lowest-rating";
+          }
+          console.log("URL:", url);
+          const response = await axios.get(url);
+          setReviews(response.data);
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+        }
+      };
+  
+      fetchReviews();
+    }, [idx, sortBy]); // Added sortBy to the dependency array
+  
+    useEffect(() => {
+      const fetchSeatInfo = async () => {
+        try {
+          const response = await axios.get(
+            `/api/cafe/${idx}/seat`
+          );
+          if (response.status === 200) {
+            setSeats(response.data); // 좌석 데이터 상태 업데이트
+          } else {
+            console.error("좌석 정보를 불러오는 데 실패했습니다.");
+          }
+        } catch (error) {
+          console.error("좌석 정보를 불러오는 데 실패했습니다:", error);
+        }
+      };
+  
+      fetchSeatInfo();
+    }, [idx]);
+    
+    return (
+        <div className="container">
+            <PlaceInfo cafeData={cafeData}/>
+            {isAdmin === "ADMIN" ? <OwnerCertification/> : (<></>)}
+            <FindWay/>
+            <PromotionComponent cafeid={idx}/>
+            <MenuInfo isAdmin={isAdmin}/>
+            <div className="place_details">
+              <div className="inner_place">
+                <div className="tit_subject">
+                  좌석 현황
+                </div>
+                <div className="seat_place">
+                  <SeatView seats={seats} cafeId={idx}/>
+                </div>
               </div>
             </div>
-          </div>
-          <Comment/>
-        </>
-    </div>
-  );    
+            <Comment/>
+        </div>
+    );
 }
 
 export default Shop;
