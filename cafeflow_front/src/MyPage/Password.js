@@ -56,7 +56,7 @@ function Password() {
   };
 
   const handleSubmit = async () => {
-    const userId = JSON.parse(localStorage.getItem("userInfo")).id; // 사용자 ID 추출
+    const userId = JSON.parse(localStorage.getItem("userInfo")).id;
 
     if (canSubmit()) {
       try {
