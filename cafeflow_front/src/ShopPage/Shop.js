@@ -570,7 +570,7 @@ function Shop() {
         <PlaceInfo cafeData={cafeData} />
         {isAdmin === "ADMIN" && <OwnerCertification />}
         <FindWay />
-        <PromotionComponent cafeid={idx}/>
+        <PromotionComponent cafeid={idx} />
         <MenuInfo isAdmin={isAdmin} />
         <div className="place_details">
           <div className="inner_place">
