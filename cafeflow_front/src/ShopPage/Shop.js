@@ -229,8 +229,11 @@ function Comment() {
       const formData = new FormData();
       formData.append('rating', rating);
       formData.append('comment', comment);
-      formData.append('image', imageFile); // Append the first file from files array
-  
+      
+      if (imageFile) {
+        formData.append('image', imageFile); // Append the first file from files array
+      }
+
       const headers = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
@@ -401,14 +404,16 @@ function Comment() {
   {sortBy !== "0" ? (
     // Display reviews in normal order
     reviews.map((review, index) => (
-      <div key={index} className="review">
+      <div key={index} >
         <Card id="reviews">
           <Card.Header className="name_with_rate" style={{ textAlign: "start" }}>
             <div>{review.nickname}</div>
             <div>{"⭐️".repeat(review.rating)}</div>
           </Card.Header>
-          <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
-          <div style={{ textAlign: "start" }}>{review.comment}</div>
+          <div className="review">
+            <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
+            <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
+          </div>
         </Card>
         <br/>
       </div>
