@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './SeatView.css'; // You can define your own CSS for SeatView
 import Stomp from 'stompjs';
 import axios from 'axios'; // Import Axios for API calls
+import SockJS from "sockjs-client";
+
+// Import seat images for different sizes
+import seatImage2 from './seat2.png';
+import seatImage4 from './seat4.png';
+import seatImage6 from './seat6.png';
 
 function SeatView({ seats, cafeId }) {
     const [seatStatuses, setSeatStatuses] = useState({}); // State to manage seat statuses
@@ -24,7 +30,7 @@ function SeatView({ seats, cafeId }) {
         fetchInitialSeatStatuses();
 
         // Connect to WebSocket server
-        const socket = new WebSocket('ws://cafeflow.store:8080/ws');
+        const socket = new SockJS("http://cafeflow.store:8080/ws");
         const stompClient = Stomp.over(socket);
 
         stompClient.connect({}, () => {
@@ -59,13 +65,27 @@ function SeatView({ seats, cafeId }) {
         };
 
         // Create WebSocket connection
-        const socket = new WebSocket('ws://cafeflow.store:8080/ws');
+        const socket = new SockJS("http://cafeflow.store:8080/ws");
         const stompClient = Stomp.over(socket);
         
         stompClient.connect({}, () => {
             // Send the seat status update to the destination queue
             stompClient.send(`/app/cafe/${cafeId}/seat`, {}, JSON.stringify(seatUpdate));
         });
+    };
+
+    // Function to determine which image to use based on seat size
+    const getSeatImage = (seatSize) => {
+        switch (seatSize) {
+            case 2:
+                return seatImage2;
+            case 4:
+                return seatImage4;
+            case 6:
+                return seatImage6;
+            default:
+                return seatImage2; // Default to size 2 image if size is unknown
+        }
     };
 
     return (
@@ -82,7 +102,9 @@ function SeatView({ seats, cafeId }) {
                                     height: seat.seatAngle === "HORIZONTAL" ? seat.seatSize * 50 : 100,
                                     left: seat.seatCoordinates.x,
                                     top: seat.seatCoordinates.y,
-                                    backgroundColor: seatStatuses[seat.seatNumber] === "OCCUPIED" ? "#d3c2a0" : "#1abc9c" // Change background color based on seatStatus
+                                    backgroundImage: `url(${getSeatImage(seat.seatSize)})`, // Set background image for seat
+                                    backgroundSize: 'cover', // Adjust image size as needed
+                                    backgroundColor: seatStatuses[seat.seatNumber] === "OCCUPIED" ? "#d3c2a0" : "#1abc9c" // Fallback color
                                 }}
                                 onClick={() => handleSeatClick(seat.seatNumber)} // Attach click event handler
                             >

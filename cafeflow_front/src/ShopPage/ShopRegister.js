@@ -62,8 +62,9 @@ function ShopRegister() {
                 formData.append('description', description);
                 formData.append('mapx', selectedCafe.mapx);
                 formData.append('mapy', selectedCafe.mapy);
-                formData.append('image', imageFile);
-    
+                if(imageFile){
+                    formData.append('image', imageFile);
+                }
                 const headers = {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
