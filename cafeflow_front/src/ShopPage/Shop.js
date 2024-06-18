@@ -14,7 +14,7 @@ import Modal from 'react-modal';
 import './styles.css';
 import Dropzone from './dropzone';
 import PromotionComponent from "../PromotionPage/PromotionComponent";
-import { PiCoffeeFill, PiCoffeeBold, PiCoffeeBeanFill } from "react-icons/pi";
+import { PiCoffeeFill } from "react-icons/pi";
 
 // Modal styles
 const customStyles = {
@@ -292,10 +292,13 @@ function Comment() {
       <br/>
       <div>
       <div className="image_container">
-        {reviews.slice(0, 6).map((review, index) => (
-          <div key={index} className="review_images">
-            <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
-          </div>
+      {reviews.slice(0, 6).map((review, index) => (
+          // 리뷰의 이미지가 있는 경우에만 이미지를 렌더링
+          review.image && (
+            <div key={index} className="review_images">
+              <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
+            </div>
+          )
         ))}
         {reviews.length > 6 && (
           <div className="view_more" onClick={openModal}>
@@ -313,9 +316,17 @@ function Comment() {
         <br/>
         <div className="modal_image_container">
           {reviews.map((review, index) => (
-            <div key={index} className="modal_review_images">
-              <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
-            </div>
+            review.image && (
+                <div key={index} className="review_images">
+                  <img src={`data:image/jpeg;base64,${review.image}`} alt={`Review ${index}`} />
+                </div>
+              )
+            ))}
+            {reviews.length > 6 && (
+              <div className="view_more" onClick={openModal}>
+                View More
+              </div>
+            )}
           ))}
         </div>
         <br/>
@@ -413,7 +424,7 @@ function Comment() {
         </div>
         </Card.Header>
         <div className="review">
-        <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
+        {review.image && (<img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />)}
         <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
         </div>
       </Card>
@@ -430,7 +441,7 @@ function Comment() {
             <div>{Array(review.rating).fill(<PiCoffeeFill color='#6f4e37' />)}</div>
           </Card.Header>
           <div className="review">
-            <img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />
+            {review.image && (<img className="review_img" src={`data:image/jpeg;base64,${review.image}`} />)}
             <div className="review_txt" style={{ textAlign: "start" }}>{review.comment}</div>
           </div>
         </Card>
