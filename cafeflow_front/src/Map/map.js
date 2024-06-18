@@ -28,6 +28,7 @@ function MapInfo() {
   const navermaps = useNavermaps();
   const stompClientRef = useRef(null);
   const [isListVisible, setIsListVisible] = useState(false);
+    const [isConnecting, setIsConnecting] = useState(false);
 
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
@@ -92,31 +93,40 @@ function MapInfo() {
     updateMarkers(map, dummyMarkersRef.current);
   };
 
-const connectWebSocket = () => {
-  const socket = new SockJS("http://cafeflow.store:8080/ws");
-  const stompClient = Stomp.over(socket);
-
-  stompClient.connect(
-    {},
-    () => {
-      stompClient.subscribe("/topic/cafe", (message) => {
-        const updatedCafe = JSON.parse(message.body);
-        console.log("Received message:", message);
-        updateMarkerTraffic(
-          updatedCafe.cafeId,
-          updatedCafe.traffic === "YELLOW" ? "BLUE" : updatedCafe.traffic,
-          updatedCafe.watingTime
-        );
-      });
-      console.log("WebSocket connected");
-    },
-    (error) => {
-      console.error("WebSocket connection error:", error);
+  const connectWebSocket = () => {
+    if (stompClientRef.current || isConnecting) {
+      console.log("WebSocket already connected or connecting");
+      return;
     }
-  );
 
-  stompClientRef.current = stompClient;
-};
+    setIsConnecting(true);
+    
+    const socket = new SockJS("/ws");
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect(
+      {},
+      () => {
+        stompClient.subscribe("/topic/cafe", (message) => {
+          const updatedCafe = JSON.parse(message.body);
+          console.log("Received message:", message);
+          updateMarkerTraffic(
+            updatedCafe.cafeId,
+            updatedCafe.traffic,
+            updatedCafe.watingTime
+          );
+        });
+        console.log("WebSocket connected");
+        setIsConnecting(false);
+      },
+      (error) => {
+        console.error("WebSocket connection error:", error);
+        setIsConnecting(false);
+      }
+    );
+
+    stompClientRef.current = stompClient;
+  };
 
   const disconnectWebSocket = () => {
     if (stompClientRef.current) {
@@ -181,8 +191,6 @@ const connectWebSocket = () => {
 
     const map = new naver.maps.Map(mapRef.current, mapOptions);
     mapInstanceRef.current = map;
-
-    connectWebSocket();
 
     var locationBtnHtml =
       '<div class="custom-control-button" id="current-location-btn"> ↻ 현재 화면에서 검색</div>';
@@ -269,11 +277,14 @@ const connectWebSocket = () => {
       setErrorMessage("사용자 위치 추적 에러");
       setShowError(true);
     }
-
-    return () => {
-      disconnectWebSocket();
-    };
   }, [navermaps]);
+
+  useEffect(() => {
+    connectWebSocket();
+        return () => {
+          disconnectWebSocket();
+        };
+  }, []);
 
   const updateMarkerTraffic = (cafeId, traffic, watingTime) => {
     setMarkersData((prevMarkers) =>

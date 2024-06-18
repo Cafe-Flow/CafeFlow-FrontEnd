@@ -2,9 +2,9 @@
   background-color: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   text-align: left;
-  margin-bottom: 20px;
-  height: 600px;
+  padding-bottom: 30px;
   max-height: 800px;
+  margin-bottom: 20px;
 }
 
 .promotion-box-top {
@@ -27,11 +27,6 @@
   font-weight: 700;
   border: none;
   background-color: white;
-}
-
-.promotion-box img {
-  width: 100%;
-  height: auto;
 }
 
 .slick-slide img {

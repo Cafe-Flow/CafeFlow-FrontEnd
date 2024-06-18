@@ -12,11 +12,11 @@ function Chatrooms() {
   const [error, setError] = useState(null);
   const [userType, setUserType] = useState("");
   const [userMemberId, setUserMemberID] = useState(null);
-  const [isChatOpen, setIsChatOpen] = useState(false); // 채팅창 열기 상태
-  const [selectedReceiverId, setSelectedReceiverId] = useState(null); // 선택된 채팅방의 상대방 ID
-  const [selectedName, setSelectedName] = useState(""); // 선택된 채팅방의 상대방 이름
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // 삭제 확인 모달 상태
-  const [roomIdToDelete, setRoomIdToDelete] = useState(null); // 삭제할 채팅방 ID
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [selectedReceiverId, setSelectedReceiverId] = useState(null);
+  const [selectedName, setSelectedName] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [roomIdToDelete, setRoomIdToDelete] = useState(null);
 
   useEffect(() => {
     const updateUserInfo = () => {
