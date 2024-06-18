@@ -226,7 +226,10 @@ function Comment() {
       const formData = new FormData();
       formData.append('rating', rating);
       formData.append('comment', comment);
-      formData.append('image', imageFile); // Append the first file from files array
+
+      if (imageFile) {
+        formData.append("image", imageFile); // Append the first file from files array
+      }
       
       const headers = {
         Authorization: `Bearer ${token}`,
