@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './SeatView.css'; // You can define your own CSS for SeatView
-import axios from 'axios';
 import Stomp from 'stompjs';
 
 function SeatView({ seats, cafeId }) {
@@ -34,6 +33,7 @@ function SeatView({ seats, cafeId }) {
     // Function to handle seat click
     const handleSeatClick = (seatNumber) => {
         // Toggle seat status between "AVAILABLE" and "OCCUPIED"
+        seatStatuses[seatNumber] = seatStatuses[seatNumber] || "AVAILABLE";
         const newStatus = seatStatuses[seatNumber] === "AVAILABLE" ? "OCCUPIED" : "AVAILABLE";
 
         // Send seat status update to the server

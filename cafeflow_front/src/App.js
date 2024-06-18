@@ -14,7 +14,6 @@ import Modify from "./MyPage/Modify.js";
 import Delete from "./MyPage/Delete.js";
 import Password from "./MyPage/Password.js";
 import NewBoard from "./CommunityPage/NewBoard.js";
-import Shoplist from "./ShopPage/ShopList.js";
 import ShopRegister from "./ShopPage/ShopRegister.js";
 import SeatView from "./SeatPage/SeatView.js";
 import Shop from "./ShopPage/Shop.js";
@@ -96,7 +95,6 @@ function App() {
               path="/community/edit-post/:postId"
               element={<EditBoard />}
             />
-            <Route path="/shop" element={<Shoplist />} />
             <Route path="/seat" element={<SeatRegister />} />
             <Route path="/seat/:cafeId" element={<SeatView />} />
             <Route path="/shop/:idx" element={<Shop />} />

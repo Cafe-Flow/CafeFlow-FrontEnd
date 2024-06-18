@@ -71,7 +71,7 @@ function Header() {
           />
           <Navbar.Collapse id="basic-navbar-nav">
             <div className="nav-container">
-            {userInfo.userType === "ADMIN" && (
+            { userInfo !== null && userInfo.userType === "ADMIN" && (
               <a className="nav-element" href="/shopregister">
                 매장 등록
               </a>
