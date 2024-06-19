@@ -15,6 +15,7 @@ import './styles.css';
 import Dropzone from './dropzone';
 import PromotionComponent from "../PromotionPage/PromotionComponent";
 import { PiCoffeeFill } from "react-icons/pi";
+import { useUser } from "../MainPage/UserContext";
 
 // Modal styles
 const customStyles = {
@@ -479,12 +480,12 @@ const FindWay = () => (
 
 function Shop() {
   let { idx } = useParams();
-  const [userInfo, setUserInfo] = useState(null); // 유저 정보를 저장할 상태 추가
   const [reviews, setReviews] = useState([]);
   const [cafeData, setCafeData] = useState(null);
   const [seats, setSeats] = useState([]); // State to store seat data
   const [sortBy, setSortBy] = useState("0"); // Default sort option is "0"
   const [isAdmin, setIsAdmin] = useState("USER"); // State to hold whether user is admin
+  const { userInfo, setUserInfo } = useUser();
   const Array = [0, 1, 2, 3, 4];
   useEffect(() => {
     const fetchCafeData = async () => {
@@ -493,6 +494,9 @@ function Shop() {
           `/api/cafe/${idx}`
         );
         console.log("cafeData", response.data);
+        if (response.data.memberId === userInfo.id) {
+          setIsAdmin("ADMIN");
+        }
         setCafeData(response.data);
       } catch (error) {
         console.error("카페 데이터를 불러오는 중 오류 발생:", error);
