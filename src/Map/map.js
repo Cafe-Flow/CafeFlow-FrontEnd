@@ -439,7 +439,7 @@ function MapInfo() {
     const newLocation = new navermaps.LatLng(marker.lat, marker.lng);
     if (mapInstanceRef.current) {
       mapInstanceRef.current.setCenter(newLocation);
-      mapInstanceRef.current.setZoom(14);
+      mapInstanceRef.current.setZoom(18);
     }
   };
 
@@ -447,7 +447,7 @@ function MapInfo() {
     const newLocation = new naver.maps.LatLng(result.y, result.x);
     if (mapInstanceRef.current) {
       mapInstanceRef.current.setCenter(newLocation);
-      mapInstanceRef.current.setZoom(14);
+      mapInstanceRef.current.setZoom(18);
       if (searchMarkerRef.current) {
         searchMarkerRef.current.setMap(null);
       }
