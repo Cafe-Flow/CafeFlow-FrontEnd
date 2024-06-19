@@ -5,9 +5,9 @@ import axios from 'axios'; // Import Axios for API calls
 import SockJS from "sockjs-client";
 
 // Import seat images for different sizes
-import seatImage2 from './seat2.png';
-import seatImage4 from './seat4.png';
-import seatImage6 from './seat6.png';
+// import seatImage2 from './seat2.png';
+// import seatImage4 from './seat4.png';
+// import seatImage6 from './seat6.png';
 
 function SeatView({ seats, cafeId }) {
     const [seatStatuses, setSeatStatuses] = useState({}); // State to manage seat statuses
@@ -75,18 +75,18 @@ function SeatView({ seats, cafeId }) {
     };
 
     // Function to determine which image to use based on seat size
-    const getSeatImage = (seatSize) => {
-        switch (seatSize) {
-            case 2:
-                return seatImage2;
-            case 4:
-                return seatImage4;
-            case 6:
-                return seatImage6;
-            default:
-                return seatImage2; // Default to size 2 image if size is unknown
-        }
-    };
+    // const getSeatImage = (seatSize) => {
+    //     switch (seatSize) {
+    //         case 2:
+    //             return seatImage2;
+    //         case 4:
+    //             return seatImage4;
+    //         case 6:
+    //             return seatImage6;
+    //         default:
+    //             return seatImage2; // Default to size 2 image if size is unknown
+    //     }
+    // };
 
     return (
         <div id="background">
@@ -102,7 +102,7 @@ function SeatView({ seats, cafeId }) {
                                     height: seat.seatAngle === "HORIZONTAL" ? seat.seatSize * 50 : 100,
                                     left: seat.seatCoordinates.x,
                                     top: seat.seatCoordinates.y,
-                                    backgroundImage: `url(${getSeatImage(seat.seatSize)})`, // Set background image for seat
+                                    // backgroundImage: `url(${getSeatImage(seat.seatSize)})`, // Set background image for seat
                                     backgroundSize: 'cover', // Adjust image size as needed
                                     backgroundColor: seatStatuses[seat.seatNumber] === "OCCUPIED" ? "#d3c2a0" : "#1abc9c" // Fallback color
                                 }}
