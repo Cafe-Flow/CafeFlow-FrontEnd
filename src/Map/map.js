@@ -201,6 +201,17 @@ function MapInfo() {
     const map = new naver.maps.Map(mapRef.current, mapOptions);
     mapInstanceRef.current = map;
 
+    const markerOptions = {
+      position: new naver.maps.LatLng(36.14591781218163, 128.3935552490008),
+      map: map,
+      icon: {
+        content: '<img src="/img/marker.png" alt="내 위치" style="width: 32px; height: 32px;">',
+        size: new naver.maps.Size(50, 52),
+        origin: new naver.maps.Point(0, 0),
+        anchor: new naver.maps.Point(25, 26), // 앵커를 마커의 중앙 하단으로 설정
+      },
+    };
+
     var locationBtnHtml =
       '<div class="custom-control-button" id="current-location-btn"> ↻ 현재 화면에서 검색</div>';
 
@@ -255,7 +266,10 @@ function MapInfo() {
 
     fetchData();
 
+    new naver.maps.Marker(markerOptions);
+    
   }, [navermaps]);
+
 
   useEffect(() => {
     connectWebSocket();

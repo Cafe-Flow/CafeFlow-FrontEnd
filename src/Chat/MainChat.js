@@ -242,14 +242,14 @@ function MainChat({ userId, cafeOwnerId, name, isUser, onClose }) {
                     : "message-left"
                 }`}
               >
-                {!message.receiverReadStatus && (
+                {/* {!message.receiverReadStatus && (
                   <p
                     className="unread-indicator"
                     key={`unread-${message.id || `temp-${index}`}`}
                   >
                     읽지 않음
                   </p>
-                )}
+                )} */}
                 {message.content}
               </div>
             </React.Fragment>
